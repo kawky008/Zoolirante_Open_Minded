@@ -21,7 +21,8 @@ namespace Zoolirante_Open_Minded.Controllers
         // GET: Merchandises
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Merchandises.ToListAsync());
+			ViewData["BannerText"] = "Banner for merchandise page";
+			return View(await _context.Merchandises.ToListAsync());
         }
 
         // GET: Merchandises/Details/5

@@ -21,6 +21,8 @@ namespace Zoolirante_Open_Minded.Controllers
         // GET: Animals
         public async Task<IActionResult> Index(String? searchName, String? searchSpecies, String? searchConservation)
         {
+            ViewData["BannerText"] = "Explore the amazing animals of Zoolirante";
+
             var animal = _context.Animals.AsQueryable();
 
             ViewBag.searchName = searchName;
