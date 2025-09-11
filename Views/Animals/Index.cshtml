@@ -6,6 +6,14 @@
 
 <h1>Index</h1>
 
+<form asp-controller="Animals" asp-action="Index">
+    <div class="row">
+        <div class="col-6">
+            <label id="searchName">Search Animals</label>
+            <input class="form-control" type="text" name="searchName" id="searchName" placeholder="Search animal..." />
+        </div>
+    </div>
+</form>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
