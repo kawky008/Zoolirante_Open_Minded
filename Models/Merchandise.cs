@@ -18,4 +18,6 @@ public partial class Merchandise
     public string? ImageUrl { get; set; }
 
     public string? Category { get; set; }
+
+    public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }
