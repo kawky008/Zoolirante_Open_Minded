@@ -17,6 +17,50 @@ html {
   min-height: 100%;
 }
 
+.navbar-custom {
+    background-color: #f7ecd4 !important;
+}
+
+.navbar-custom .nav-link {
+    transition: all 0.3s ease; /* smooth transition */
+}
+
+.navbar-custom .nav-link:hover {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* subtle shadow */
+    transform: scale(1.05); /* slight zoom effect */
+}
+
+.navbar-custom .nav-link.active {
+    font-weight: bold;
+    text-decoration: underline;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+}
+
+.hero-container {
+    position: relative;
+    margin: 0 auto;
+}
+
+.hero-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: brightness(60%); /* fades/dims the image */
+}
+
+.hero-text {
+    position: absolute;
+    top: 50%; /* vertical center */
+    left: 50%; /* horizontal center */
+    transform: translate(-50%, -50%); /* without this, the element's top left would be at the center*/
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+    font-size: 2.5rem;
+    font-weight: bold;
+    padding: 0 20px; /* prevent text from touching edges on small screens */
+}
+
 body {
   margin-bottom: 60px;
 }
