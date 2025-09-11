@@ -19,9 +19,13 @@ namespace Zoolirante_Open_Minded.Controllers
         }
 
         // GET: Merchandises
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchText)
         {
-            return View(await _context.Merchandises.ToListAsync());
+			var q = _context.Merchandises.AsQueryable();
+
+			if (!string.IsNullOrWhiteSpace(searchText))
+				q = q.Where(i => i.Name.StartsWith(searchText));
+			return View(await q.ToListAsync());
         }
 
         // GET: Merchandises/Details/5

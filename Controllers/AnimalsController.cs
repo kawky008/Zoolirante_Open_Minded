@@ -19,7 +19,7 @@ namespace Zoolirante_Open_Minded.Controllers
         }
 
         // GET: Animals
-        public async Task<IActionResult> Index(String? searchName, String? searchSpecies, String? searchConservation)
+        public async Task<IActionResult> Index(String? searchName, String? searchSpecies, String? searchConservation, String? searchRegion)
         {
             var animal = _context.Animals.AsQueryable();
 
@@ -32,8 +32,12 @@ namespace Zoolirante_Open_Minded.Controllers
             // Creating conservation dropdown list
             var conservationStatus = animal.Select(x => x.ConservationStatus).Distinct().ToList();
             ViewBag.conservation = new SelectList(conservationStatus, selectedValue: searchConservation);
-            // Filtering
-            if (!String.IsNullOrWhiteSpace(searchName))
+
+			// Creating region dropdown list
+			var regions = animal.Select(x => x.Region).Distinct().ToList();
+			ViewBag.regionList = new SelectList(regions, selectedValue: searchRegion);
+			// Filtering
+			if (!String.IsNullOrWhiteSpace(searchName))
             {
                 animal = animal.Where(x => x.Name.Contains(searchName));
             }
@@ -45,7 +49,11 @@ namespace Zoolirante_Open_Minded.Controllers
             {
                 animal = animal.Where(x => x.ConservationStatus == searchConservation);
             }
-            return View(await animal.ToListAsync());
+			if (!string.IsNullOrEmpty(searchRegion))
+			{
+				animal = animal.Where(x => x.Region == searchRegion);
+			}
+			return View(await animal.ToListAsync());
         }
 
         // GET: Animals/Details/5
