@@ -19,12 +19,31 @@ namespace Zoolirante_Open_Minded.Controllers
         }
 
         // GET: Animals
-        public async Task<IActionResult> Index(String? searchName)
+        public async Task<IActionResult> Index(String? searchName, String? searchSpecies, String? searchConservation)
         {
             var animal = _context.Animals.AsQueryable();
-            if (!String.IsNullOrEmpty(searchName))
+
+            ViewBag.searchName = searchName;
+
+            // Creating species dropdown list
+            var species = animal.Select(x=>x.Species).ToList();          
+            ViewBag.speciesList = new SelectList(species, selectedValue: searchSpecies);
+
+            // Creating conservation dropdown list
+            var conservationStatus = animal.Select(x => x.ConservationStatus).Distinct().ToList();
+            ViewBag.conservation = new SelectList(conservationStatus, selectedValue: searchConservation);
+            // Filtering
+            if (!String.IsNullOrWhiteSpace(searchName))
             {
                 animal = animal.Where(x => x.Name.Contains(searchName));
+            }
+            if (!String.IsNullOrEmpty(searchSpecies))
+            {
+                animal = animal.Where(x => x.Species == searchSpecies);
+            }
+            if (!String.IsNullOrEmpty(searchConservation))
+            {
+                animal = animal.Where(x => x.ConservationStatus == searchConservation);
             }
             return View(await animal.ToListAsync());
         }

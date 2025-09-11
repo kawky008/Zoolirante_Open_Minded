@@ -8,10 +8,27 @@
 
 <form asp-controller="Animals" asp-action="Index">
     <div class="row">
-        <div class="col-6">
+        <div class="col-5">
             <label id="searchName">Search Animals</label>
-            <input class="form-control" type="text" name="searchName" id="searchName" placeholder="Search animal..." />
+            <input class="form-control" type="text" name="searchName" id="searchName" placeholder="Search animal..." value="@ViewBag.searchName" />
         </div>
+        <div class="col-3">
+            <label id="searchSpecies">Species</label>
+            <select id="searchSpecies" name="searchSpecies" class="form-control" asp-items="ViewBag.speciesList">
+                <option value="">All Species</option>
+            </select>
+        </div>
+        <div class="col-3">
+            <label id="searchConservation">Conservation Status</label>
+            <select id="searchConservation" name="searchConservation" class="form-control" asp-items="ViewBag.conservation">
+                <option value="">All Conservation Status</option>
+            </select>
+        </div>
+
+        <div class="col-1 mt-4">
+            <button class="btn btn-outline-info" type="submit">Search</button>
+        </div>
+       
     </div>
 </form>
 <p>
