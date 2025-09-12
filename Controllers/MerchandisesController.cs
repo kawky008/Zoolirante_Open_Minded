@@ -18,6 +18,7 @@ namespace Zoolirante_Open_Minded.Controllers
             _context = context;
         }
 
+		// GET: Merchandises
 		public async Task<IActionResult> Index(string searchText)
 		{
 			var q = _context.Merchandises.AsQueryable();

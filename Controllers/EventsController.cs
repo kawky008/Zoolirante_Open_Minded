@@ -19,16 +19,17 @@ namespace Zoolirante_Open_Minded.Controllers
         }
 
         // GET: Events
-        public async Task<IActionResult> Index()
+        public IActionResult Index()=> RedirectToAction(nameof(Ongoing));
+        public async Task<IActionResult> Ongoing()
         {
-			var now = DateTime.Now;
-			var list = await _context.Events
-				.Where(e => e.StartTime <= now && e.EndTime >= now)
-				.OrderBy(e => e.EndTime)
-				.ToListAsync();
-			ViewBag.Mode = "ongoing";
-			return View("Index", list);
-		}
+            var now = DateTime.Now;
+            var list = await _context.Events
+                .Where(e => e.StartTime <= now && e.EndTime >= now)
+                .OrderBy(e => e.EndTime)
+                .ToListAsync();
+            ViewBag.Mode = "ongoing";
+            return View("Index", list);
+        }
 
         public async Task<IActionResult> Upcoming()
         {
@@ -41,8 +42,8 @@ namespace Zoolirante_Open_Minded.Controllers
             return View("Index", list);
         }
 
-		// GET: Events/Details/5
-		public async Task<IActionResult> Details(int? id)
+        // GET: Events/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
