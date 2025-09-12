@@ -21,6 +21,7 @@ namespace Zoolirante_Open_Minded.Controllers
         // GET: Merchandises
         public async Task<IActionResult> Index(string searchText)
         {
+			ViewData["BannerText"] = "View our merchandises";
 			var q = _context.Merchandises.AsQueryable();
 
 			if (!string.IsNullOrWhiteSpace(searchText))
