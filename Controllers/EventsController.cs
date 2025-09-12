@@ -21,11 +21,28 @@ namespace Zoolirante_Open_Minded.Controllers
         // GET: Events
         public async Task<IActionResult> Index()
         {
-			return View(await _context.Events.ToListAsync());
+			var now = DateTime.Now;
+			var list = await _context.Events
+				.Where(e => e.StartTime <= now && e.EndTime >= now)
+				.OrderBy(e => e.EndTime)
+				.ToListAsync();
+			ViewBag.Mode = "ongoing";
+			return View("Index", list);
+		}
+
+        public async Task<IActionResult> Upcoming()
+        {
+            var now = DateTime.Now;
+            var list = await _context.Events
+                .Where(e => e.StartTime > now)
+                .OrderBy(e => e.StartTime)
+                .ToListAsync();
+            ViewBag.Mode = "upcoming";
+            return View("Index", list);
         }
 
-        // GET: Events/Details/5
-        public async Task<IActionResult> Details(int? id)
+		// GET: Events/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {

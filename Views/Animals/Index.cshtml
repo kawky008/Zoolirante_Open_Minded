@@ -19,9 +19,15 @@
                 <option value="">All Conservation Status</option>
             </select>
         </div>
-
-
-       
+        <div class="col-3">
+            <label id="searchRegion">Region</label>
+            <select id="searchRegion" name="searchRegion" class="form-control" asp-items="ViewBag.regionList">
+                <option value="">All Region</option>
+            </select>
+        </div>
+        <div class="col-1 mt-4">
+            <button class="btn btn-outline-info" type="submit">Search</button>
+        </div>
     </div>
 </form>
 

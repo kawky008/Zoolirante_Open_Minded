@@ -18,14 +18,17 @@ namespace Zoolirante_Open_Minded.Controllers
             _context = context;
         }
 
-        // GET: Merchandises
-        public async Task<IActionResult> Index()
-        {
-			return View(await _context.Merchandises.ToListAsync());
-        }
+		public async Task<IActionResult> Index(string searchText)
+		{
+			var q = _context.Merchandises.AsQueryable();
 
-        // GET: Merchandises/Details/5
-        public async Task<IActionResult> Details(int? id)
+			if (!string.IsNullOrWhiteSpace(searchText))
+				q = q.Where(i => i.Name.StartsWith(searchText));
+			return View(await q.ToListAsync());
+		}
+
+		// GET: Merchandises/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
