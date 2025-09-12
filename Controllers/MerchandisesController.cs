@@ -1,11 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Zoolirante_Open_Minded.Helpers;
 using Zoolirante_Open_Minded.Models;
+using Zoolirante_Open_Minded.ViewModels;
 
 namespace Zoolirante_Open_Minded.Controllers
 {
@@ -46,6 +50,46 @@ namespace Zoolirante_Open_Minded.Controllers
 
             return View(merchandise);
         }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToCart(int id, int qty = 1)
+        {
+            var p = await _context.Merchandises.FirstOrDefaultAsync(x => x.ProductId == id);
+            if (p == null) return NotFound();
+
+            const string CartKey = "CART_V1";
+            var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
+
+            var line = cart.Items.FirstOrDefault(i => i.ProductId == id);
+            if (line == null)
+            {
+                cart.Items.Add(new CartItemVM
+                {
+                    ProductId = p.ProductId,
+                    Name = p.Name,
+                    Price = p.Price,
+                    Qty = Math.Max(1, Math.Min(qty, p.Stock)),
+                    ImageUrl = p.ImageUrl
+                });
+            }
+            else
+            {
+                var max = Math.Max(1, p.Stock);
+                line.Qty = Math.Min(max, line.Qty + Math.Max(1, qty));
+            }
+
+            HttpContext.Session.SetObject(CartKey, cart);
+            TempData["CartMessage"] = $"Added {p.Name} (x{qty})";
+
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrWhiteSpace(referer)) return Redirect(referer);
+            return RedirectToAction(nameof(Index));
+        }
+                                     
+            
 
         // GET: Merchandises/Create
         public IActionResult Create()
@@ -159,3 +203,5 @@ namespace Zoolirante_Open_Minded.Controllers
         }
     }
 }
+
+

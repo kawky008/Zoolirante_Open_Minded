@@ -23,10 +23,10 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
+            @Model.Price.ToString("C")
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
+            @Model.Price.ToString("C")
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Stock)
@@ -47,6 +47,45 @@
             @Html.DisplayFor(model => model.Category)
         </dd>
     </dl>
+
+    @if (Model.Stock <= 0)
+    {
+        <div class="text-danger mt-2">Out of stock</div>
+    }
+    else
+    {
+        <form asp-controller="Merchandises" asp-action="AddToCart" method="post" class="mt-3">
+            <input type="hidden" name="id" value="@Model.ProductId" />
+            <label class="me-2">Qty</label>
+            <input type="number" name="qty" value="1" min="1" max="@Model.Stock"
+                   class="form-control d-inline w-auto" />
+            <button type="submit" class="btn btn-primary ms-2">Add to cart</button>
+            @Html.AntiForgeryToken()
+        </form>
+    }
+
+    <form asp-controller="Merchandises" asp-action="AddToCart" method="post" class="mt-3">
+        <input type="hidden" name="id" value="@Model.ProductId" />
+        <label class="me-2">Qty</label>
+        <input type="number" name="qty" value="1" min="1" max="@Model.Stock"
+               class="form-control d-inline w-auto" />
+        <button type="submit" class="btn btn-primary ms-2">Add to cart</button>
+        @Html.AntiForgeryToken()
+    </form>
+
+    <div class="mt-2">
+        <a class="btn btn-outline-secondary" asp-controller="Cart" asp-action="Index">View Cart</a>
+    </div>
+
+    @if (TempData["CartMessage"] is string msg)
+    {
+        <div class="alert alert-success mt-2">@msg</div>
+    }
+
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.ProductId">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.ProductId">Edit</a> |
