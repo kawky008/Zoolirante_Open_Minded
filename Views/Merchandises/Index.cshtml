@@ -17,6 +17,17 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+
+@if (TempData["CartMessage"] is string pageMsg)
+{
+    <div class="alert alert-success">@pageMsg</div>
+}
+
+<div class="text-end mb-3">
+    <a class="btn btn-outline-secondary" asp-controller="Cart" asp-action="Index">View Cart</a>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -51,7 +62,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @item.Price.ToString("C")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Stock)
@@ -66,6 +77,21 @@
                 <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+
+                @if (item.Stock <= 0)
+                {
+                    <span class="text-danger ms-2">Out of stock</span>
+                }
+                else
+                {
+                    <form asp-controller="Merchandises" asp-action="AddToCart" method="post" class="d-inline ms-2">
+                        <input type="hidden" name="id" value="@item.ProductId" />
+                        <input type="number" name="qty" value="1" min="1" max="@item.Stock"
+                            class="form-control form-control-sm d-inline w-auto" />
+                        <button type="submit" class="btn btn-sm btn-primary">Add to cart</button>
+                        @Html.AntiForgeryToken()
+                    </form>
+                }
             </td>
         </tr>
 }
