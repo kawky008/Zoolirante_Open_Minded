@@ -3,6 +3,20 @@
 @{
     ViewData["Title"] = "Upcoming Events";
 }
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 m-0">Upcoming Events</h1>
+
+    <a href="#eventList" class="btn btn-primary btn-sm">View Upcoming Events</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        There are no upcoming events right now. Please check back later.
+    </div>
+}
+else
+{
 <div id="eventList" class="row g-3">
     @foreach (var e in Model)
     {
