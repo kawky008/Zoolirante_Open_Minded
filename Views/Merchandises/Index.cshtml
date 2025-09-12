@@ -1,10 +1,10 @@
-﻿@model IEnumerable<Zoolirante_Open_Minded.Models.Merchandise>
+@model IEnumerable<Zoolirante_Open_Minded.Models.Merchandise>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Merchandises";
 }
 
-<h1>Index</h1>
+<h1>Merchandises</h1>
 <form method="get" class="row g-2 mb-3">
     <div class="col-4">
         <input name="searchText" value="@ViewBag.SearchText" class="form-control" placeholder="Search Items..." />
@@ -94,6 +94,58 @@
                 }
             </td>
         </tr>
+<style>
+    .card-img-top {
+        height: 180px;
+        object-fit: cover;
+    }asd
+    .text-truncate-2 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+</style>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">No merchandise found.</div>
 }
-    </tbody>
-</table>
+else
+{
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img class="card-img-top" src="@item.ImageUrl" alt="@item.Name" />
+
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start gap-2 mb-1">
+                            <h6 class="card-title mb-0 text-truncate">@item.Name</h6>
+                            @if (!string.IsNullOrEmpty(item.Category))
+                            {
+                                <span class="badge text-bg-light border">@item.Category</span>
+                            }
+                        </div>
+
+                        <p class="card-text small text-muted text-truncate-2 flex-grow-1">
+                            @item.Description
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="fw-bold">$@item.Price.ToString("f2")</span>
+                            <span class="badge text-bg-secondary">Stock: @item.Stock</span>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-transparent border-0">
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.ProductId">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
