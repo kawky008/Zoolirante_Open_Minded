@@ -19,15 +19,27 @@ namespace Zoolirante_Open_Minded.Controllers
         }
 
         // GET: Events
-        public async Task<IActionResult> Index()
+        public IActionResult Index()=> RedirectToAction(nameof(Ongoing));
+        public async Task<IActionResult> Ongoing()
         {
             var now = DateTime.Now;
-            var upcoming = await _context.Events
-                .Where(e => e.StartTime >= now)
+            var list = await _context.Events
+                .Where(e => e.StartTime <= now && e.EndTime >= now)
+                .OrderBy(e => e.EndTime)
+                .ToListAsync();
+            ViewBag.Mode = "ongoing";
+            return View("Index", list);
+        }
+
+        public async Task<IActionResult> Upcoming()
+        {
+            var now = DateTime.Now;
+            var list = await _context.Events
+                .Where(e => e.StartTime > now)
                 .OrderBy(e => e.StartTime)
                 .ToListAsync();
-
-            return View(upcoming);
+            ViewBag.Mode = "upcoming";
+            return View("Index", list);
         }
 
         // GET: Events/Details/5
