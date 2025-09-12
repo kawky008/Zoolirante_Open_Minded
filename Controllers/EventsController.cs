@@ -21,7 +21,6 @@ namespace Zoolirante_Open_Minded.Controllers
         // GET: Events
         public async Task<IActionResult> Index()
         {
-			ViewData["BannerText"] = "Banner for events page";
 			return View(await _context.Events.ToListAsync());
         }
 
