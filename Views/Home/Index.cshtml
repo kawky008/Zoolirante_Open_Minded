@@ -2,7 +2,23 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <a asp-controller="Events" asp-action="Ongoing" class="btn">View Events</a>
+<div class="row h-100 g-4 mb-4">
+    <div class="col-4">
+        <div class="card" style="width: 25rem; height: 10rem;">
+            <p class="card-text">Display list of today's events</p>
+            <p>Able to jump to clicked event</p>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card" style="width: 25rem; height: 10rem;">
+            <p class="card-text">Display list of this week's events</p>
+            <p>Able to jump to clicked event</p>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card" style="width: 25rem; height: 10rem;">
+            <p class="card-text">Display account & membership link</p>
+        </div>
+    </div>
 </div>
+<img src="/images/sample_map.png" style="width:50%; height:auto; display:block; margin:0 auto;" />
