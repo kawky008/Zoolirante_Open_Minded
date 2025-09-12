@@ -18,9 +18,9 @@ namespace Zoolirante_Open_Minded.Controllers
             _context = context;
         }
 
-		// GET: Merchandises
-		public async Task<IActionResult> Index(string searchText)
-		{
+        // GET: Merchandises
+        public async Task<IActionResult> Index(string searchText)
+        {
 			var q = _context.Merchandises.AsQueryable();
 
 			if (!string.IsNullOrWhiteSpace(searchText))
@@ -28,10 +28,10 @@ namespace Zoolirante_Open_Minded.Controllers
 			return View(await q.ToListAsync());
 		}
 
-		// GET: Merchandises/Details/5
-		public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+        // GET: Merchandises/Details/5
+        public async Task<IActionResult> Details(int? id)
+		{
+			if (id == null)
             {
                 return NotFound();
             }
