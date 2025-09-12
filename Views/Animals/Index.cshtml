@@ -4,99 +4,44 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
 <form asp-controller="Animals" asp-action="Index">
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-5">
-            <label id="searchName">Search Animals</label>
             <input class="form-control" type="text" name="searchName" id="searchName" placeholder="Search animal..." value="@ViewBag.searchName" />
         </div>
         <div class="col-3">
-            <label id="searchSpecies">Species</label>
             <select id="searchSpecies" name="searchSpecies" class="form-control" asp-items="ViewBag.speciesList">
                 <option value="">All Species</option>
             </select>
         </div>
         <div class="col-3">
-            <label id="searchConservation">Conservation Status</label>
             <select id="searchConservation" name="searchConservation" class="form-control" asp-items="ViewBag.conservation">
                 <option value="">All Conservation Status</option>
             </select>
         </div>
 
-        <div class="col-1 mt-4">
+        <div class="col-1">
             <button class="btn btn-outline-info" type="submit">Search</button>
         </div>
        
     </div>
 </form>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Species)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Region)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ConservationStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Habitat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ExhibitLocation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Species)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Region)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConservationStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Habitat)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ExhibitLocation)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.AnimalId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AnimalId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AnimalId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<hr />
+
+<div class="row g-4 mx-0">
+    @foreach (var item in Model) {
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100" style="width: 25rem;">
+                <a asp-action="Details" asp-route-id="@item.AnimalId" class="text-decoration-none text-dark d-block h-100">
+                    <img class="card-img-top" src="@item.ImageUrl" alt="@item.Name">
+                    <div class="card-body">
+                        <h5 class="card-title mb-2">@Html.DisplayFor(modelItem => item.Name)</h5>
+                        <p class="card-text mb-1">Species: @Html.DisplayFor(modelItem => item.Species)</p>
+                        <p class="card-text">Conservation Status: @Html.DisplayFor(modelItem => item.ConservationStatus)</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    }
+</div>
