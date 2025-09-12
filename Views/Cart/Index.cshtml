@@ -10,10 +10,15 @@
 }
 else
 {
-    <form asp-action="Clear" method="post" class="mb-2">
-        @Html.AntiForgeryToken()
-        <button class="btn btn-outline-danger btn-sm">Clear cart</button>
-    </form>
+    <div class="d-flex justify-content-between mb-3">
+        <form asp-action="Clear" method="post">
+            @Html.AntiForgeryToken()
+            <button class="btn btn-outline-danger btn-sm">Clear cart</button>
+        </form>
+
+        <a class="btn btn-success" asp-action="Checkout">Checkout</a>
+    </div>
+
 
     <table class="table table-sm align-middle">
         <thead>

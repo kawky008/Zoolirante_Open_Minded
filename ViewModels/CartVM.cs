@@ -8,6 +8,9 @@ namespace Zoolirante_Open_Minded.ViewModels
         public List<CartItemVM> Items { get; set; } = new();
         public int ItemCount => Items.Sum(i => i.Qty);
         public decimal Subtotal => Items.Sum(i => i.LineTotal);
+        public int? PickupLocationId { get; set; }
+        public string? PickupLocationName { get; set; }
     }
 }
+
 
