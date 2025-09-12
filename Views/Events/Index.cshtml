@@ -1,18 +1,20 @@
 ﻿@model IEnumerable<Zoolirante_Open_Minded.Models.Event>
 
 @{
-    ViewData["Title"] = "Upcoming Events";
+    var mode = (ViewBag.Mode as string) ?? "ongoing";
 }
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h4 m-0">Upcoming Events</h1>
-
-    <a href="#eventList" class="btn btn-primary btn-sm">View Upcoming Events</a>
+    <a asp-action="Ongoing" class="btn btn-outline-primary @(mode == "ongoing" ? "active" : "")">View Ongoing</a>
+    <a asp-action="Upcoming" class="btn btn-outline-primary @(mode == "upcoming" ? "active" : "")">View Upcoming</a>
 </div>
 
 @if (!Model.Any())
 {
     <div class="alert alert-info">
-        There are no upcoming events right now. Please check back later.
+        @(mode == "ongoing"
+            ? "There are no ongoing events right now. Click View Upcoming to see whats coming NEXT!!!"
+            : "There are no upcoming events right now. Please check back later.")
+
     </div>
 }
 else
