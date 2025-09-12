@@ -6,7 +6,7 @@
 
 <form asp-controller="Animals" asp-action="Index">
     <div class="row mb-4">
-        <div class="col-5">
+        <div class="col-3">
             <input class="form-control" type="text" name="searchName" id="searchName" placeholder="Search animal..." value="@ViewBag.searchName" />
         </div>
         <div class="col-3">
@@ -19,13 +19,12 @@
                 <option value="">All Conservation Status</option>
             </select>
         </div>
-        <div class="col-3">
-            <label id="searchRegion">Region</label>
+        <div class="col-2">
             <select id="searchRegion" name="searchRegion" class="form-control" asp-items="ViewBag.regionList">
                 <option value="">All Region</option>
             </select>
         </div>
-        <div class="col-1 mt-4">
+        <div class="col-1">
             <button class="btn btn-outline-info" type="submit">Search</button>
         </div>
     </div>
