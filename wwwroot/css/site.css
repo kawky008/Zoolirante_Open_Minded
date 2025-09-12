@@ -61,6 +61,18 @@ html {
     padding: 0 20px; /* prevent text from touching edges on small screens */
 }
 
+.card {
+    border: none; /* remove default border */
+    border-radius: 1rem; /* rounded corners */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* soft shadow */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
 body {
   margin-bottom: 60px;
 }
