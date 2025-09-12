@@ -1,10 +1,10 @@
 @model IEnumerable<Zoolirante_Open_Minded.Models.Merchandise>
 
 @{
-    ViewData["Title"] = "Merchandises";
+    ViewData["Title"] = "Index";
 }
 
-<h1>Merchandises</h1>
+<h1>Index</h1>
 <form method="get" class="row g-2 mb-3">
     <div class="col-4">
         <input name="searchText" value="@ViewBag.SearchText" class="form-control" placeholder="Search Items..." />
@@ -14,86 +14,6 @@
     </div>
 </form>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
-
-@if (TempData["CartMessage"] is string pageMsg)
-{
-    <div class="alert alert-success">@pageMsg</div>
-}
-
-<div class="text-end mb-3">
-    <a class="btn btn-outline-secondary" asp-controller="Cart" asp-action="Index">View Cart</a>
-</div>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Stock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @item.Price.ToString("C")
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Stock)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-
-                @if (item.Stock <= 0)
-                {
-                    <span class="text-danger ms-2">Out of stock</span>
-                }
-                else
-                {
-                    <form asp-controller="Merchandises" asp-action="AddToCart" method="post" class="d-inline ms-2">
-                        <input type="hidden" name="id" value="@item.ProductId" />
-                        <input type="number" name="qty" value="1" min="1" max="@item.Stock"
-                            class="form-control form-control-sm d-inline w-auto" />
-                        <button type="submit" class="btn btn-sm btn-primary">Add to cart</button>
-                        @Html.AntiForgeryToken()
-                    </form>
-                }
-            </td>
-        </tr>
 <style>
     .card-img-top {
         height: 180px;
@@ -134,7 +54,7 @@ else
                         </p>
 
                         <div class="d-flex justify-content-between align-items-center mt-2">
-                            <span class="fw-bold">$@item.Price.ToString("f2")</span>
+                            <span class="fw-bold">@item.Price.ToString("f2")</span>
                             <span class="badge text-bg-secondary">Stock: @item.Stock</span>
                         </div>
                     </div>
@@ -142,6 +62,10 @@ else
                     <div class="card-footer bg-transparent border-0">
                         <div class="d-grid gap-2">
                             <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.ProductId">Details</a>
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.ProductId">Edit</a>
+                                <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                            </div>
                         </div>
                     </div>
                 </div>
