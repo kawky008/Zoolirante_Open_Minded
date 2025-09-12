@@ -22,7 +22,8 @@ namespace Zoolirante_Open_Minded.Controllers
         public IActionResult Index()=> RedirectToAction(nameof(Ongoing));
         public async Task<IActionResult> Ongoing()
         {
-            var now = DateTime.Now;
+			ViewData["BannerText"] = "View our events";
+			var now = DateTime.Now;
             var list = await _context.Events
                 .Where(e => e.StartTime <= now && e.EndTime >= now)
                 .OrderBy(e => e.EndTime)
@@ -33,7 +34,8 @@ namespace Zoolirante_Open_Minded.Controllers
 
         public async Task<IActionResult> Upcoming()
         {
-            var now = DateTime.Now;
+			ViewData["BannerText"] = "Welcome to Zoolirante";
+			var now = DateTime.Now;
             var list = await _context.Events
                 .Where(e => e.StartTime > now)
                 .OrderBy(e => e.StartTime)
