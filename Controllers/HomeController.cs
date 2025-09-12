@@ -6,6 +6,7 @@ namespace Zoolirante_Open_Minded.Controllers
 	{
 		public IActionResult Index()
 		{
+			ViewData["BannerText"] = "Welcome to Zoolirante";
 			return View();
 		}
 	}
