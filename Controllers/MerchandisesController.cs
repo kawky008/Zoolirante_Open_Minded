@@ -21,12 +21,12 @@ namespace Zoolirante_Open_Minded.Controllers
         // GET: Merchandises
         public async Task<IActionResult> Index(string searchText)
         {
-			var q = _context.Merchandises.AsQueryable();
+            var q = _context.Merchandises.AsQueryable();
 
-			if (!string.IsNullOrWhiteSpace(searchText))
-				q = q.Where(i => i.Name.StartsWith(searchText));
-			return View(await q.ToListAsync());
-		}
+            if (!string.IsNullOrWhiteSpace(searchText))
+                q = q.Where(i => i.Name.StartsWith(searchText));
+            return View(await q.ToListAsync());
+        }
 
         // GET: Merchandises/Details/5
         public async Task<IActionResult> Details(int? id)
