@@ -25,26 +25,34 @@
             </select>
         </div>
         <div class="col-1">
-            <button class="btn btn-outline-info" type="submit">Search</button>
+            <button class="btn btn-warning w-100 mb-2" type="submit">Search</button>
         </div>
     </div>
 </form>
 
 <hr />
-
-<div class="row g-4 mx-0">
-    @foreach (var item in Model) {
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="card h-100" style="width: 25rem;">
-                <a asp-action="Details" asp-route-id="@item.AnimalId" class="text-decoration-none text-dark d-block h-100">
-                    <img class="card-img-top" src="@item.ImageUrl" alt="@item.Name">
-                    <div class="card-body">
-                        <h5 class="card-title mb-2">@Html.DisplayFor(modelItem => item.Name)</h5>
-                        <p class="card-text mb-1">Species: @Html.DisplayFor(modelItem => item.Species)</p>
-                        <p class="card-text">Conservation Status: @Html.DisplayFor(modelItem => item.ConservationStatus)</p>
-                    </div>
-                </a>
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">No Animal found.</div>
+}
+else
+{
+    <div class="row g-4 mx-0">
+        @foreach (var item in Model)
+        {
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100" style="width: 25rem;">
+                    <a asp-action="Details" asp-route-id="@item.AnimalId" class="text-decoration-none text-dark d-block h-100">
+                        <img class="card-img-top" src="@item.ImageUrl" alt="@item.Name">
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">@Html.DisplayFor(modelItem => item.Name)</h5>
+                            <p class="card-text mb-1">Species: @Html.DisplayFor(modelItem => item.Species)</p>
+                            <p class="card-text">Conservation Status: @Html.DisplayFor(modelItem => item.ConservationStatus)</p>
+                        </div>
+                    </a>
+                </div>
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+
+}
