@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<Zoolirante_Open_Minded.Models.Merchandise>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Merchandises";
 }
 
-<h1>Index</h1>
+<h1>Merchandises</h1>
 <form method="get" class="row g-2 mb-3">
     <div class="col-4">
         <input name="searchText" value="@ViewBag.SearchText" class="form-control" placeholder="Search Items..." />
@@ -62,10 +62,6 @@ else
                     <div class="card-footer bg-transparent border-0">
                         <div class="d-grid gap-2">
                             <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.ProductId">Details</a>
-                            <div class="btn-group">
-                                <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.ProductId">Edit</a>
-                                <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-                            </div>
                         </div>
                     </div>
                 </div>
