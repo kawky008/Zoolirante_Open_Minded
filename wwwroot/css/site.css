@@ -24,6 +24,7 @@ body {
     justify-content: space-between;
     gap: 8px;
     background: #383737f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* soft shadow */
     border-radius: 10px;
     position: relative;
 }
@@ -70,6 +71,7 @@ button:active {
     color: #e1e1e1;
     background: #383737f0;
     border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* soft shadow */
     padding: 0 12px; /* adjust so text stays centered */
     font-size: 15px; /* same as searchButton */
 }
