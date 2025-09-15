@@ -17,6 +17,56 @@ namespace Zoolirante_Open_Minded.Controllers
         {
             _context = context;
         }
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(User user)
+        {
+            if (string.IsNullOrWhiteSpace(user.Email) || string.IsNullOrWhiteSpace(user.PasswordHash))
+            {
+                if (string.IsNullOrWhiteSpace(user.Email))
+                    ModelState.AddModelError(nameof(user.Email), "Email is required.");
+
+                if (string.IsNullOrWhiteSpace(user.PasswordHash))
+                    ModelState.AddModelError(nameof(user.PasswordHash), "Password is required.");
+
+                return View("Login", user);
+            }
+
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+
+            if (existingUser == null)
+            {
+                ModelState.AddModelError(nameof(user.Email), "Email does not exist in the system.");
+                return View("Login", user);
+            }
+
+            if (existingUser.PasswordHash != user.PasswordHash)
+            {
+                ModelState.AddModelError(nameof(user.PasswordHash), "Incorrect password.");
+                return View("Login", user);
+            }
+
+           
+            HttpContext.Session.SetInt32("UserId", existingUser.UserId);
+            HttpContext.Session.SetString("FullName", existingUser.FullName);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult LogOut()
+        {
+           
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Users");
+        }
+
+
+
 
         // GET: Users
         public async Task<IActionResult> Index()
