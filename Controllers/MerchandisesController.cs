@@ -57,37 +57,47 @@ namespace Zoolirante_Open_Minded.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(int id, int qty = 1)
         {
-            var p = await _context.Merchandises.FirstOrDefaultAsync(x => x.ProductId == id);
-            if (p == null) return NotFound();
+			var p = await _context.Merchandises.FirstOrDefaultAsync(x => x.ProductId == id);
+			if (p == null) return NotFound();
 
-            const string CartKey = "CART_V1";
-            var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
+			var now = DateTime.UtcNow;
+			var uid = HttpContext.Session.GetInt32("UserId");
+			var isMember = uid.HasValue && await _context.Memberships
+				.AnyAsync(m => m.UserId == uid.Value && m.EndDate > now);
 
-            var line = cart.Items.FirstOrDefault(i => i.ProductId == id);
-            if (line == null)
-            {
-                cart.Items.Add(new CartItemVM
-                {
-                    ProductId = p.ProductId,
-                    Name = p.Name,
-                    Price = p.Price,
-                    Qty = Math.Max(1, Math.Min(qty, p.Stock)),
-                    ImageUrl = p.ImageUrl
-                });
-            }
-            else
-            {
-                var max = Math.Max(1, p.Stock);
-                line.Qty = Math.Min(max, line.Qty + Math.Max(1, qty));
-            }
+			const string CartKey = "CART_V1";
+			var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
 
-            HttpContext.Session.SetObject(CartKey, cart);
-            TempData["CartMessage"] = $"Added {p.Name} (x{qty})";
+			var line = cart.Items.FirstOrDefault(i => i.ProductId == id);
+			if (line == null)
+			{
+				cart.Items.Add(new CartItemVM
+				{
+					ProductId = p.ProductId,
+					Name = p.Name,
+					OriginalPrice = p.Price,                                
+					Price = isMember ? p.Price * 0.90m : p.Price,  
+					Qty = Math.Max(1, Math.Min(qty, p.Stock)),
+					ImageUrl = p.ImageUrl
+				});
+			}
+			else
+			{
+				var max = Math.Max(1, p.Stock);
+				line.Qty = Math.Min(max, line.Qty + Math.Max(1, qty));
+				line.OriginalPrice = p.Price; 
+				line.Price = isMember ? line.OriginalPrice * 0.90m : line.OriginalPrice;
+			}
 
-            var referer = Request.Headers["Referer"].ToString();
-            if (!string.IsNullOrWhiteSpace(referer)) return Redirect(referer);
-            return RedirectToAction(nameof(Index));
-        }
+			HttpContext.Session.SetObject(CartKey, cart);
+			TempData["CartMessage"] = isMember
+				? $"Added {p.Name} (x{qty}) — 10% member discount applied"
+				: $"Added {p.Name} (x{qty})";
+
+			var referer = Request.Headers["Referer"].ToString();
+			if (!string.IsNullOrWhiteSpace(referer)) return Redirect(referer);
+			return RedirectToAction(nameof(Index));
+		}
                                      
             
 

@@ -10,7 +10,8 @@ namespace Zoolirante_Open_Minded.ViewModels
         public decimal Subtotal => Items.Sum(i => i.LineTotal);
         public int? PickupLocationId { get; set; }
         public string? PickupLocationName { get; set; }
-    }
+		public decimal TotalSavings => Items.Sum(i => i.LineSavings);
+	}
 }
 
 

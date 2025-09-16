@@ -48,14 +48,32 @@ namespace Zoolirante_Open_Minded.Controllers
             return items;
         }
 
+		[HttpGet]
+		public async Task<IActionResult> Index()
+		{
 
-        public IActionResult Index()
-        {
-            var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
-            return View(cart);
-        }
+			var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
 
-        public async Task<IActionResult> Checkout()
+			var uid = HttpContext.Session.GetInt32("UserId");
+			var isMember = false;
+			if (uid.HasValue)
+			{
+				var now = DateTime.UtcNow;
+				isMember = await _db.Memberships.AnyAsync(m => m.UserId == uid.Value && m.EndDate > now);
+			}
+
+			foreach (var it in cart.Items)
+			{
+				if (it.OriginalPrice <= 0) it.OriginalPrice = it.Price; // fallback item cũ
+				it.Price = isMember ? it.OriginalPrice * 0.90m : it.OriginalPrice;
+			}
+			HttpContext.Session.SetObject(CartKey, cart);
+
+			return View(cart);
+		}
+
+
+		public async Task<IActionResult> Checkout()
         {
             var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
             ViewBag.PickupOptions = await LoadPickupOptionsAsync(); // for the dropdown
