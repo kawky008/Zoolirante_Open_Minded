@@ -1,9 +1,12 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
     background-color: #f7ecd4;
+    margin-bottom: 60px;
 }
 
 @media (min-width: 768px) {
@@ -16,6 +19,12 @@ body {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+
+
+
+
+
+/*****************************       Search functions      *******************************/
 /* From Uiverse.io by OnlyCodeChannel */
 .searchBox {
     display: flex;
@@ -75,7 +84,13 @@ button:active {
     padding: 0 12px; /* adjust so text stays centered */
     font-size: 15px; /* same as searchButton */
 }
+/****************************************************************************************/
 
+
+
+
+
+/*****************************       Favorite Button      *******************************/
 /* From Uiverse.io by barisdogansutcu */
 .favorite-label {
     background-color: #383737f0;
@@ -154,13 +169,12 @@ button:active {
     transform: translate(0px,0%);
     opacity: 1;
 }
+/***************************************************************************************/
 
 
-html {
-  position: relative;
-  min-height: 100%;
-}
 
+
+/*****************************       Navigation Bar      *******************************/
 .navbar-custom {
     background-color: #f7ecd4 !important;
 }
@@ -179,7 +193,14 @@ html {
     text-decoration: underline;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
 }
+/***************************************************************************************/
 
+
+
+
+
+
+/******************************        Banner      *************************************/
 .hero-container {
     position: relative;
     margin: 0 auto;
@@ -204,7 +225,13 @@ html {
     font-weight: bold;
     padding: 0 20px; /* prevent text from touching edges on small screens */
 }
+/**************************************************************************************/
 
+
+
+
+
+/*******************************        Card        ***********************************/
 .card {
     background-color: #383737;
     border: 1rem solid #383737;
@@ -221,7 +248,84 @@ html {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
+/*************************************************************************************/
 
-body {
-  margin-bottom: 60px;
+
+
+
+
+
+/******************************     Popup Window     *********************************/
+/* From Uiverse.io by kennyotsu-monochromia */
+
+/* overlay (full screen background) */
+.popup-overlay {
+    position: fixed;
+    inset: 0; /* shorthand for top:0; right:0; bottom:0; left:0 */
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center; /* center popup horizontally */
+    align-items: center; /* center popup vertically */
+    z-index: 1000;
 }
+
+.popup-window {
+    --black: #000000;
+    --ch-black: #141414;
+    --eer-black: #1b1b1b;
+    --night-rider: #2e2e2e;
+    --white: #ffffff;
+    --af-white: #f3f3f3;
+    --ch-white: #e1e1e1;
+    --tomato: #fa5656;
+    font-family: Helvetica, sans-serif;
+    padding: 25px;
+    display: flex;
+    width: 60%;
+    max-width: 1500px;
+    flex-direction: column;
+    align-items: start;
+    overflow: visible;
+    color: var(--af-white);
+    background-color: var(--black);
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, .1);
+}
+
+/*----heading and description-----*/
+.popup-body {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    text-align: start;
+}
+
+.popup-title {
+    font-size: 2rem;
+    font-weight: 1200;
+}
+
+.popup-description {
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+
+/*-----close button------*/
+.close {
+    position: absolute;
+    right: 10px;
+    top: -70px;
+    color: var(--ch-white);
+    height: 30px;
+    width: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 60px;
+    font-weight: 300;
+    transition: .5s ease;
+}
+/******************************************************************************************/
