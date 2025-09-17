@@ -69,7 +69,7 @@ button:active {
     height: 70px; /* same as searchButton */
     width: 250px;
     color: #e1e1e1;
-    background: #383737f0;
+    background: #383737;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* soft shadow */
     padding: 0 12px; /* adjust so text stays centered */
@@ -78,7 +78,7 @@ button:active {
 
 /* From Uiverse.io by barisdogansutcu */
 .favorite-label {
-    background-color: white;
+    background-color: #383737f0;
     display: flex;
     align-items: center;
     gap: 14px;
@@ -86,7 +86,7 @@ button:active {
     cursor: pointer;
     user-select: none;
     border-radius: 10px;
-    color: black;
+    color: #e1e1e1;
 }
 
 .favorite-input {
@@ -206,10 +206,15 @@ html {
 }
 
 .card {
-    border: none; /* remove default border */
+    background-color: #383737;
+    border: 1rem solid #383737;
     border-radius: 1rem; /* rounded corners */
     box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* soft shadow */
     transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-body {
+    color: #e1e1e1;
 }
 
 .card:hover {
