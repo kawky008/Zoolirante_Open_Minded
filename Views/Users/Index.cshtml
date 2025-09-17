@@ -24,7 +24,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Role)
             </th>
-            <th>Payment Method</th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentMethod)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -50,7 +52,7 @@
                     }
                     else
                     {
-                        @item.PaymentMethod
+                        @Html.DisplayFor(modelItem => item.PaymentMethod)
                     }
                 </td>
             <td>

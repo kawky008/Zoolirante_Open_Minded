@@ -12,7 +12,7 @@
         <select name="paymentMethod" class="form-control">
             @foreach (var opt in (List<string>)ViewBag.PaymentOptions)
             {
-                <option value="@opt"></option>
+                <option value="@opt">@opt</option>
             }
         </select>
     </div>
