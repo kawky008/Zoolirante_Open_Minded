@@ -65,11 +65,42 @@ namespace Zoolirante_Open_Minded.Controllers
             return RedirectToAction("Login", "Users");
         }
 
+		[HttpGet]
+		public async Task<IActionResult> EditPayment()
+		{
+			var uid = HttpContext.Session.GetInt32("UserId");
+			if (uid is null) return RedirectToAction("Login");
+
+			var user = await _context.Users.FindAsync(uid.Value);
+			if (user == null) return NotFound();
+
+			ViewBag.PaymentOptions = new List<string> { "Visa", "MasterCard", "PayPal", "Cash" };
+
+			return View(user);
+		}
+
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> EditPayment(string paymentMethod)
+		{
+			var uid = HttpContext.Session.GetInt32("UserId");
+			if (uid is null) return RedirectToAction("Login");
+
+			var user = await _context.Users.FindAsync(uid.Value);
+			if (user == null) return NotFound();
+
+			user.PaymentMethod = paymentMethod;
+			_context.Update(user);
+			await _context.SaveChangesAsync();
+
+			TempData["Message"] = "Payment method updated.";
+			return RedirectToAction("Index", "Home");
+		}
 
 
 
-        // GET: Users
-        public async Task<IActionResult> Index()
+
+		// GET: Users
+		public async Task<IActionResult> Index()
         {
             return View(await _context.Users.ToListAsync());
         }
