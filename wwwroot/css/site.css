@@ -2,6 +2,10 @@ html {
   font-size: 14px;
 }
 
+body {
+    background-color: #f7ecd4;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -11,6 +15,147 @@ html {
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
+
+/* From Uiverse.io by OnlyCodeChannel */
+.searchBox {
+    display: flex;
+    max-width: 300px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #383737f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* soft shadow */
+    border-radius: 10px;
+    position: relative;
+}
+
+.searchButton {
+    color: white;
+    position: absolute;
+    right: 8px;
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-2, linear-gradient(90deg, #dc9720 0%, #db5312 100%));
+    border: 0;
+    border-radius: 5px;
+    display: inline-block;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+}
+
+/*hover effect*/
+button:hover {
+    color: #fff;
+    background-color: #1A1A1A;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 10px 20px;
+    transform: translateY(-3px);
+}
+
+/*button pressing effect*/
+button:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
+
+.searchInput {
+    border: none;
+    background: none;
+    outline: none;
+    color: #e1e1e1;
+    font-size: 15px;
+    padding: 24px 46px 24px 26px;
+}
+
+.dropdowns {
+    height: 70px; /* same as searchButton */
+    width: 250px;
+    color: #e1e1e1;
+    background: #383737f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* soft shadow */
+    padding: 0 12px; /* adjust so text stays centered */
+    font-size: 15px; /* same as searchButton */
+}
+
+/* From Uiverse.io by barisdogansutcu */
+.favorite-label {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 15px 10px 10px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 10px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    color: black;
+}
+
+.favorite-input {
+    display: none;
+}
+
+.favorite-input:checked + .favorite-label svg {
+    fill: hsl(0deg 100% 50%);
+    stroke: hsl(0deg 100% 50%);
+    animation: heartButton 1s;
+}
+
+@keyframes heartButton {
+    0% {
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(1.3);
+    }
+
+    50% {
+        transform: scale(1);
+    }
+
+    75% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.favorite-input + .favorite-label .action {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+}
+
+.favorite-input + .favorite-label .action span {
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 1;
+    grid-row-end: 1;
+    transition: all .5s;
+}
+
+.favorite-input + .favorite-label .action span.option-1 {
+    transform: translate(0px,0%);
+    opacity: 1;
+}
+
+.favorite-input:checked + .favorite-label .action span.option-1 {
+    transform: translate(0px,-100%);
+    opacity: 0;
+}
+
+.favorite-input + .favorite-label .action span.option-2 {
+    transform: translate(0px,100%);
+    opacity: 0;
+}
+
+.favorite-input:checked + .favorite-label .action span.option-2 {
+    transform: translate(0px,0%);
+    opacity: 1;
+}
+
 
 html {
   position: relative;

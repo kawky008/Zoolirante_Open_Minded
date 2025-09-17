@@ -1,0 +1,15 @@
+﻿@model Zoolirante_Open_Minded.Models.Membership
+@{
+    ViewData["Title"] = "Join Membership";
+}
+<h2>Join Membership (1 Month)</h2>
+
+<form asp-action="JoinConfirm" method="post">
+    <button class="btn btn-primary" type="submit">Confirm Purchase / Renew</button>
+</form>
+
+@if (TempData["Message"] != null)
+{
+    <p class="text-success mt-2">@TempData["Message"]</p>
+}
+

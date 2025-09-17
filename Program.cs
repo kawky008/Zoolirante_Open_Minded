@@ -35,7 +35,7 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddHttpContextAccessor();
 // To AUD
 var au = new CultureInfo("en-AU");
 CultureInfo.DefaultThreadCurrentCulture = au;

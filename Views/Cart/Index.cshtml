@@ -37,7 +37,14 @@ else
                             <div>@it.Name</div>
                         </div>
                     </td>
-                    <td class="text-end">@it.Price.ToString("C")</td>
+                    <td class="text-end">
+                        @it.Price.ToString("C")
+                        @if (it.OriginalPrice > it.Price)
+                        {
+                            <div><s>@it.OriginalPrice.ToString("C")</s></div>
+                            <div class="text-success">Saved @it.LineSavings.ToString("C")</div>
+                        }
+                    </td>
                     <td>
                         <form asp-action="Update" method="post" class="d-flex gap-2">
                             @Html.AntiForgeryToken()
@@ -63,6 +70,14 @@ else
                 <th class="text-end">@Model.Subtotal.ToString("C")</th>
                 <th></th>
             </tr>
+            @if (Model.TotalSavings > 0)
+            {
+                <tr>
+                    <th colspan="3" class="text-end text-success">You saved</th>
+                    <th class="text-end text-success">-@Model.TotalSavings.ToString("C")</th>
+                    <th></th>
+                </tr>
+            }
         </tfoot>
     </table>
 }
