@@ -24,6 +24,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Role)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentMethod)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -42,10 +45,21 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Role)
             </td>
+                <td>
+                    @if (string.IsNullOrEmpty(item.PaymentMethod))
+                    {
+                        <span class="text-muted">Not set</span>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.PaymentMethod)
+                    }
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
+                <a asp-action="EditPayment" asp-route-id="@item.UserId">Change Payment Method</a>
             </td>
         </tr>
 }

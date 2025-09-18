@@ -1,0 +1,15 @@
+﻿@model Zoolirante_Open_Minded.Models.ResetPasswordViewModel
+
+<h2>Reset Your Password</h2>
+<form asp-action="ConfirmReset" method="post">
+    <input type="hidden" asp-for="Email" />
+    <input type="hidden" asp-for="Token" />
+
+    <div class="form-group">
+        <label asp-for="NewPassword"></label>
+        <input asp-for="NewPassword" class="form-control" type="password" />
+        <span asp-validation-for="NewPassword" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3">Reset Password</button>
+</form>

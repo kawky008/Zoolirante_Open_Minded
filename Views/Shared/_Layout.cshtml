@@ -14,7 +14,8 @@
     <title>@ViewData["Title"] - TempProject</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/TempProject.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 <body>
     <header>
@@ -56,6 +57,11 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Memberships" asp-action="Index">
                                     Join Membership
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-controller="FavoriteAnimals" asp-action="Index">
+                                    Favorite Animals
                                 </a>
                             </li>
                         }

@@ -1,7 +1,12 @@
 ﻿@model Zoolirante_Open_Minded.Models.User
 
 
-
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Login" method="post">
@@ -16,8 +21,9 @@
                 <label asp-for="PasswordHash" class="control-label"></label>
                 <input asp-for="PasswordHash" class="form-control" placeholder="Please enter your password"/>
                 <span asp-validation-for="PasswordHash" class="text-danger"></span>
-               
+                
             </div>
+            <a class="text-black-50" asp-controller="Users" asp-action="Reset">Forgot password?</a>
             <div class="form-group mt-3">
                 <button type="submit" class="btn btn-danger">Logon</button>
             </div>
