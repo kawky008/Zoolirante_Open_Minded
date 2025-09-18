@@ -26,7 +26,7 @@
                 <option value="">All Region</option>
             </select>
         </div>
-    
+
         <!-- Stylish search button -->
         <!-- From Uiverse.io by OnlyCodeChannel -->
         <div class="searchBox col-3">
@@ -40,7 +40,7 @@
                                 12.3167 21.2448 11.252 20.8333 10.2587C20.4219 9.2653 19.8188 8.36271 19.0585 7.60242C18.2982 6.84214 17.3956 6.23905 16.4022 5.82759C15.4089 5.41612 14.3442
                                 5.20435 13.269 5.20435C12.1938 5.20435 11.1291 5.41612 10.1358 5.82759C9.1424 6.23905 8.23981 6.84214 7.47953 7.60242C5.94407 9.13789 5.08145 11.2204 5.08145
                                 13.3919C5.08145 15.5634 5.94407 17.6459 7.47953 19.1814C9.01499 20.7168 11.0975 21.5794 13.269 21.5794C15.4405 21.5794 17.523 20.7168 19.0585 19.1814Z"
-                                  stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" shape-rendering="crispEdges"></path>
+                            stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" shape-rendering="crispEdges"></path>
                         </g>
                     </g>
                     <defs>
@@ -89,7 +89,7 @@ else
                 <div class="card h-100 animal-card" data-animal-id="@item.AnimalId" data-habitat="@item.Habitat" data-description="@item.Description">
                     <img class="card-img-top " style="width:100%; height:370px;" src="@item.ImageUrl" alt="@item.Name">
                     <div class="card-body">
-                        <div class="row align-items-center mb-4">
+                        <div class="row align-items-center">
                             <h5 class="col card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
 
                             <!-- if user is logged in -->
@@ -123,9 +123,9 @@ else
                                         </div>
                                     </a>
                                 </div>
-                            }                            
-
+                            }
                         </div>
+                        <hr style="border:2px solid #dc9720;"></hr>
                         <p class="card-text mb-1">Species: @Html.DisplayFor(modelItem => item.Species)</p>
                         <p class="card-text mb-1">Conservation Status: @Html.DisplayFor(modelItem => item.ConservationStatus)</p>
                         <p class="card-text mb-1">Region: @Html.DisplayFor(modelItem => item.Region)</p>
@@ -135,6 +135,7 @@ else
         }
     </div>
 
+    <!-- Popup window for animal details -->
     <div id="animal-popup" class="popup-overlay" style="display:none;">
         <div class="popup-window">
             <div class="popup-body">
@@ -144,7 +145,7 @@ else
                     </div>
                     <div class="col">
                         <span class="close mb-4">&times;</span>
-                        <div class="row align-items-center mb-4">
+                        <div class="row align-items-center mt-4 mb-1">
                             <h3 id="popup-name" class="col popup-title"></h3>
 
                             <!-- Favorite button -->
@@ -163,6 +164,7 @@ else
                             </div>
 
                         </div>
+                        <hr style="border:5px solid #dc9720;"></hr>
                         <div class="popup-details">
                             <p id="popup-species"></p>
                             <p id="popup-conservation"></p>
@@ -207,8 +209,14 @@ else
 
                 // find the favorite checkbox inside this card
                 currentCardFavorite = card.querySelector('.favorite-input');
-                // sync popup state with card
-                popupFavorite.checked = currentCardFavorite.checked;
+
+                // sync popup state with card only if it exists
+                if (currentCardFavorite) {
+                    popupFavorite.checked = currentCardFavorite.checked;
+                } else {
+                    // logged out: always unchecked in popup
+                    popupFavorite.checked = false;
+                }
 
                 popup.style.display = 'flex';
             });
@@ -216,8 +224,14 @@ else
 
         // Sync popup favorite back to card when toggled
         popupFavorite.addEventListener('change', () => {
-            if (currentCardFavorite) {
+            if (currentCardFavorite)
+            {
                 currentCardFavorite.checked = popupFavorite.checked;
+            }
+            else
+            {
+            // redirect to login when logged out
+            window.location.href = '@Url.Action("Login", "Users")';
             }
         });
 
