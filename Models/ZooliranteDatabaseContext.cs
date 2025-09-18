@@ -14,6 +14,7 @@ public partial class ZooliranteDatabaseContext : DbContext
         : base(options)
     {
     }
+    public virtual  DbSet<AnimalFavourite> AnimalFavourites { get; set; }
 
     public virtual DbSet<Animal> Animals { get; set; }
 
