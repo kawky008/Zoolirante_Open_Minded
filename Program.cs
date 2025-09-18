@@ -1,8 +1,8 @@
+using System.Globalization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Zoolirante_Open_Minded.Models;
-using Microsoft.AspNetCore.Http;
-using System.Globalization;
-
+using Zoolirante_Open_Minded.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +13,7 @@ builder.Services.AddDbContext<ZooliranteDatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ZooliranteDatabaseContext") ??
     throw new InvalidOperationException("Connection string 'ZooliranteDatabaseContext' not found.")));
 
+builder.Services.AddScoped<IEmailService, Email>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

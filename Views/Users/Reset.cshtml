@@ -1,0 +1,19 @@
+﻿@model Zoolirante_Open_Minded.Models.User
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <p>Email does not exist in the system</p>
+    </div>
+}
+<form asp-action="Reset" method="post">
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" placeholder="Please enter your email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-danger">Send Reset Link</button>
+    </div>
+</form>

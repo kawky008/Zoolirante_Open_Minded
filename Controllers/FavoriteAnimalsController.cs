@@ -21,16 +21,7 @@ namespace Zoolirante_Open_Minded.Controllers
         // GET: FavoriteAnimals
         public async Task<IActionResult> Index()
         {
-            // Get userId
-            //var userId =
-
-            // Get fav animals
-            //var favoriteAnimals = await _context.[AssociationTableForFavoriteAnimals]
-            //    .Where(f => f.UserId == userId)
-            //    .Select(f => f.Animal)
-            //    .ToListAsync();
-
-            //return View(favoriteAnimals);
+            
 
             return View(await _context.Animals.ToListAsync());
         }
