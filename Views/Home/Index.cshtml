@@ -27,4 +27,43 @@
         </div>
     </div>
 </div>
-<img src="/images/sample_map.png" style="width:50%; height:auto; display:block; margin:0 auto;" />
+
+<!-- Interactive Map using Leaflet.js -->
+<div class="d-flex justify-content-center mb-4">
+    <div class="text-center map-card">
+        <h2 style="color: #d17a09; margin-top:1rem; margin-bottom: 1rem;">Map of the zoo</h2>
+        <div id="map" class="map mx-auto"></div>
+    </div>
+</div>
+
+<script>
+    const map = L.map('map', {crs: L.CRS.Simple, zoomSnap: 0.2, zoomDelta: 0.5, minZoom: -1, maxZoom: 1});
+    const bounds = [[0, 0], [800, 1500]];
+    const image = L.imageOverlay('/images/sample_map.png', bounds).addTo(map);
+    map.fitBounds(bounds);
+
+    // Icon class for Pin
+    var Pin = L.Icon.extend({
+        options: {
+            iconSize:     [50, 45], // size of the icon
+            iconAnchor:   [0, 0], // point of the icon which will correspond to marker's location
+            popupAnchor:  [25, -2] // point from which the popup should open relative to the iconAnchor
+        }
+    })
+
+    var orangePin = new Pin({iconUrl: 'images/orange_pin.png'}),
+        bluePin = new Pin({iconUrl: 'images/blue_pin.png'});
+
+    // display orange pins
+    L.marker([600, 300], {icon: orangePin}).addTo(map).bindPopup("Bear exhibit");
+    L.marker([570, 850], {icon: orangePin}).addTo(map).bindPopup("Savanna exhibit");
+    L.marker([250, 150], {icon: orangePin}).addTo(map).bindPopup("Primate exhibit");
+    L.marker([200, 850], {icon: orangePin}).addTo(map).bindPopup("Bird exhibit");
+
+    // display blue pins
+    L.marker([550, 450], {icon: bluePin}).addTo(map).bindPopup("Rest area");
+    L.marker([200, 1200], {icon: bluePin}).addTo(map).bindPopup("Zoo entrance");
+    L.marker([500, 1100], {icon: bluePin}).addTo(map).bindPopup("Restaurants");
+
+</script>
+
