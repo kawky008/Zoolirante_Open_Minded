@@ -1,6 +1,41 @@
-﻿@{
+﻿@model Zoolirante_Open_Minded.ViewModels.HomeIndexViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
+
+
+<h2>Today's Events</h2>
+@if (Model.EventsToday.Any())
+{
+    <ul>
+        @foreach (var ev in Model.EventsToday)
+        {
+            <li><strong>@ev.Title</strong> — @ev.Location</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No events today.</p>
+}
+
+<h2>Upcoming Events</h2>
+@if (Model.EventsUpcoming.Any())
+{
+    <ul>
+        @foreach (var ev in Model.EventsUpcoming)
+        {
+            <li><strong>@ev.Title</strong> — @ev.Location</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No upcoming events this week.</p>
+}
+
+
+
 
 <div class="row h-100 g-4 mb-4">
     <div class="col-4">
