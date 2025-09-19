@@ -1,13 +1,29 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Zoolirante_Open_Minded.Models;
 using Zoolirante_Open_Minded.Services;
+
 
 namespace Zoolirante_Open_Minded.Controllers
 {
     public class EntranceTicketsController : Controller
     {
+        // Which payment methods are valid per ticket type
+        private static readonly Dictionary<string, string[]> _allowedPaymentsByType =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                ["Adult"] = new[] { "Visa", "MasterCard", "PayPal" },
+                ["Child"] = new[] { "Visa", "MasterCard" },           // PayPal disallowed
+                ["Senior"] = new[] { "Visa", "MasterCard", "PayPal" },
+                ["Concession"] = new[] { "Visa", "MasterCard" }
+            };
+
+        // Fallback for unknown types (no Cash for online)
+        private static readonly string[] _defaultOnlinePayments = new[] { "Visa", "MasterCard", "PayPal" };
+
         private readonly ZooliranteDatabaseContext _context;
         private readonly IEmailService _emailService;
 
@@ -30,6 +46,16 @@ namespace Zoolirante_Open_Minded.Controllers
                 Type = "Adult", 
                 Price = 30m     
             };
+            var user = _context.Users.Find(userId.Value);
+            var allowed = _allowedPaymentsByType.TryGetValue(ticket.Type, out var list)
+                ? list
+                : _defaultOnlinePayments;
+
+            ViewBag.AllowedPayments = allowed;
+            ViewBag.UserPaymentMethod = user?.PaymentMethod;
+            ViewBag.PaymentMethodValid =
+                allowed.Contains(user?.PaymentMethod ?? "", StringComparer.OrdinalIgnoreCase);
+
             return View(ticket);
         }
 
@@ -41,12 +67,34 @@ namespace Zoolirante_Open_Minded.Controllers
            
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
-                return RedirectToAction("Login", "Users"); 
+                return RedirectToAction("Login", "Users");
 
-            ticket.UserId = userId.Value;
+            ticket.UserId = userId.Value; 
 
-            
+            var allowed = _allowedPaymentsByType.TryGetValue(ticket.Type, out var list)
+                ? list
+                : _defaultOnlinePayments;
+
+            var user = await _context.Users.FindAsync(userId.Value);
+            if (user == null) return RedirectToAction("Login", "Users");
+
+            if (!allowed.Contains(user.PaymentMethod ?? "", StringComparer.OrdinalIgnoreCase))
+            {
+                ModelState.AddModelError(string.Empty,
+                    $"Your saved payment method ({user.PaymentMethod ?? "None"}) is not valid for {ticket.Type} tickets. " +
+                    $"Allowed: {string.Join(", ", allowed)}. Please change your payment method.");
+
+                ViewBag.AllowedPayments = allowed;
+                ViewBag.UserPaymentMethod = user.PaymentMethod;
+                ViewBag.PaymentMethodValid = false;
+
+     
                 ticket.Price = ticket.Type == "Child" ? 20m : 30m;
+
+                return View(ticket);
+            }
+
+            ticket.Price = ticket.Type == "Child" ? 20m : 30m;
 
                 
                 ticket.CreatedAt = DateTime.Now;
@@ -58,9 +106,7 @@ namespace Zoolirante_Open_Minded.Controllers
                 await _context.SaveChangesAsync();
 
               
-                
-
-            var user = await _context.Users.FindAsync(userId.Value);
+               
             if (user != null)
             {
                 
@@ -76,6 +122,7 @@ namespace Zoolirante_Open_Minded.Controllers
         {
             var ticket = await _context.EntranceTickets.FindAsync(id);
             if (ticket == null) return NotFound();
+
 
             return View(ticket);
         }

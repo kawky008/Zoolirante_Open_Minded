@@ -9,6 +9,13 @@
     
 }
 
+@{
+    
+    var allowed = ViewBag.AllowedPayments as string[] ?? new[] { "Visa", "MasterCard", "PayPal" };
+    var userPaymentMethod = ViewBag.UserPaymentMethod as string ?? "";
+    bool paymentMethodValid = (ViewBag.PaymentMethodValid as bool?) ?? true;
+}
+
 <h2>Buy Entrance Ticket</h2>
 
 <p>Logged in as: <strong>@fullName</strong></p>
@@ -23,6 +30,39 @@
             <option value="Adult" selected>Adult ($30)</option>
             <option value="Child">Child ($20)</option>
         </select>
+
+        <div class="mt-2">
+            <small class="text-muted">Allowed payment methods for this ticket:</small>
+            <div class="mt-1" id="allowedBadges">
+                @foreach (var p in allowed)
+                {
+                    <span class="badge rounded-pill bg-light text-dark border me-1">@p</span>
+                }
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(userPaymentMethod))
+        {
+            <div class="mt-2">
+                <small>
+                    Using your saved method:
+                    <span class="badge @(paymentMethodValid ? "bg-success" : "bg-warning text-dark")">
+                        @userPaymentMethod
+                    </span>
+                </small>
+
+                @if (!paymentMethodValid)
+                {
+                    <div class="alert alert-warning mt-2 mb-0 p-2">
+                        Your saved payment method isn’t valid for the selected ticket.
+                        <a asp-controller="Users"
+                           asp-action="EditPayment"
+                           class="btn btn-sm btn-outline-secondary ms-2">Change payment method</a>
+                    </div>
+                }
+            </div>
+        }
+
         <span asp-validation-for="Type" class="text-danger"></span>
     </div>
     <input asp-for="Details" hidden />
