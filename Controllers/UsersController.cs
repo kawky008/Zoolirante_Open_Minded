@@ -55,7 +55,7 @@ namespace Zoolirante_Open_Minded.Controllers
             return RedirectToAction("Login");
         }
 
-        // GET: Confirm reset page
+      
         [HttpGet]
         public async Task<IActionResult> ConfirmReset(string token, string email)
         {
@@ -70,7 +70,7 @@ namespace Zoolirante_Open_Minded.Controllers
             return View(new ResetPasswordViewModel { Email = email, Token = token });
         }
 
-        // POST: Update password
+        
         [HttpPost]
         public async Task<IActionResult> ConfirmReset(ResetPasswordViewModel model)
         {
@@ -90,11 +90,11 @@ namespace Zoolirante_Open_Minded.Controllers
             return RedirectToAction("Login");
         }
 
-        // GET: Login page
+       
         [HttpGet]
         public IActionResult Login() => View();
 
-        // POST: Login
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(User model)
@@ -260,14 +260,26 @@ namespace Zoolirante_Open_Minded.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users
+                                     .Include(u => u.Memberships) 
+                                     .FirstOrDefaultAsync(u => u.UserId == id);
+
             if (user != null)
             {
+                // Remove related memberships first
+                if (user.Memberships != null && user.Memberships.Any())
+                {
+                    _context.Memberships.RemoveRange(user.Memberships);
+                }
+
+                // Remove user
                 _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
             }
+
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool UserExists(int id) => _context.Users.Any(u => u.UserId == id);
     }

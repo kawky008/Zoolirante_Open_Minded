@@ -1,0 +1,21 @@
+﻿@model Zoolirante_Open_Minded.Models.EntranceTicket
+
+<h2>Ticket Confirmation</h2>
+
+<p>Hi @Model.User.FullName,</p>
+
+<p>Your ticket has been successfully purchased! A confirmation email has been sent to <strong>@Model.User.Email</strong>.</p>
+
+<hr />
+
+<h4>Ticket Details:</h4>
+<ul>
+    <li><strong>Ticket ID:</strong> @Model.TicketId</li>
+    <li><strong>Type:</strong> @Model.Type</li>
+    <li><strong>Price:</strong> $@Model.Price</li>
+    <li><strong>Issued Date:</strong> @Model.IssuedDate.ToShortDateString()</li>
+    <li><strong>Expiry Date:</strong> @Model.ExpiredDate.ToShortDateString()</li>
+</ul>
+
+<a asp-action="Buy" class="btn btn-primary">Buy Another Ticket</a>
+<a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Go to Home</a>
