@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 using Zoolirante_Open_Minded.Models;
 using Zoolirante_Open_Minded.Services;
@@ -45,7 +47,7 @@ namespace Zoolirante_Open_Minded.Controllers
                 UserId = userId.Value,
                 Type = "Adult", 
                 Price = 30m     
-            };
+          
             var user = _context.Users.Find(userId.Value);
             var allowed = _allowedPaymentsByType.TryGetValue(ticket.Type, out var list)
                 ? list
@@ -57,6 +59,8 @@ namespace Zoolirante_Open_Minded.Controllers
                 allowed.Contains(user?.PaymentMethod ?? "", StringComparer.OrdinalIgnoreCase);
 
             return View(ticket);
+			return View(ticket);
+      
         }
 
 
@@ -70,6 +74,7 @@ namespace Zoolirante_Open_Minded.Controllers
                 return RedirectToAction("Login", "Users");
 
             ticket.UserId = userId.Value; 
+
 
             var allowed = _allowedPaymentsByType.TryGetValue(ticket.Type, out var list)
                 ? list
@@ -98,11 +103,26 @@ namespace Zoolirante_Open_Minded.Controllers
 
                 
                 ticket.CreatedAt = DateTime.Now;
+
+
+			ticket.Price = ticket.Type == "Child" ? 20m : 30m;
+
+
+			ticket.CreatedAt = DateTime.Now;
+
                 ticket.ExpiredAt = DateTime.Now.AddMonths(1);
                 ticket.Details = "Ticket purchased online";
 
+			var isMember = await _context.Memberships
+		.AnyAsync(m => m.UserId == userId.Value && m.EndDate >= DateTime.UtcNow);
+			if (isMember)
+			{
+				ticket.Price = Math.Round(ticket.Price * 0.80m, 2);
+				ticket.Details += " (20% member discount applied)";
+			}
 
-                _context.EntranceTickets.Add(ticket);
+
+			_context.EntranceTickets.Add(ticket);
                 await _context.SaveChangesAsync();
 
               
@@ -126,5 +146,20 @@ namespace Zoolirante_Open_Minded.Controllers
 
             return View(ticket);
         }
-    }
+
+		[HttpGet]
+		public async Task<IActionResult> History()
+		{
+			var userId = HttpContext.Session.GetInt32("UserId");
+			if (userId is null) return RedirectToAction("Login", "Users");
+
+			var visits = await _context.EntranceTickets
+				.Where(t => t.UserId == userId.Value)
+				.OrderByDescending(t => t.CreatedAt) 
+				.ToListAsync();
+
+			return View(visits); 
+		}
+
+	}
 }
