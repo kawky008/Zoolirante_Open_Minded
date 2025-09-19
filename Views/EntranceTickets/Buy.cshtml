@@ -1,0 +1,16 @@
+﻿@model Zoolirante_Open_Minded.Models.EntranceTicket
+
+<h2>Buy Entrance Ticket</h2>
+
+<form asp-action="Buy" method="post">
+    <div class="form-group">
+        <label asp-for="Type"></label>
+        <select asp-for="Type" class="form-control">
+            <option value="Adult">Adult</option>
+            <option value="Child">Child</option>
+        </select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Buy Ticket</button>
+</form>

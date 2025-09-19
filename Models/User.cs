@@ -32,5 +32,6 @@ namespace Zoolirante_Open_Minded.Models
         public string? PaymentMethod { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+        public ICollection<Membership> Memberships { get; set; } = new List<Membership>();
     }
 }
