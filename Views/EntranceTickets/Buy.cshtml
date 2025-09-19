@@ -1,16 +1,32 @@
 ﻿@model Zoolirante_Open_Minded.Models.EntranceTicket
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
+    var fullName = HttpContextAccessor.HttpContext.Session.GetString("FullName") ?? "Guest";
+
+    
+    
+}
 
 <h2>Buy Entrance Ticket</h2>
 
+<p>Logged in as: <strong>@fullName</strong></p>
+
 <form asp-action="Buy" method="post">
+    
+    <input type="hidden" asp-for="UserId" value="@userId" />
+
     <div class="form-group">
-        <label asp-for="Type"></label>
+        <label asp-for="Type">Ticket Type</label>
         <select asp-for="Type" class="form-control">
-            <option value="Adult">Adult</option>
-            <option value="Child">Child</option>
+            <option value="Adult" selected>Adult ($30)</option>
+            <option value="Child">Child ($20)</option>
         </select>
         <span asp-validation-for="Type" class="text-danger"></span>
     </div>
+    <input asp-for="Details" hidden />
+   
 
     <button type="submit" class="btn btn-primary">Buy Ticket</button>
 </form>

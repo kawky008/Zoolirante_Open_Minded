@@ -8,21 +8,19 @@ namespace Zoolirante_Open_Minded.Models
         [Key]
         public int TicketId { get; set; }
 
-        [Required]
+        
         public int UserId { get; set; }
 
-        [Required]
+        
         public string Type { get; set; } 
-
-        [Required]
-        [Column(TypeName = "decimal(10,2)")]
+        
         public decimal Price { get; set; }
 
-        public DateTime IssuedDate { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public DateTime ExpiredDate { get; set; } = DateTime.Now.AddMonths(1);
+        public DateTime ExpiredAt { get; set; } = DateTime.Now.AddMonths(1);
 
-        
+        public string Details { get; set; }
         public User User { get; set; }
     }
 }
