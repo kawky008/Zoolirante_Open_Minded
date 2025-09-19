@@ -55,7 +55,7 @@ namespace Zoolirante_Open_Minded.Controllers
                 ticket.Details = "Ticket purchased online";
 
 			var isMember = await _context.Memberships
-		.AnyAsync(m => m.UserId == userId.Value && m.EndDate > DateTime.UtcNow);
+		.AnyAsync(m => m.UserId == userId.Value && m.EndDate >= DateTime.UtcNow);
 			if (isMember)
 			{
 				ticket.Price = Math.Round(ticket.Price * 0.80m, 2);
