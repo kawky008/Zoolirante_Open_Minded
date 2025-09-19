@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Zoolirante_Open_Minded.Models;
 
 namespace Zoolirante_Open_Minded.Models;
 
@@ -14,6 +15,8 @@ public partial class ZooliranteDatabaseContext : DbContext
         : base(options)
     {
     }
+    public virtual DbSet<EntranceTicket> EntranceTickets { get; set; }
+    
     public virtual  DbSet<AnimalFavourite> AnimalFavourites { get; set; }
 
     public virtual DbSet<Animal> Animals { get; set; }
@@ -169,4 +172,6 @@ public partial class ZooliranteDatabaseContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+public DbSet<Zoolirante_Open_Minded.Models.EntranceTicket> EntranceTicket { get; set; } = default!;
 }
