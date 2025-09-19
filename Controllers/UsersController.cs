@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Zoolirante_Open_Minded.Models;
 using Zoolirante_Open_Minded.Services;
+using static Zoolirante_Open_Minded.Controllers.UsersController;
 
 namespace Zoolirante_Open_Minded.Controllers
 {
@@ -14,11 +15,14 @@ namespace Zoolirante_Open_Minded.Controllers
         private readonly ZooliranteDatabaseContext _context;
         private readonly IEmailService _emailService;
 
+       
+
         public UsersController(ZooliranteDatabaseContext context, IEmailService emailService)
         {
             _context = context;
             _emailService = emailService;
         }
+       
 
         // GET: Reset password
         [HttpGet]
@@ -284,3 +288,4 @@ namespace Zoolirante_Open_Minded.Controllers
         private bool UserExists(int id) => _context.Users.Any(u => u.UserId == id);
     }
 }
+
