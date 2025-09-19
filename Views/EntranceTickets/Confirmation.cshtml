@@ -13,8 +13,8 @@
     <li><strong>Ticket ID:</strong> @Model.TicketId</li>
     <li><strong>Type:</strong> @Model.Type</li>
     <li><strong>Price:</strong> $@Model.Price</li>
-    <li><strong>Issued Date:</strong> @Model.IssuedDate.ToShortDateString()</li>
-    <li><strong>Expiry Date:</strong> @Model.ExpiredDate.ToShortDateString()</li>
+    <li><strong>Issued Date:</strong> @Model.CreatedAt.ToShortDateString()</li>
+    <li><strong>Expiry Date:</strong> @Model.ExpiredAt.ToShortDateString()</li>
 </ul>
 
 <a asp-action="Buy" class="btn btn-primary">Buy Another Ticket</a>

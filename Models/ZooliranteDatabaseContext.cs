@@ -173,5 +173,4 @@ public partial class ZooliranteDatabaseContext : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
-public DbSet<Zoolirante_Open_Minded.Models.EntranceTicket> EntranceTicket { get; set; } = default!;
 }
