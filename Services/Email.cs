@@ -47,8 +47,8 @@ namespace Zoolirante_Open_Minded.Services
 <ul>
     <li><strong>Type:</strong> {ticket.Type}</li>
     <li><strong>Price:</strong> ${ticket.Price}</li>
-    <li><strong>Issued:</strong> {ticket.IssuedDate:dd/MM/yyyy}</li>
-    <li><strong>Expires:</strong> {ticket.ExpiredDate:dd/MM/yyyy}</li>
+    <li><strong>Issued:</strong> {ticket.CreatedAt:dd/MM/yyyy}</li>
+    <li><strong>Expires:</strong> {ticket.ExpiredAt:dd/MM/yyyy}</li>
 </ul>
 <p>Thank you for visiting <b>Zoolirante Open-Minded</b>!</p>
 ";
