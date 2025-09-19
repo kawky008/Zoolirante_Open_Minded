@@ -64,7 +64,7 @@ namespace Zoolirante_Open_Minded.Controllers
 
 			foreach (var it in cart.Items)
 			{
-				if (it.OriginalPrice <= 0) it.OriginalPrice = it.Price; // fallback item cũ
+				if (it.OriginalPrice <= 0) it.OriginalPrice = it.Price;
 				it.Price = isMember ? it.OriginalPrice * 0.90m : it.OriginalPrice;
 			}
 			HttpContext.Session.SetObject(CartKey, cart);

@@ -68,7 +68,7 @@ namespace Zoolirante_Open_Minded.Controllers
 
 			if (actives.Count > 0)
 			{
-				foreach (var m in actives) m.EndDate = now.AddSeconds(-1); 
+				foreach (var m in actives) m.EndDate = now.AddDays(-1); 
 				_context.UpdateRange(actives);
 				await _context.SaveChangesAsync();
 			}
