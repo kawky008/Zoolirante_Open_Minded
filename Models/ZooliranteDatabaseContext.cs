@@ -17,7 +17,7 @@ public partial class ZooliranteDatabaseContext : DbContext
     }
     public virtual DbSet<EntranceTicket> EntranceTickets { get; set; }
     
-    public virtual  DbSet<AnimalFavourite> AnimalFavourites { get; set; }
+    public virtual  DbSet<AnimalFavourite> AnimalFavourite { get; set; }
 
     public virtual DbSet<Animal> Animals { get; set; }
 
