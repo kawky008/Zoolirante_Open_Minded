@@ -1,4 +1,4 @@
-﻿@model Zoolirante_Open_Minded.Models.EntranceTicket
+@model Zoolirante_Open_Minded.Models.EntranceTicket
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
@@ -8,126 +8,152 @@
 }
 
 <style>
-    /* Orange panel with dark text for contrast */
-    .visit-panel {
-        background: #fff3cd; /* light orange */
-        border: 1px solid #ffc107;
-        border-radius: 12px;
-    }
-
-        .visit-panel .card-header {
-            background: #ffe69c;
-            border-bottom: 1px solid #ffc107;
-            color: #111827; /* dark text */
-            font-weight: 700;
-        }
-
-        .visit-panel .card-body,
-        .visit-panel label,
-        .visit-panel .form-control,
-        .visit-panel .form-select {
-            color: #111827;
-        }
+  .visit-panel {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 12px;
+  }
+  .visit-panel .card-header {
+    background: #ffe69c;
+    border-bottom: 1px solid #ffc107;
+    color: #111827;
+    font-weight: 700;
+  }
+  .visit-panel .card-body,
+  .visit-panel label,
+  .visit-panel .form-control,
+  .visit-panel .form-select { color: #111827; }
 </style>
 
 <h2 class="mb-3">Buy Entrance Ticket</h2>
 <p class="mb-2">Logged in as: <strong>@fullName</strong></p>
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
-@if (TempData["Info"] != null)
-{
-    <div class="alert alert-info">@TempData["Info"]</div>
-}
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">@TempData["Success"]</div>
-}
+@if (TempData["Error"] != null)   { <div class="alert alert-danger">@TempData["Error"]</div> }
+@if (TempData["Info"] != null)    { <div class="alert alert-info">@TempData["Info"]</div> }
+@if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
 
-<!-- Book / Cancel UI (posts to SaveVisitTime) -->
+<!-- Book / Cancel UI -->
 <div class="card visit-panel shadow-sm mb-4">
-    <div class="card-header">Choose your visit time</div>
-    <div class="card-body">
-        <form id="visitForm" asp-action="SaveVisitTime" method="post" class="row g-2 align-items-end">
-            @Html.AntiForgeryToken()
+  <div class="card-header">Choose your visit time</div>
+  <div class="card-body">
+    <form id="visitForm" asp-action="SaveVisitTime" method="post" class="row g-2 align-items-end">
+      @Html.AntiForgeryToken()
 
-            <div class="col-md-4">
-                <label class="form-label">Date</label>
-                <input type="date"
-                       name="date"
-                       class="form-control"
-                       value="@DateTime.Today.ToString("yyyy-MM-dd")"
-                       required />
-            </div>
+      <div class="col-md-4">
+        <label class="form-label">Date</label>
+        <input type="date" name="date" class="form-control"
+               value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+      </div>
 
-            <div class="col-md-4">
-                <label class="form-label">Time range</label>
-                <select name="range" class="form-select">
-                    <option>09:00-11:00</option>
-                    <option>11:00-13:00</option>
-                    <option>13:00-15:00</option>
-                    <option>15:00-17:00</option>
-                </select>
-            </div>
+      <div class="col-md-4">
+        <label class="form-label">Time range</label>
+        <select name="range" class="form-select">
+          <option>09:00-11:00</option>
+          <option>11:00-13:00</option>
+          <option>13:00-15:00</option>
+          <option>15:00-17:00</option>
+        </select>
+      </div>
 
-            <div class="col-md-4 d-flex gap-2">
-                <button type="submit" class="btn btn-success flex-fill">Book</button>
-                <button type="button" id="cancelVisitBtn" class="btn btn-outline-danger flex-fill">Cancel</button>
-            </div>
-        </form>
+      <div class="col-md-4 d-flex gap-2">
+        <button type="submit" class="btn btn-success flex-fill">Book</button>
+        <button type="button" id="cancelVisitBtn" class="btn btn-outline-danger flex-fill">Cancel</button>
+      </div>
+    </form>
 
-        <small class="text-muted d-block mt-2">
-            Booking saves your chosen time; payment is handled below.
-        </small>
+    <small class="text-muted d-block mt-2">
+      Booking saves your chosen time; payment is handled below.
+    </small>
 
-        <div id="visitAlertArea" class="mt-2"></div>
-    </div>
+    <div id="visitAlertArea" class="mt-2"></div>
+  </div>
 </div>
 
-<!-- Purchase form (matches your master branch) -->
+<!-- Purchase form (posts to POST Buy) -->
 <form asp-action="Buy" method="post" class="mt-3">
-    @Html.AntiForgeryToken()
+  @Html.AntiForgeryToken()
 
-    <input type="hidden" asp-for="UserId" value="@userId" />
+  <input type="hidden" asp-for="UserId" value="@userId" />
 
-    <div class="mb-3">
-        <label asp-for="Type" class="form-label">Ticket Type</label>
-        <select asp-for="Type" class="form-control">
-            <option value="Adult" selected>Adult ($30)</option>
-            <option value="Child">Child ($20)</option>
-        </select>
-        <span asp-validation-for="Type" class="text-danger"></span>
-    </div>
+  <div class="mb-3">
+    <label asp-for="Type" class="form-label">Ticket Type</label>
+    <select asp-for="Type" class="form-control">
+      <option value="Adult" selected>Adult ($30)</option>
+      <option value="Child">Child ($20)</option>
+    </select>
+    <span asp-validation-for="Type" class="text-danger"></span>
+  </div>
 
-    <input asp-for="Details" type="hidden" />
+  <!-- JS fills this with: "Visit yyyy/MM/dd HH:mm-HH:mm" -->
+  <input asp-for="Details" type="hidden" />
 
-    <button type="submit" class="btn btn-primary">Buy Ticket</button>
+  <button type="submit" class="btn btn-primary">Buy Ticket</button>
 </form>
 
 <script>
-    // UI-only cancel: clear inputs and show a friendly message
-    document.getElementById('cancelVisitBtn')?.addEventListener('click', function () {
-      const form = document.getElementById('visitForm');
-      if (!form) return;
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('visitForm');
+  const cancelBtn = document.getElementById('cancelVisitBtn');
+  const area = document.getElementById('visitAlertArea');
+  const detailsInput = document.querySelector('input[name="Details"]');
 
-      form.reset();
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // UI feedback only
 
-      const dateInput = form.querySelector('input[name="date"]');
-      if (dateInput && !dateInput.value) {
-        const today = new Date().toISOString().substring(0, 10);
-        dateInput.value = today;
+      const date  = form.querySelector('input[name="date"]')?.value || new Date().toISOString().slice(0,10);
+      const range = form.querySelector('select[name="range"]')?.value || '';
+
+      if (detailsInput) {
+        const niceDate = date.replace(/-/g, '/');
+        detailsInput.value = `Visit ${niceDate} ${range}`;
       }
 
-      const area = document.getElementById('visitAlertArea');
+      const bookBtn = form.querySelector('button[type="submit"]');
+      if (bookBtn) {
+        bookBtn.disabled = true;
+        bookBtn.classList.remove('btn-success');
+        bookBtn.classList.add('btn-secondary');
+        bookBtn.textContent = 'Booked ✓';
+      }
+
       if (area) {
-        area.innerHTML =
-          '<div class="alert alert-secondary alert-dismissible fade show" role="alert">' +
-            'Selection cleared.' +
-            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
-          '</div>';
+        area.innerHTML = `
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Booked successfully for <strong>${date}</strong> <strong>${range}</strong>.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`;
       }
     });
-</script>
+  }
 
+  cancelBtn?.addEventListener('click', () => {
+    if (!form) return;
+    form.reset();
+
+    const dateInput = form.querySelector('input[name="date"]');
+    if (dateInput && !dateInput.value) {
+      const today = new Date().toISOString().substring(0, 10);
+      dateInput.value = today;
+    }
+
+    if (detailsInput) detailsInput.value = '';
+
+    const bookBtn = form.querySelector('button[type="submit"]');
+    if (bookBtn) {
+      bookBtn.disabled = false;
+      bookBtn.classList.remove('btn-secondary');
+      bookBtn.classList.add('btn-success');
+      bookBtn.textContent = 'Book';
+    }
+
+    if (area) {
+      area.innerHTML =
+        '<div class="alert alert-secondary alert-dismissible fade show" role="alert">' +
+          'Selection cleared.' +
+          '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+        '</div>';
+    }
+  });
+});
+</script>
