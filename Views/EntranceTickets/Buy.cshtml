@@ -5,9 +5,9 @@
 }
 
 <style>
-    /* Orange panel with dark text for contrast */
+    
     .visit-panel {
-        background: #fff3cd; /* light orange */
+        background: #fff3cd; /
         border: 1px solid #ffc107;
         border-radius: 12px;
     }
@@ -15,7 +15,7 @@
         .visit-panel .card-header {
             background: #ffe69c;
             border-bottom: 1px solid #ffc107;
-            color: #111827; /* dark text */
+            color: #111827; 
             font-weight: 700;
         }
 
@@ -42,7 +42,7 @@
     <div class="alert alert-success">@TempData["Success"]</div>
 }
 
-<!-- visit time panel (UI only) -->
+
 <div class="card visit-panel shadow-sm mb-4">
     <div class="card-header">Choose your visit time</div>
     <div class="card-body">
@@ -69,10 +69,10 @@
             </div>
 
             <div class="col-md-4 d-flex gap-2">
-                <!-- BOOK (submits form, same as your current SaveVisitTime) -->
+            
                 <button type="submit" class="btn btn-success flex-fill">Book</button>
 
-                <!-- CANCEL (UI-only: resets fields, no backend call) -->
+                
                 <button type="button" id="cancelVisitBtn" class="btn btn-outline-danger flex-fill">Cancel</button>
             </div>
         </form>
@@ -81,12 +81,12 @@
             Booking saves your chosen time; payment is handled below.
         </small>
 
-        <!-- placeholder alert area for the Cancel button -->
+        
         <div id="visitAlertArea" class="mt-2"></div>
     </div>
 </div>
 
-<!-- ticket purchase (unchanged; requires your POST Buy action if you use it) -->
+
 <form asp-action="Buy" method="post" class="row g-3">
     @Html.AntiForgeryToken()
 
@@ -105,22 +105,22 @@
 </form>
 
 <script>
-    // UI-only cancel: clear inputs and show a friendly message
+    
     document.getElementById('cancelVisitBtn')?.addEventListener('click', function () {
       const form = document.getElementById('visitForm');
       if (!form) return;
 
-      // reset fields
+      
       form.reset();
 
-      // restore today's date after reset (optional)
+     
       const dateInput = form.querySelector('input[name="date"]');
       if (dateInput && !dateInput.value) {
         const today = new Date().toISOString().substring(0, 10);
         dateInput.value = today;
       }
 
-      // show an alert (no backend call)
+      
       const area = document.getElementById('visitAlertArea');
       if (area) {
         area.innerHTML =
