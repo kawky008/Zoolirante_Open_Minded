@@ -188,8 +188,8 @@ namespace Zoolirante_Open_Minded.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(User user)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 // Hash password before saving
                 if (!string.IsNullOrEmpty(user.PasswordHash))
                     user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
@@ -198,8 +198,8 @@ namespace Zoolirante_Open_Minded.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
-        }
+           // return View(user);
+        //}
 
         // GET: Edit user
         public async Task<IActionResult> Edit(int? id)

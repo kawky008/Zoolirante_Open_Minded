@@ -1,5 +1,6 @@
 ﻿@model Zoolirante_Open_Minded.ViewModels.CartVM
 @using Microsoft.AspNetCore.Mvc.Rendering
+@inject IHttpContextAccessor HttpContextAccessor
 @{
     ViewData["Title"] = "Checkout";
     var options = ViewBag.PickupOptions as IEnumerable<SelectListItem> ?? Enumerable.Empty<SelectListItem>();
@@ -69,6 +70,11 @@
 <div class="d-flex gap-2">
     <a class="btn btn-outline-secondary" asp-action="Index">Back to Cart</a>
     @* Placeholder submit; payment is out of scope *@
-    <button class="btn btn-success" disabled>Place Order (next sprint)</button>
+
+    @if (Context.Session.GetInt32("UserId") != null)
+    {
+        <button class="btn btn-success" type="submit">Placeorder</button>
+    }
+    <button class="btn btn-success">PLease login to purchase merchandise</button>
 </div>
 
