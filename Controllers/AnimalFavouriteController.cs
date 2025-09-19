@@ -14,9 +14,9 @@ namespace Zoolirante_Open_Minded.Controllers
         }
 
         
-        public async Task<IActionResult> UserFavourites(int userId)
+        public async Task<IActionResult> UserFavorites(int userId)
         {
-            var favourites = await _context.AnimalFavourites
+            var favourites = await _context.AnimalFavourite
                 .Include(f => f.Animal)
                 .Where(f => f.UserId == userId)
                 .ToListAsync();
@@ -28,12 +28,12 @@ namespace Zoolirante_Open_Minded.Controllers
         [HttpPost]
         public async Task<IActionResult> AddFavourite(int userId, int animalId)
         {
-            var exists = await _context.AnimalFavourites
+            var exists = await _context.AnimalFavourite
                 .AnyAsync(f => f.UserId == userId && f.AnimalId == animalId);
 
             if (!exists)
             {
-                _context.AnimalFavourites.Add(new AnimalFavourite
+                _context.AnimalFavourite.Add(new AnimalFavourite
                 {
                     UserId = userId,
                     AnimalId = animalId
@@ -48,12 +48,12 @@ namespace Zoolirante_Open_Minded.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveFavourite(int userId, int animalId)
         {
-            var favourite = await _context.AnimalFavourites
+            var favourite = await _context.AnimalFavourite
                 .FirstOrDefaultAsync(f => f.UserId == userId && f.AnimalId == animalId);
 
             if (favourite != null)
             {
-                _context.AnimalFavourites.Remove(favourite);
+                _context.AnimalFavourite.Remove(favourite);
                 await _context.SaveChangesAsync();
             }
 
