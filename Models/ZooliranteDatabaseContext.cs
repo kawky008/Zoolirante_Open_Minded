@@ -109,7 +109,10 @@ public partial class ZooliranteDatabaseContext : DbContext
             entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCFD539484F");
 
             entity.Property(e => e.OrderDate).HasDefaultValueSql("(sysdatetime())");
-            entity.Property(e => e.PickupWindow).HasMaxLength(50);
+            
+            entity.Property(e => e.Items)
+                    .HasColumnType("varchar(max)")
+                    .IsRequired(false);
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasDefaultValue("Pending");

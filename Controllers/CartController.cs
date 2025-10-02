@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Zoolirante_Open_Minded.ViewModels;
 using Zoolirante_Open_Minded.Helpers;
-using Zoolirante_Open_Minded.Models;   
+using Zoolirante_Open_Minded.Models;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;   
-using Microsoft.EntityFrameworkCore;         
-using System.Data;                           
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 
 namespace Zoolirante_Open_Minded.Controllers
@@ -13,7 +13,7 @@ namespace Zoolirante_Open_Minded.Controllers
     public class CartController : Controller
     {
         private const string CartKey = "CART_V1";
-        private readonly ZooliranteDatabaseContext _db;  
+        private readonly ZooliranteDatabaseContext _db;
 
 
         public CartController(ZooliranteDatabaseContext db)
@@ -48,32 +48,32 @@ namespace Zoolirante_Open_Minded.Controllers
             return items;
         }
 
-		[HttpGet]
-		public async Task<IActionResult> Index()
-		{
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
 
-			var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
+            var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
 
-			var uid = HttpContext.Session.GetInt32("UserId");
-			var isMember = false;
-			if (uid.HasValue)
-			{
-				var now = DateTime.UtcNow;
-				isMember = await _db.Memberships.AnyAsync(m => m.UserId == uid.Value && m.EndDate > now);
-			}
+            var uid = HttpContext.Session.GetInt32("UserId");
+            var isMember = false;
+            if (uid.HasValue)
+            {
+                var now = DateTime.UtcNow;
+                isMember = await _db.Memberships.AnyAsync(m => m.UserId == uid.Value && m.EndDate > now);
+            }
 
-			foreach (var it in cart.Items)
-			{
-				if (it.OriginalPrice <= 0) it.OriginalPrice = it.Price;
-				it.Price = isMember ? it.OriginalPrice * 0.90m : it.OriginalPrice;
-			}
-			HttpContext.Session.SetObject(CartKey, cart);
+            foreach (var it in cart.Items)
+            {
+                if (it.OriginalPrice <= 0) it.OriginalPrice = it.Price;
+                it.Price = isMember ? it.OriginalPrice * 0.90m : it.OriginalPrice;
+            }
+            HttpContext.Session.SetObject(CartKey, cart);
 
-			return View(cart);
-		}
+            return View(cart);
+        }
 
 
-		public async Task<IActionResult> Checkout()
+        public async Task<IActionResult> Checkout()
         {
             var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
             ViewBag.PickupOptions = await LoadPickupOptionsAsync(); // for the dropdown
@@ -85,7 +85,7 @@ namespace Zoolirante_Open_Minded.Controllers
         {
             var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
 
-            
+
             string? name = null;
             var conn = _db.Database.GetDbConnection();
             if (conn.State != ConnectionState.Open)
@@ -107,7 +107,7 @@ namespace Zoolirante_Open_Minded.Controllers
             }
             await conn.CloseAsync();
 
-            if (name == null) return NotFound(); // invalid id / inactive
+            if (name == null) return NotFound();
 
             cart.PickupLocationId = id;
             cart.PickupLocationName = name;
@@ -132,7 +132,7 @@ namespace Zoolirante_Open_Minded.Controllers
                 }
                 else
                 {
-                    
+
                     var stock = _db.Merchandises
                                    .Where(p => p.ProductId == productId)
                                    .Select(p => p.Stock)
@@ -162,5 +162,36 @@ namespace Zoolirante_Open_Minded.Controllers
             HttpContext.Session.SetObject(CartKey, new CartVM());
             return RedirectToAction(nameof(Index));
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("UserId,PickupLocationId,PickupDate")] Order order)
+        {
+            var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
+
+            if (!cart.Items.Any())
+            {
+                TempData["CartMessage"] = "Your cart is empty.";
+                return RedirectToAction(nameof(Checkout));
+            }
+
+
+            order.Items = string.Join(", ", cart.Items.Select(i => $"({i.Qty}) {i.Name}"));
+
+            order.TotalAmount = cart.Subtotal;
+            order.OrderDate = DateTime.Now;
+            order.Status = "Pending";
+
+            _db.Orders.Add(order);
+            await _db.SaveChangesAsync();
+
+
+            HttpContext.Session.SetObject(CartKey, new CartVM());
+
+            TempData["CartMessage"] = $"Order placed successfully! Total: {order.TotalAmount:C}";
+            return RedirectToAction("Index", "Orders");
+        }
+
+
+
     }
 }
