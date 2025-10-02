@@ -25,32 +25,7 @@ namespace Zoolirante_Open_Minded.Controllers
 		{
 			var uid = HttpContext.Session.GetInt32("UserId");
 			if (uid is null) return RedirectToAction("Login", "Users");
-
-			var now = DateTime.UtcNow;
-
-			var current = await _context.Memberships
-				.Where(x => x.UserId == uid.Value && x.EndDate > now)
-				.OrderByDescending(x => x.EndDate)
-				.FirstOrDefaultAsync();
-
-			if (current is null)
-			{
-				_context.Memberships.Add(new Membership
-				{
-					UserId = uid.Value,
-					StartDate = now,
-					EndDate = now.AddMonths(1)
-				});
-			}
-			else
-			{
-				current.EndDate = current.EndDate.AddMonths(1);
-				_context.Update(current);
-			}
-
-			await _context.SaveChangesAsync();
-			HttpContext.Session.SetString("IsMember", "1");
-			return RedirectToAction(nameof(Index));
+			return View();
 		}
 
 		[HttpPost]

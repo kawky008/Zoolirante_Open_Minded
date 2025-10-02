@@ -73,7 +73,10 @@
 
     @if (Context.Session.GetInt32("UserId") != null)
     {
-        <button class="btn btn-success" type="submit">Placeorder</button>
+        <form asp-controller="Payments" asp-action="Card" method="post" class="d-inline">
+            @Html.AntiForgeryToken()
+            <button class="btn btn-success" type="submit">Checkout</button>
+        </form>
     }
     <button class="btn btn-success">PLease login to purchase merchandise</button>
 </div>

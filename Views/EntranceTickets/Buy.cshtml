@@ -75,19 +75,25 @@
 
   <input type="hidden" asp-for="UserId" value="@userId" />
 
-  <div class="mb-3">
+  @* <div class="mb-3">
     <label asp-for="Type" class="form-label">Ticket Type</label>
     <select asp-for="Type" class="form-control">
       <option value="Adult" selected>Adult ($30)</option>
       <option value="Child">Child ($20)</option>
     </select>
     <span asp-validation-for="Type" class="text-danger"></span>
-  </div>
+  </div> OLD VERSION *@
 
   <!-- JS fills this with: "Visit yyyy/MM/dd HH:mm-HH:mm" -->
   <input asp-for="Details" type="hidden" />
 
-  <button type="submit" class="btn btn-primary">Buy Ticket</button>
+    @* <button type="submit" class="btn btn-primary">Buy Ticket</button> OLD VERSION *@
+</form>
+<form asp-controller="Payments" asp-action="Card" method="get" class="d-inline">
+    <input type="hidden" name="orderId" value="0" />
+    <input type="hidden" name="purpose" value="ticket" />
+    <input type="hidden" name="ticketId" value="@Model.TicketId" />
+    <button type="submit" class="btn btn-primary">Pay with Card</button>
 </form>
 
 <script>
