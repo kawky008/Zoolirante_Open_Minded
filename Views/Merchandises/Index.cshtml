@@ -21,17 +21,24 @@
         <button class="btn btn-warning w-100 mb-2" type="submit">Find your Item</button>
     </div>
 </form>
+@if (userId != null && role == "Admin")
+{
+    <p><a class="btn btn-warning" asp-action="Create">Create New</a></p>
+}
 
-<p><a asp-action="Create">Create New</a></p>
 
 @if (TempData["CartMessage"] is string pageMsg)
 {
     <div class="alert alert-success">@pageMsg</div>
 }
 
-<div class="text-end mb-3">
-    <a class="btn btn-outline-secondary" asp-controller="Cart" asp-action="Index">View Cart</a>
-</div>
+@if (userId != null)
+{
+    <div class="text-end mb-3">
+        <a class="btn btn-outline-secondary" asp-controller="Cart" asp-action="Index">View Cart</a>
+    </div>
+}
+
 
 <style>
     .card-img-top {
@@ -82,7 +89,7 @@ else
                     <div class="card-footer bg-transparent border-0">
                         <div class="d-grid gap-2">
                             <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.ProductId">Details</a>
-                            @if (userId != null && role != "Admin")
+                            @if (userId != null && role == "Admin")
                             {
                                 <div class="btn-group">
                                     <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.ProductId">Edit</a>

@@ -123,7 +123,7 @@ namespace Zoolirante_Open_Minded.Controllers
 
             HttpContext.Session.SetInt32("UserId", user.UserId);
             HttpContext.Session.SetString("FullName", user.FullName);
-
+            HttpContext.Session.SetString("Role", user.Role);
             return RedirectToAction("Index", "Home");
         }
 
