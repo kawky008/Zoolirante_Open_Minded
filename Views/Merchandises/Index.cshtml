@@ -2,7 +2,15 @@
 @{
     ViewData["Title"] = "Index";
 }
+@inject IHttpContextAccessor HttpContextAccessor
 
+
+
+@{
+    var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
+    var fullName = HttpContextAccessor.HttpContext.Session.GetString("FullName");
+    var role = HttpContextAccessor.HttpContext.Session.GetString("Role");
+}
 <h1>Merchandise</h1>
 
 <form method="get" class="row g-2 mb-3">
@@ -13,17 +21,24 @@
         <button class="btn btn-warning w-100 mb-2" type="submit">Find your Item</button>
     </div>
 </form>
+@if (userId != null && role == "Admin")
+{
+    <p><a class="btn btn-warning" asp-action="Create">Create New</a></p>
+}
 
-<p><a asp-action="Create">Create New</a></p>
 
 @if (TempData["CartMessage"] is string pageMsg)
 {
     <div class="alert alert-success">@pageMsg</div>
 }
 
-<div class="text-end mb-3">
-    <a class="btn btn-outline-secondary" asp-controller="Cart" asp-action="Index">View Cart</a>
-</div>
+@if (userId != null)
+{
+    <div class="text-end mb-3">
+        <a class="btn btn-outline-secondary" asp-controller="Cart" asp-action="Index">View Cart</a>
+    </div>
+}
+
 
 <style>
     .card-img-top {
@@ -74,25 +89,33 @@ else
                     <div class="card-footer bg-transparent border-0">
                         <div class="d-grid gap-2">
                             <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.ProductId">Details</a>
-
-                            <div class="btn-group">
-                                <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.ProductId">Edit</a>
-                                <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-                            </div>
-
+                            @if (userId != null && role == "Admin")
+                            {
+                                <div class="btn-group">
+                                    <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.ProductId">Edit</a>
+                                    <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                                </div>
+                            }
                             @if (item.Stock <= 0)
                             {
                                 <div class="text-danger small mt-2">Out of stock</div>
                             }
                             else
                             {
+                                @if (userId != null)
+                                {
                                 <form asp-controller="Merchandises" asp-action="AddToCart" method="post" class="d-flex align-items-center gap-2 mt-2">
                                     <input type="hidden" name="id" value="@item.ProductId" />
                                     <input type="number" name="qty" value="1" min="1" max="@item.Stock"
                                            class="form-control form-control-sm w-auto" />
                                     <button type="submit" class="btn btn-sm btn-primary">Add to cart</button>
                                     @Html.AntiForgeryToken()
-                                </form>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-warning" asp-controller="Users" asp-action="Create">Please login to buy item</a>
+                                }
                             }
                         </div>
                     </div>
