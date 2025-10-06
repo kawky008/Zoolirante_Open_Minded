@@ -98,7 +98,7 @@ else
                                 <!-- Favorite button -->
                                 <div class="col-auto mb-2">
                                     <!-- From Uiverse.io by barisdogansutcu -->
-                                    <input type="checkbox" class="favorite-input" id="favorite-@item.AnimalId">
+                                    <input type="checkbox" class="favorite-input" name="animalId" id="favorite-@item.AnimalId">
                                     <label for="favorite-@item.AnimalId" class="favorite-label">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
                                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -192,6 +192,39 @@ else
 
         let currentCardFavorite = null; // keep track of the clicked card’s favorite
 
+        async function loadUserFavorites() {
+            const res = await fetch('/api/AnimalFavourite/UserFavorites');
+            if (res.ok) {
+                const favIds = await res.json();
+                favIds.forEach(id => {
+                    const checkbox = document.getElementById(`favorite-${id}`);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadUserFavorites);
+
+        // Toggle favorites
+        async function toggleFavorite(animalId, isChecked) {
+            const response = await fetch('/api/AnimalFavourite/Toggle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ animalId: animalId })
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    // redirect to login when logged out
+                    window.location.href = '@Url.Action("Login", "Users")';
+                } else {
+                    console.error('Error toggling favorite:', response.statusText);
+                }
+            }
+        }
+
         document.querySelectorAll('.animal-card').forEach(card => {
             card.addEventListener('click', (e) => {
                 // If the click was on the favorite input or its label, do nothing
@@ -222,11 +255,21 @@ else
             });
         });
 
+
+        document.querySelectorAll('.favorite-input').forEach(chk => {
+            chk.addEventListener('change', async (e) => {
+                const animalId = e.target.id.replace('favorite-', '');
+                await toggleFavorite(animalId, e.target.checked);
+            });
+        });
+
         // Sync popup favorite back to card when toggled
-        popupFavorite.addEventListener('change', () => {
+        popupFavorite.addEventListener('change', async () => {
             if (currentCardFavorite)
             {
                 currentCardFavorite.checked = popupFavorite.checked;
+                const animalId = currentCardFavorite.id.replace('favorite-', '');
+                await toggleFavorite(animalId, popupFavorite.checked);
             }
             else
             {

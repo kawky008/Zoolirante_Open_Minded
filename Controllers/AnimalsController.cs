@@ -58,8 +58,8 @@ namespace Zoolirante_Open_Minded.Controllers
 			return View(await animal.ToListAsync());
         }
 
-        // GET: Animals/Details/5
-        public async Task<IActionResult> Details(int? id)
+		// GET: Animals/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
