@@ -3,8 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Zoolirante_Open_Minded.Models;
 
 namespace Zoolirante_Open_Minded.Controllers
-{
-    public class AnimalFavouriteController : Controller
+{	public class ToggleFavoriteDto
+	{
+		public int AnimalId { get; set; }
+	}
+
+	[Route("api/[controller]")]
+	[ApiController]
+	public class AnimalFavouriteController : Controller
     {
         private readonly ZooliranteDatabaseContext _context;
 
@@ -13,19 +19,53 @@ namespace Zoolirante_Open_Minded.Controllers
             _context = context;
         }
 
-        
-        public async Task<IActionResult> UserFavorites(int userId)
-        {
-            var favourites = await _context.AnimalFavourite
-                .Include(f => f.Animal)
-                .Where(f => f.UserId == userId)
-                .ToListAsync();
+		[HttpPost("Toggle")]
+		public IActionResult Toggle([FromBody] ToggleFavoriteDto fav)
+		{
+			var userId = HttpContext.Session.GetInt32("UserId");
+			if (userId == null)
+			{
+				return Unauthorized();
+			}
 
-            return View(favourites);
-        }
+			var existing = _context.AnimalFavourite
+				.FirstOrDefault(f => f.UserId == userId && f.AnimalId == fav.AnimalId);
 
-       
-        [HttpPost]
+			if (existing != null)
+			{
+				_context.AnimalFavourite.Remove(existing);
+				_context.SaveChanges();
+				return Ok(new { added = false });
+			}
+			else
+			{
+				var newFav = new AnimalFavourite
+				{
+					UserId = userId.Value,
+					AnimalId = fav.AnimalId
+				};
+				_context.AnimalFavourite.Add(newFav);
+				_context.SaveChanges();
+				return Ok(new { added = true });
+			}
+		}
+
+		[HttpGet("UserFavorites")]
+		public IActionResult UserFavorites()
+		{
+			var userId = HttpContext.Session.GetInt32("UserId");
+			if (userId == null)
+				return Unauthorized();
+
+			var favorites = _context.AnimalFavourite
+				.Where(f => f.UserId == userId)
+				.Select(f => f.AnimalId)
+				.ToList();
+
+			return Ok(favorites);
+		}
+
+		[HttpPost]
         public async Task<IActionResult> AddFavourite(int userId, int animalId)
         {
             var exists = await _context.AnimalFavourite
