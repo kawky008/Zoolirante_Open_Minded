@@ -137,7 +137,7 @@ namespace Zoolirante_Open_Minded.Controllers
 						: "Ticket purchased online"
 				};
 
-				_context.EntranceTickets.Add(ticket);
+				_context.EntranceTicket.Add(ticket);
 				await _context.SaveChangesAsync();
 
 				
