@@ -27,7 +27,11 @@ namespace Zoolirante_Open_Minded.Controllers
 				.Select(e => new EventViewModel
 				{
 					Title = e.Title,
-					Location = e.Location
+					Location = e.Location,
+					StartTime = e.StartTime,
+					EndTime = e.EndTime,
+					Description = e.Description,
+					ImageUrl = e.ImageUrl
 				})
 				.ToList();
 
@@ -36,7 +40,11 @@ namespace Zoolirante_Open_Minded.Controllers
 				.Select(e => new EventViewModel
 				{
 					Title = e.Title,
-					Location = e.Location
+					Location = e.Location,
+					StartTime = e.StartTime,
+					EndTime = e.EndTime,
+					Description = e.Description,
+					ImageUrl = e.ImageUrl
 				})
 				.ToList();
 

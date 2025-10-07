@@ -20,6 +20,7 @@ public partial class Event
     public decimal Price { get; set; }
 
     public string Location { get; set; } = null!;
+    public string ImageUrl { get; set; } = null!;
 
     public virtual ICollection<Animal> Animals { get; set; } = new List<Animal>();
 }
