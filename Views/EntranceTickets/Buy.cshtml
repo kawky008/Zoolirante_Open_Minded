@@ -69,32 +69,54 @@
   </div>
 </div>
 
-<!-- Purchase form (posts to POST Buy) -->
-<form asp-action="Buy" method="post" class="mt-3">
-  @Html.AntiForgeryToken()
+<div class="mb-3">
+    <label class="form-label">Ticket Type</label><br />
+    <input type="radio" id="adult" name="ticketType" value="Adult" checked />
+    <label for="adult">Adult ($30)</label>&nbsp;&nbsp;
+    <input type="radio" id="child" name="ticketType" value="Child" />
+    <label for="child">Child ($20)</label>
+</div>
 
-  <input type="hidden" asp-for="UserId" value="@userId" />
-
-  @* <div class="mb-3">
-    <label asp-for="Type" class="form-label">Ticket Type</label>
-    <select asp-for="Type" class="form-control">
-      <option value="Adult" selected>Adult ($30)</option>
-      <option value="Child">Child ($20)</option>
-    </select>
-    <span asp-validation-for="Type" class="text-danger"></span>
-  </div> OLD VERSION *@
-
-  <!-- JS fills this with: "Visit yyyy/MM/dd HH:mm-HH:mm" -->
-  <input asp-for="Details" type="hidden" />
-
-    @* <button type="submit" class="btn btn-primary">Buy Ticket</button> OLD VERSION *@
-</form>
 <form asp-controller="Payments" asp-action="Card" method="get" class="d-inline">
     <input type="hidden" name="orderId" value="0" />
     <input type="hidden" name="purpose" value="ticket" />
     <input type="hidden" name="ticketId" value="@Model.TicketId" />
     <button type="submit" class="btn btn-primary">Pay with Card</button>
 </form>
+
+
+<iframe name="bgSubmit" style="display:none;"></iframe>
+
+<form id="paypalForm" asp-controller="Payments" asp-action="PaypalDemo" method="post" target="bgSubmit" class="d-inline">
+    <input type="hidden" name="purpose" value="ticket" />
+    <input type="hidden" name="ticketType" id="ppTicketType" />
+    <input type="hidden" name="qty" value="1" />
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-outline-dark"
+            onclick="window.open('https://www.sandbox.paypal.com/', '_blank')">
+        Pay with PayPal
+    </button>
+</form>
+
+<script>
+    
+    document.getElementById('btnPayCard').addEventListener('click', function () {
+        const type = document.querySelector('input[name="ticketType"]:checked').value;
+        const qty = 1;
+        const url = '@Url.Action("Card", "Payments")'
+                    + '?purpose=ticket'
+                    + '&ticketType=' + encodeURIComponent(type)
+                    + '&qty=' + qty
+                    + '&visitDate=' + encodeURIComponent(visitDate);
+        window.location.href = url;
+    });
+
+    
+    document.getElementById('paypalForm').addEventListener('submit', function () {
+        document.getElementById('ppTicketType').value =
+            document.querySelector('input[name="ticketType"]:checked').value;
+    });
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {

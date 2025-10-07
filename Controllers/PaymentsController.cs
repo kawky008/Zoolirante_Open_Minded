@@ -211,5 +211,114 @@ namespace Zoolirante_Open_Minded.Controllers
 			}
 			return sum % 10 == 0;
 		}
+
+		
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> PaypalDemo(
+			int orderId = 0, string? purpose = null,
+			int? ticketId = null, int? qty = null,
+			DateTime? visitDate = null, string? ticketType = null)
+		{
+			
+			TempData["HitPost"] = "HIT Payments/PaypalDemo POST";
+
+			// ===== MEMBERSHIP =====
+			if (string.Equals(purpose, "membership", StringComparison.OrdinalIgnoreCase))
+			{
+				var uid = HttpContext.Session.GetInt32("UserId");
+				if (uid is null) return RedirectToAction("Login", "Users");
+
+				var now = DateTime.UtcNow;
+				var current = await _context.Memberships
+					.Where(x => x.UserId == uid.Value && x.EndDate > now)
+					.OrderByDescending(x => x.EndDate)
+					.FirstOrDefaultAsync();
+
+				if (current is null)
+					_context.Memberships.Add(new Membership { UserId = uid.Value, StartDate = now, EndDate = now.AddMonths(1) });
+				else
+				{
+					current.EndDate = current.EndDate.AddMonths(1);
+					_context.Update(current);
+				}
+				await _context.SaveChangesAsync();
+
+				HttpContext.Session.SetString("IsMember", "1");
+				TempData["Msg"] = "PayPal (demo): Membership activated/extended!";
+				return RedirectToAction("Index", "Memberships");
+			}
+
+			// ===== TICKET =====
+			if (string.Equals(purpose, "ticket", StringComparison.OrdinalIgnoreCase))
+			{
+				var uid = HttpContext.Session.GetInt32("UserId");
+				if (uid is null) return RedirectToAction("Login", "Users");
+
+				var qtyVal = Math.Max(1, qty ?? 1);
+				var type = string.Equals(ticketType, "Child", StringComparison.OrdinalIgnoreCase) ? "Child" : "Adult";
+				decimal unit = (type == "Child") ? 20m : 30m;
+
+				var isMember = await _context.Memberships
+					.AnyAsync(m => m.UserId == uid.Value && m.EndDate >= DateTime.Now);
+				if (isMember) unit = Math.Round(unit * 0.80m, 2);
+
+				var now = DateTime.Now;
+				var ticket = new EntranceTicket
+				{
+					UserId = uid.Value,
+					Type = type,
+					Price = unit * qtyVal,
+					CreatedAt = now,
+					ExpiredAt = now.AddMonths(1),
+					Details = isMember
+						? "Ticket purchased via PayPal (20% member discount)"
+						: "Ticket purchased via PayPal"
+				};
+				_context.EntranceTicket.Add(ticket);
+				await _context.SaveChangesAsync();
+
+				var user = await _context.Users.FindAsync(uid.Value);
+				if (user != null) await _email.SendTicketConfirmationAsync(user, ticket);
+
+				TempData["Msg"] = "PayPal: Ticket booked successfully!";
+				return RedirectToAction("History", "EntranceTickets");
+			}
+
+			// ===== MERCHANDISE =====
+			if (orderId > 0)
+			{
+				var uid = HttpContext.Session.GetInt32("UserId");
+				if (uid is null) return RedirectToAction("Login", "Users");
+
+				var order = await _context.Orders
+					.Include(o => o.OrderItems)
+					.FirstOrDefaultAsync(o => o.OrderId == orderId && o.UserId == uid.Value);
+
+				if (order != null)
+				{
+					order.Status = "Paid";
+
+					var productIds = order.OrderItems.Select(oi => oi.ProductId).Distinct().ToList();
+					var products = await _context.Merchandises
+						.Where(m => productIds.Contains(m.ProductId))
+						.ToDictionaryAsync(m => m.ProductId);
+
+					foreach (var item in order.OrderItems)
+						if (products.TryGetValue(item.ProductId, out var p))
+							p.Stock = Math.Max(0, p.Stock - item.Quantity);
+
+					await _context.SaveChangesAsync();
+
+					HttpContext.Session.Remove("CART_V1");
+					TempData["Msg"] = "PayPal: Order paid, stock updated, and cart cleared!";
+					return RedirectToAction("Index", "Orders");
+				}
+			}
+
+			TempData["Msg"] = "PayPal (demo): No operation performed.";
+			return RedirectToAction("Index", "Home");
+		}
+
 	}
 }
