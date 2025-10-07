@@ -152,11 +152,44 @@ namespace Zoolirante_Open_Minded.Controllers
 			// MERCHANDISE
 			if (vm.OrderId > 0)
 			{
-				var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == vm.OrderId);
+				var uid = HttpContext.Session.GetInt32("UserId");
+				if (uid is null) return RedirectToAction("Login", "Users");
+
+				var order = await _context.Orders
+					.Include(o => o.OrderItems)
+					.FirstOrDefaultAsync(o => o.OrderId == vm.OrderId && o.UserId == uid.Value);
+
 				if (order != null)
 				{
-					order.Status = "Paid (Simulated)";
+					
+					order.Status = "Paid";
+
+					
+					var productIds = order.OrderItems.Select(oi => oi.ProductId).Distinct().ToList();
+					var products = await _context.Merchandises
+						.Where(m => productIds.Contains(m.ProductId))
+						.ToDictionaryAsync(m => m.ProductId);
+
+					
+					foreach (var item in order.OrderItems)
+					{
+						if (products.TryGetValue(item.ProductId, out var p))
+						{
+							
+							var newStock = p.Stock - item.Quantity;
+							p.Stock = newStock < 0 ? 0 : newStock;
+						}
+					}
+
 					await _context.SaveChangesAsync();
+
+					
+					HttpContext.Session.Remove("CART_V1");
+
+					
+					TempData["Msg"] = "Payment accepted (demo). Order paid, stock updated and cart cleared! Redirecting to Home...";
+					vm.CardNumber = vm.Cvv = "";
+					return View(vm);
 				}
 			}
 
