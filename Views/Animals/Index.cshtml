@@ -193,7 +193,7 @@ else
         let currentCardFavorite = null; // keep track of the clicked card’s favorite
 
         async function loadUserFavorites() {
-            const res = await fetch('/api/AnimalFavourite/UserFavorites');
+            const res = await fetch('/api/AnimalFavourite/Favourite');
             if (res.ok) {
                 const favIds = await res.json();
                 favIds.forEach(id => {
