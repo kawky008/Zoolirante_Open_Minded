@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Zoolirante_Open_Minded.Models;
 
@@ -50,12 +51,11 @@ namespace Zoolirante_Open_Minded.Controllers
 			}
 		}
 
-		[HttpGet("UserFavorites")]
-		public IActionResult UserFavorites()
+		[HttpGet("Favourite")]
+		public IActionResult Favourite()
 		{
 			var userId = HttpContext.Session.GetInt32("UserId");
-			if (userId == null)
-				return Unauthorized();
+			if (userId == null) return Unauthorized();
 
 			var favorites = _context.AnimalFavourite
 				.Where(f => f.UserId == userId)
@@ -65,39 +65,56 @@ namespace Zoolirante_Open_Minded.Controllers
 			return Ok(favorites);
 		}
 
-		[HttpPost]
-        public async Task<IActionResult> AddFavourite(int userId, int animalId)
-        {
-            var exists = await _context.AnimalFavourite
-                .AnyAsync(f => f.UserId == userId && f.AnimalId == animalId);
+		[HttpGet("/AnimalFavourite/UserFavorites")]
+		public async Task<IActionResult> UserFavorites(String? searchName, String? searchSpecies, String? searchConservation, String? searchRegion)
+		{
+			ViewData["BannerText"] = "Explore the amazing animals of Zoolirante";
 
-            if (!exists)
-            {
-                _context.AnimalFavourite.Add(new AnimalFavourite
-                {
-                    UserId = userId,
-                    AnimalId = animalId
-                });
-                await _context.SaveChangesAsync();
-            }
+			var userId = HttpContext.Session.GetInt32("UserId");
+			if (userId == null)
+				return RedirectToAction("Login", "Users");
 
-            return RedirectToAction("UserFavourites", new { userId });
-        }
+			var favoriteAnimalIds = await _context.AnimalFavourite
+				.Where(f => f.UserId == userId)
+				.Select(f => f.AnimalId)
+				.ToListAsync();
 
-        
-        [HttpPost]
-        public async Task<IActionResult> RemoveFavourite(int userId, int animalId)
-        {
-            var favourite = await _context.AnimalFavourite
-                .FirstOrDefaultAsync(f => f.UserId == userId && f.AnimalId == animalId);
+			var animal = _context.Animals
+				.Where(a => favoriteAnimalIds.Contains(a.AnimalId))
+				.AsQueryable();
 
-            if (favourite != null)
-            {
-                _context.AnimalFavourite.Remove(favourite);
-                await _context.SaveChangesAsync();
-            }
+			ViewBag.searchName = searchName;
 
-            return RedirectToAction("UserFavourites", new { userId });
-        }
-    }
+			// Creating species dropdown list
+			var species = animal.Select(x => x.Species).ToList();
+			ViewBag.speciesList = new SelectList(species, selectedValue: searchSpecies);
+
+			// Creating conservation dropdown list
+			var conservationStatus = animal.Select(x => x.ConservationStatus).Distinct().ToList();
+			ViewBag.conservation = new SelectList(conservationStatus, selectedValue: searchConservation);
+
+			// Creating region dropdown list
+			var regions = animal.Select(x => x.Region).Distinct().ToList();
+			ViewBag.regionList = new SelectList(regions, selectedValue: searchRegion);
+			// Filtering
+			if (!String.IsNullOrWhiteSpace(searchName))
+			{
+				animal = animal.Where(x => x.Name.Contains(searchName));
+			}
+			if (!String.IsNullOrEmpty(searchSpecies))
+			{
+				animal = animal.Where(x => x.Species == searchSpecies);
+			}
+			if (!String.IsNullOrEmpty(searchConservation))
+			{
+				animal = animal.Where(x => x.ConservationStatus == searchConservation);
+			}
+			if (!string.IsNullOrEmpty(searchRegion))
+			{
+				animal = animal.Where(x => x.Region == searchRegion);
+			}
+
+			return View("UserFavorites", await animal.ToListAsync());
+		}
+	}
 }
