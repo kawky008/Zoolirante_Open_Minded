@@ -24,19 +24,22 @@
 @if (userId != null && role == "Admin")
 {
     <p><a class="btn btn-warning" asp-action="Create">Create New</a></p>
+    
 }
 
 
-@if (TempData["CartMessage"] is string pageMsg)
-{
-    <div class="alert alert-success">@pageMsg</div>
-}
+
 
 @if (userId != null)
 {
+    @if (TempData["CartMessage"] is string pageMsg)
+    {
+        <div class="alert alert-success">@pageMsg</div>
+    }
     <div class="text-end mb-3">
         <a class="btn btn-outline-secondary" asp-controller="Cart" asp-action="Index">View Cart</a>
     </div>
+
 }
 
 
@@ -114,7 +117,7 @@ else
                                 }
                                 else
                                 {
-                                    <a class="btn btn-warning" asp-controller="Users" asp-action="Create">Please login to buy item</a>
+                                    <a class="btn btn-warning" asp-controller="Users" asp-action="Login">Please login to buy item</a>
                                 }
                             }
                         </div>
