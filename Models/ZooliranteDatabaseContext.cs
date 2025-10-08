@@ -35,12 +35,38 @@ public partial class ZooliranteDatabaseContext : DbContext
 
 	public virtual DbSet<Membership> Memberships { get; set; }
 
-	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public virtual DbSet<UserDetail> UserDetails { get; set; }
+
+
+
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=zoodatabase.database.windows.net;Initial Catalog=zooDatabase;Persist Security Info=True;User ID=naomidang;Password=Tryyourbest123;Encrypt=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+
+        modelBuilder.Entity<UserDetail>(entity =>
+        {
+            entity.ToTable("UserDetail");
+            entity.HasKey(e => e.UserDetailId);
+            entity.HasIndex(e => e.UserId).IsUnique();
+
+            entity.Property(e => e.FirstName).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.MiddleName).HasMaxLength(100);
+            entity.Property(e => e.LastName).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.Phone).HasMaxLength(30);
+            entity.Property(e => e.Street).HasMaxLength(150);
+
+            entity.HasOne(d => d.User)
+                  .WithOne(p => p.UserDetail)                 
+                  .HasForeignKey<UserDetail>(d => d.UserId)
+                  .OnDelete(DeleteBehavior.Cascade)
+                  .HasConstraintName("FK_UserDetail_User");
+        });
+
         modelBuilder.Entity<Animal>(entity =>
         {
             entity.HasKey(e => e.AnimalId).HasName("PK__Animals__A21A730703C3EA3B");
