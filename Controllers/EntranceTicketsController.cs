@@ -1,14 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Net.Sockets;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using Zoolirante_Open_Minded.Models;
 using Zoolirante_Open_Minded.Services;
 
+
 namespace Zoolirante_Open_Minded.Controllers
 {
     public class EntranceTicketsController : Controller
     {
+        // Which payment methods are valid per ticket type
+        private static readonly Dictionary<string, string[]> _allowedPaymentsByType =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                ["Adult"] = new[] { "Visa", "MasterCard", "PayPal" },
+                ["Child"] = new[] { "Visa", "MasterCard" },           // PayPal disallowed
+                ["Senior"] = new[] { "Visa", "MasterCard", "PayPal" },
+                ["Concession"] = new[] { "Visa", "MasterCard" }
+            };
+
+        // Fallback for unknown types (no Cash for online)
+        private static readonly string[] _defaultOnlinePayments = new[] { "Visa", "MasterCard", "PayPal" };
+
         private readonly ZooliranteDatabaseContext _context;
         private readonly IEmailService _emailService;
 
@@ -18,7 +35,7 @@ namespace Zoolirante_Open_Minded.Controllers
             _emailService = emailService;
         }
 
-        
+
         public IActionResult Buy()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -28,10 +45,10 @@ namespace Zoolirante_Open_Minded.Controllers
             var ticket = new EntranceTicket
             {
                 UserId = userId.Value,
-                Type = "Adult", 
-                Price = 30m     
+                Type = "Adult",
+                Price = 30m
             };
-			return View(ticket);
+            return View(ticket);
         }
 
 
@@ -42,15 +59,45 @@ namespace Zoolirante_Open_Minded.Controllers
            
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
-                return RedirectToAction("Login", "Users"); 
+                return RedirectToAction("Login", "Users");
 
-            ticket.UserId = userId.Value;
+            ticket.UserId = userId.Value; 
+
+
+            var allowed = _allowedPaymentsByType.TryGetValue(ticket.Type, out var list)
+                ? list
+                : _defaultOnlinePayments;
+
+            var user = await _context.Users.FindAsync(userId.Value);
+            if (user == null) return RedirectToAction("Login", "Users");
+
+            if (!allowed.Contains(user.PaymentMethod ?? "", StringComparer.OrdinalIgnoreCase))
+            {
+                ModelState.AddModelError(string.Empty,
+                    $"Your saved payment method ({user.PaymentMethod ?? "None"}) is not valid for {ticket.Type} tickets. " +
+                    $"Allowed: {string.Join(", ", allowed)}. Please change your payment method.");
+
+                ViewBag.AllowedPayments = allowed;
+                ViewBag.UserPaymentMethod = user.PaymentMethod;
+                ViewBag.PaymentMethodValid = false;
+
+     
+                ticket.Price = ticket.Type == "Child" ? 20m : 30m;
+
+                return View(ticket);
+            }
+
+            ticket.Price = ticket.Type == "Child" ? 20m : 30m;
+
+                
+                ticket.CreatedAt = DateTime.Now;
 
 
 			ticket.Price = ticket.Type == "Child" ? 20m : 30m;
 
 
 			ticket.CreatedAt = DateTime.Now;
+
                 ticket.ExpiredAt = DateTime.Now.AddMonths(1);
                 ticket.Details = "Ticket purchased online";
 
@@ -67,9 +114,7 @@ namespace Zoolirante_Open_Minded.Controllers
                 await _context.SaveChangesAsync();
 
               
-                
-
-            var user = await _context.Users.FindAsync(userId.Value);
+               
             if (user != null)
             {
                 
@@ -85,6 +130,7 @@ namespace Zoolirante_Open_Minded.Controllers
         {
             var ticket = await _context.EntranceTicket.FindAsync(id);
             if (ticket == null) return NotFound();
+
 
             return View(ticket);
         }
