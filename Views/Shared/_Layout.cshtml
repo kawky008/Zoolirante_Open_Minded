@@ -5,6 +5,7 @@
 @{
     var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
     var fullName = HttpContextAccessor.HttpContext.Session.GetString("FullName");
+    var role = HttpContextAccessor.HttpContext.Session.GetString("Role");
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -45,7 +46,7 @@
                         <li class="nav-item">
                             @if (userId != null)
                             {
-                                <a class="nav-link text-dark" asp-controller="Users" asp-action="Details" asp-route-id="@userId">Hello, @fullName!</a>
+                                <a class="nav-link text-dark" asp-controller="Users" asp-action="Details" asp-route-id="@userId">Hello, @fullName! (@role)</a>
                             }
                             else
                             {
@@ -60,7 +61,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link text-dark" asp-controller="FavoriteAnimals" asp-action="Index">
+                                <a class="nav-link text-dark" asp-controller="AnimalFavourite" asp-action="UserFavorites">
                                     Favorite Animals
                                 </a>
                             </li>
@@ -70,6 +71,11 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="EntranceTickets" asp-action="History">
                                     My Visit History
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Orders" asp-action="Index">
+                                    Tracking orders
                                 </a>
                             </li>
                         }

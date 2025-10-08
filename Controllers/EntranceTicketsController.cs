@@ -122,7 +122,7 @@ namespace Zoolirante_Open_Minded.Controllers
 			}
 
 
-			_context.EntranceTickets.Add(ticket);
+			_context.EntranceTicket.Add(ticket);
                 await _context.SaveChangesAsync();
 
               
@@ -140,7 +140,7 @@ namespace Zoolirante_Open_Minded.Controllers
 
         public async Task<IActionResult> Confirmation(int id)
         {
-            var ticket = await _context.EntranceTickets.FindAsync(id);
+            var ticket = await _context.EntranceTicket.FindAsync(id);
             if (ticket == null) return NotFound();
 
 
@@ -153,7 +153,7 @@ namespace Zoolirante_Open_Minded.Controllers
 			var userId = HttpContext.Session.GetInt32("UserId");
 			if (userId is null) return RedirectToAction("Login", "Users");
 
-			var visits = await _context.EntranceTickets
+			var visits = await _context.EntranceTicket
 				.Where(t => t.UserId == userId.Value)
 				.OrderByDescending(t => t.CreatedAt) 
 				.ToListAsync();

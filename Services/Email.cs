@@ -51,6 +51,7 @@ namespace Zoolirante_Open_Minded.Services
     <li><strong>Expires:</strong> {ticket.ExpiredAt:dd/MM/yyyy}</li>
 </ul>
 <p>Thank you for visiting <b>Zoolirante Open-Minded</b>!</p>
+
 ";
             await SendEmailAsync(user.Email, subject, body);
         }

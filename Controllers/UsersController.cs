@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Zoolirante_Open_Minded.Models;
 using Zoolirante_Open_Minded.Services;
+using static Zoolirante_Open_Minded.Controllers.UsersController;
 
 namespace Zoolirante_Open_Minded.Controllers
 {
@@ -14,11 +15,14 @@ namespace Zoolirante_Open_Minded.Controllers
         private readonly ZooliranteDatabaseContext _context;
         private readonly IEmailService _emailService;
 
+       
+
         public UsersController(ZooliranteDatabaseContext context, IEmailService emailService)
         {
             _context = context;
             _emailService = emailService;
         }
+       
 
         // GET: Reset password
         [HttpGet]
@@ -119,7 +123,7 @@ namespace Zoolirante_Open_Minded.Controllers
 
             HttpContext.Session.SetInt32("UserId", user.UserId);
             HttpContext.Session.SetString("FullName", user.FullName);
-
+            HttpContext.Session.SetString("Role", user.Role);
             return RedirectToAction("Index", "Home");
         }
 
@@ -184,8 +188,8 @@ namespace Zoolirante_Open_Minded.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(User user)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 // Hash password before saving
                 if (!string.IsNullOrEmpty(user.PasswordHash))
                     user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
@@ -194,8 +198,8 @@ namespace Zoolirante_Open_Minded.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
-        }
+           // return View(user);
+        //}
 
         // GET: Edit user
         public async Task<IActionResult> Edit(int? id)
@@ -284,3 +288,4 @@ namespace Zoolirante_Open_Minded.Controllers
         private bool UserExists(int id) => _context.Users.Any(u => u.UserId == id);
     }
 }
+

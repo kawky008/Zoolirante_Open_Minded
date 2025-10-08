@@ -21,9 +21,7 @@ body {
 
 
 
-
-
-/*****************************       Search functions      *******************************/
+/*****************************       Map      *******************************/
 .map-card {
     width: 70%;
     background-color: #383737;
@@ -41,6 +39,8 @@ body {
 
 
 
+
+
 /*****************************       Search functions      *******************************/
 /* From Uiverse.io by OnlyCodeChannel */
 .searchBox {
@@ -49,9 +49,10 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    background: #383737f0;
+    background: floralwhite;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* soft shadow */
     border-radius: 10px;
+    border: 3px solid #dc9720;
     position: relative;
 }
 
@@ -94,9 +95,10 @@ button:active {
 .dropdowns {
     height: 70px; /* same as searchButton */
     width: 250px;
-    color: #e1e1e1;
-    background: #383737;
+    color: black;
+    background: floralwhite;
     border-radius: 10px;
+    border: 3px solid #dc9720;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* soft shadow */
     padding: 0 12px; /* adjust so text stays centered */
     font-size: 15px; /* same as searchButton */
@@ -110,7 +112,7 @@ button:active {
 /*****************************       Favorite Button      *******************************/
 /* From Uiverse.io by barisdogansutcu */
 .favorite-label {
-    background-color: #383737f0;
+    background-color: floralwhite;
     display: flex;
     align-items: center;
     gap: 14px;
@@ -118,7 +120,7 @@ button:active {
     cursor: pointer;
     user-select: none;
     border-radius: 10px;
-    color: #e1e1e1;
+    color: black;
 }
 
 .favorite-input {
@@ -250,15 +252,15 @@ button:active {
 
 /*******************************        Card        ***********************************/
 .card {
-    background-color: #383737;
-    border: 1rem solid #383737;
+    background-color: floralwhite;
+    border: 3px solid #dc9720;
     border-radius: 1rem; /* rounded corners */
     box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* soft shadow */
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .card-body {
-    color: #e1e1e1;
+    color: rgba(0,0,0,0.8);
 }
 
 .card:hover {
@@ -303,8 +305,8 @@ button:active {
     flex-direction: column;
     align-items: start;
     overflow: visible;
-    color: var(--af-white);
-    background-color: var(--black);
+    color: black;
+    background-color: floralwhite;
     border: 3px solid #dc9720;
     border-radius: 8px;
     position: relative;

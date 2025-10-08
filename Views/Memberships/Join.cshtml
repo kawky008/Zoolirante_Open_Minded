@@ -4,9 +4,37 @@
 }
 <h2>Join Membership (1 Month)</h2>
 
-<form asp-action="JoinConfirm" method="post">
-    <button class="btn btn-primary" type="submit">Confirm Purchase / Renew</button>
+<a class="btn btn-primary" asp-controller="Payments" asp-action="Card"asp-route-orderId="0" asp-route-purpose="membership">
+    Pay with Card
+</a>
+
+<form id="paypalMembershipForm" asp-controller="Payments" asp-action="PaypalDemo" method="post">
+    <input type="hidden" name="purpose" value="membership" />
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-outline-dark">
+        Pay with PayPal
+    </button>
 </form>
+
+<script>
+    (function () {
+      const form = document.getElementById('paypalMembershipForm');
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const fd = new FormData(form);
+        const token = fd.get('__RequestVerificationToken');
+        const win = window.open('', '_blank');
+        await fetch(form.action, {
+          method: 'POST',
+          body: fd,
+          headers: { 'RequestVerificationToken': token }
+        });
+        if (win) win.location.href = 'https://www.sandbox.paypal.com/';
+        window.location.href = '@Url.Action("Index", "Memberships")';
+      });
+    })();
+</script>
+
 
 @if (TempData["Message"] != null)
 {

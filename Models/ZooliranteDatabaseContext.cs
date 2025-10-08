@@ -15,9 +15,9 @@ public partial class ZooliranteDatabaseContext : DbContext
         : base(options)
     {
     }
-    public virtual DbSet<EntranceTicket> EntranceTickets { get; set; }
+    public virtual DbSet<EntranceTicket> EntranceTicket { get; set; }
     
-    public virtual  DbSet<AnimalFavourite> AnimalFavourites { get; set; }
+    public virtual  DbSet<AnimalFavourite> AnimalFavourite { get; set; }
 
     public virtual DbSet<Animal> Animals { get; set; }
 
@@ -37,7 +37,7 @@ public partial class ZooliranteDatabaseContext : DbContext
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=zoolirante-open-minded.database.windows.net;Initial Catalog=ZooliranteDatabase;Persist Security Info=True;User ID=itsmekento;Password=AJXgRGaQ3E9JkCg;Encrypt=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=zoodatabase.database.windows.net;Initial Catalog=zooDatabase;Persist Security Info=True;User ID=naomidang;Password=Tryyourbest123;Encrypt=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -109,7 +109,10 @@ public partial class ZooliranteDatabaseContext : DbContext
             entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCFD539484F");
 
             entity.Property(e => e.OrderDate).HasDefaultValueSql("(sysdatetime())");
-            entity.Property(e => e.PickupWindow).HasMaxLength(50);
+            
+            entity.Property(e => e.Items)
+                    .HasColumnType("varchar(max)")
+                    .IsRequired(false);
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasDefaultValue("Pending");
@@ -147,7 +150,7 @@ public partial class ZooliranteDatabaseContext : DbContext
         {
             entity.HasKey(e => e.PickupLocationId).HasName("PK__PickupLo__F6FC9D68744AAE45");
 
-            entity.ToTable("PickupLocation");
+            entity.ToTable("PickupLocations");
 
             entity.Property(e => e.Name).HasMaxLength(150);
             entity.Property(e => e.OpenFrom).HasPrecision(0);
