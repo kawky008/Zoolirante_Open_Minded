@@ -15,7 +15,19 @@ namespace Zoolirante_Open_Minded.Controllers
         private readonly ZooliranteDatabaseContext _context;
         private readonly IEmailService _emailService;
 
-       
+        // 4.1
+        public class ProfileEditVm
+        {
+            public int UserId { get; set; }
+            public string Email { get; set; } = "";
+            public string Role { get; set; } = "";
+
+            public string? FirstName { get; set; }
+            public string? MiddleName { get; set; }
+            public string? LastName { get; set; }
+            public string? Phone { get; set; }
+            public string? Street { get; set; }
+        }
 
         public UsersController(ZooliranteDatabaseContext context, IEmailService emailService)
         {
@@ -148,6 +160,34 @@ namespace Zoolirante_Open_Minded.Controllers
             return View(user);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EditInfo()
+        {
+            var uid = HttpContext.Session.GetInt32("UserId");
+            if (uid == null) return RedirectToAction("Login");
+
+            var user = await _context.Users
+                .Include(u => u.UserDetail)
+                .FirstOrDefaultAsync(u => u.UserId == uid.Value);
+            if (user == null) return NotFound();
+
+            var d = user.UserDetail;
+            var vm = new ProfileEditVm
+            {
+                UserId = user.UserId,
+                Email = user.Email,
+                Role = user.Role,
+                FirstName = d?.FirstName,
+                MiddleName = d?.MiddleName,
+                LastName = d?.LastName,
+                Phone = d?.Phone,
+                Street = d?.Street
+            };
+
+            return View(vm); 
+        }
+
+
         // POST: Update payment method
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> EditPayment(string paymentMethod)
@@ -212,7 +252,7 @@ namespace Zoolirante_Open_Minded.Controllers
             return View(user);
         }
 
-        // POST: Edit user
+        // POST: Edit user 4.2
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("UserId,FullName,Email,PasswordHash,Role,PaymentMethod")] User user)
@@ -247,6 +287,46 @@ namespace Zoolirante_Open_Minded.Controllers
             }
             return View(user);
         }
+
+       //4.3
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditInfo(ProfileEditVm vm)
+        {
+            var uid = HttpContext.Session.GetInt32("UserId");
+            if (uid == null || uid.Value != vm.UserId) return RedirectToAction("Login");
+            if (!ModelState.IsValid) return View(vm);
+
+            var user = await _context.Users
+                .Include(u => u.UserDetail)
+                .FirstOrDefaultAsync(u => u.UserId == uid.Value);
+            if (user == null) return NotFound();
+
+            var detail = user.UserDetail;
+            if (detail == null)
+            {
+                detail = new UserDetail { UserId = user.UserId };
+                _context.UserDetails.Add(detail);
+                user.UserDetail = detail;
+            }
+
+            detail.FirstName = vm.FirstName?.Trim() ?? "";
+            detail.MiddleName = string.IsNullOrWhiteSpace(vm.MiddleName) ? null : vm.MiddleName!.Trim();
+            detail.LastName = vm.LastName?.Trim() ?? "";
+            detail.Phone = string.IsNullOrWhiteSpace(vm.Phone) ? null : vm.Phone!.Trim();
+            detail.Street = string.IsNullOrWhiteSpace(vm.Street) ? null : vm.Street!.Trim();
+
+
+            user.FullName = string.Join(" ",
+                new[] { detail.FirstName, detail.MiddleName, detail.LastName }
+                .Where(s => !string.IsNullOrWhiteSpace(s)));
+
+            await _context.SaveChangesAsync();
+
+
+            return RedirectToAction(nameof(Details), new { id = user.UserId });
+        }
+
 
         // GET: Delete user
         public async Task<IActionResult> Delete(int? id)
