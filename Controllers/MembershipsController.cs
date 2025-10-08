@@ -213,7 +213,13 @@ namespace Zoolirante_Open_Minded.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        [HttpGet]
+        public async Task<IActionResult> ShowDetails()
+        {
+            var membership = await _context.Memberships.Include(i=> i.User).Where(i => i.EndDate >= DateTime.Now).ToListAsync();
+            
+            return View(membership);
+        }
         private bool MembershipExists(int id)
         {
             return _context.Memberships.Any(e => e.MembershipId == id);

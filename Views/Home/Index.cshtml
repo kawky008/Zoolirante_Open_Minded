@@ -10,6 +10,15 @@
         border-bottom-right-radius: 0 !important;
     }
 
+    .card-title {
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-weight: bold;
+        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
     * {
         box-sizing: border-box
     }
@@ -79,7 +88,7 @@
     }
 </style>
 
-<h2>Today's Events</h2>
+<h2 class="text-center">Today's Events</h2>
 
 @if (Model.EventsToday.Any())
 {
@@ -111,8 +120,9 @@ else
 }
 
 <br />
+<br />
 
-<h2>Upcoming Events Of The Week</h2>
+<h2 class="text-center">Upcoming Events Of The Week</h2>
 
 @if (Model.EventsUpcoming.Any())
 {
@@ -163,6 +173,9 @@ else
         }
         x[slideIndex[no]-1].style.display = "block";
     }
+
+    setInterval(() => {plusSlides(1, 0)}, 3000);
+    setInterval(() => {plusSlides(1, 1)}, 4000);
 </script>
 
 
