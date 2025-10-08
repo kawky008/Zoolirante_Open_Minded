@@ -18,6 +18,8 @@ namespace Zoolirante_Open_Minded.Controllers
 
 		public IActionResult Index()
 		{
+			ViewData["BannerText"] = "Welcome to Zoolirante!";
+
 			var today = DateTime.Today;
 			var tomorrow = today.AddDays(1);
 			var weekLater = today.AddDays(7);
