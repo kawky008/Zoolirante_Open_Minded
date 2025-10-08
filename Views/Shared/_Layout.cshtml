@@ -16,12 +16,13 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://kit.fontawesome.com/2e78690260.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-custom navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
-            <div class="container">
+        <nav class="navbar navbar-custom navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow align-items-center">
+            <div class="container d-flex align-items-center">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img class="d-inline-block align-content-center" src="/images/Zoolirante_logo.png" alt="Zoolirante Logo" width="150" height="80" />
                 </a>
@@ -30,70 +31,95 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    <ul class="navbar-nav mr-auto align-items-center">
+                        <li class="nav-item mx-2">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fa-solid fa-house fa-2x"></i>
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Animals" asp-action="Index">Animal</a>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link" asp-area="" asp-controller="Animals" asp-action="Index">
+                                <i class="fa-solid fa-paw fa-2x"></i>
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">Event</a>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link" asp-area="" asp-controller="Events" asp-action="Index">
+                                <i class="fa-solid fa-calendar-days fa-2x"></i>
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Merchandises" asp-action="Index">Merchandises</a>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link" asp-area="" asp-controller="Merchandises" asp-action="Index">
+                                <i class="fa-solid fa-cart-shopping fa-2x"></i>
+                            </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item ms-5 me-2">
                             @if (userId != null)
                             {
                                 if (role == "Admin"){
                                 
-                                    <a class="nav-link text-dark" asp-controller="Users" asp-action="Details" asp-route-id="@userId">Hello, @fullName! (Manager)</a>
+                                    <a class="nav-link" asp-controller="Users" asp-action="Details" asp-route-id="@userId">
+                                        <span class="d-flex align-items-center">
+                                            <i class="fa-solid fa-user fa-2x"></i>
+                                            <span>
+                                                <span class="greeting-hello">Hello,</span><br />
+                                                <span class="greeting-name">@fullName! (Manager)</span>
+                                            </span>
+                                            
+                                        </span>
+                                        
+                                    </a>
                                 }
                                else{
                                 
-                                    <a class="nav-link text-dark" asp-controller="Users" asp-action="Details" asp-route-id="@userId">Hello, @fullName! (@role)</a>
+                                    <a class="nav-link" asp-controller="Users" asp-action="Details" asp-route-id="@userId">
+                                        Hello,<br />
+                                        <span>@fullName! (@role)</span>
+                                    </a>
                                }
                             }
                             else
                             {
-                                <a class="nav-link text-dark" asp-controller="Users" asp-action="Login">Login</a>
+                                <a class="nav-link" asp-controller="Users" asp-action="Login">
+                                    <i class="fa-solid fa-user fa-2x"></i>
+                                </a>
                             }
                         </li>
                         @if (Context.Session.GetInt32("UserId") != null)
                         {
                            
-                                if (role == "Admin"){
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Memberships" asp-action="ShowDetails">
-                                    Join Membership
-                                </a>
-                            </li>
-                                }
-                                else{
-                            
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Memberships" asp-action="Index">
-                                        Join Membership
+                                if (role == "Admin")
+                                {
+                                <li class="nav-item mx-2">
+                                    <a class="nav-link" asp-controller="Memberships" asp-action="ShowDetails">
+                                        <i class="fa-solid fa-user-plus fa-2x"></i>
                                     </a>
                                 </li>
                                 }
-                            <li>
-                                <a class="nav-link text-dark" asp-controller="AnimalFavourite" asp-action="UserFavorites">
-                                    Favorite Animals
+                                else
+                                {                            
+                                <li class="nav-item mx-2">
+                                    <a class="nav-link" asp-controller="Memberships" asp-action="Index">
+                                        <i class="fa-solid fa-user-plus fa-2x"></i>
+                                    </a>
+                                </li>
+                                }
+                            <li class="nav-item mx-2">
+                                <a class="nav-link" asp-controller="AnimalFavourite" asp-action="UserFavorites">
+                                    <i class="fa-solid fa-heart fa-2x"></i>
                                 </a>
                             </li>
-                            <li>
-                                <a class="nav-link text-dark" asp-controller="EntranceTickets" asp-action="Buy">Buy Ticket</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="EntranceTickets" asp-action="History">
-                                    My Visit History
+                            <li class="nav-item mx-2">
+                                <a class="nav-link" asp-controller="EntranceTickets" asp-action="Buy">
+                                    <i class="fa-solid fa-ticket fa-2x"></i>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Orders" asp-action="Index">
-                                    Tracking orders
+                            <li class="nav-item mx-2">
+                                <a class="nav-link" asp-controller="EntranceTickets" asp-action="History">
+                                    <i class="fa-solid fa-suitcase fa-2x"></i>                                </a>
+                            </li>
+                            <li class="nav-item mx-2">
+                                <a class="nav-link" asp-controller="Orders" asp-action="Index">
+                                    <i class="fa-solid fa-clock-rotate-left fa-2x"></i>
                                 </a>
                             </li>
                         }
@@ -118,7 +144,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - Zoolirante - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
         </div>
     </footer>
 

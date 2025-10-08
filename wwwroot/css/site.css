@@ -199,18 +199,30 @@ button:active {
 }
 
 .navbar-custom .nav-link {
-    transition: all 0.3s ease; /* smooth transition */
+    color: #659707;
+    transition: color 0.3s ease;
 }
 
 .navbar-custom .nav-link:hover {
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* subtle shadow */
-    transform: scale(1.05); /* slight zoom effect */
+    color: #65c707;
 }
 
 .navbar-custom .nav-link.active {
     font-weight: bold;
     text-decoration: underline;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    color: #65c707;
+}
+
+.greeting-hello {
+    font-weight: 600;
+    font-size: 18px;
+    color: #db7322;
+}
+
+.greeting-name {
+    font-weight: 600;
+    font-size: 22px;
+    color: #db7322;
 }
 /***************************************************************************************/
 
