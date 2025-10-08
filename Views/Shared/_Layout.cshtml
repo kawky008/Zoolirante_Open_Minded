@@ -33,31 +33,31 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto align-items-center">
                         <li class="nav-item mx-2">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Home">
                                 <i class="fa-solid fa-house fa-2x"></i>
                             </a>
                         </li>
                         <li class="nav-item mx-2">
-                            <a class="nav-link" asp-area="" asp-controller="Animals" asp-action="Index">
+                            <a class="nav-link" asp-area="" asp-controller="Animals" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Animals">
                                 <i class="fa-solid fa-paw fa-2x"></i>
                             </a>
                         </li>
                         <li class="nav-item mx-2">
-                            <a class="nav-link" asp-area="" asp-controller="Events" asp-action="Index">
+                            <a class="nav-link" asp-area="" asp-controller="Events" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Events">
                                 <i class="fa-solid fa-calendar-days fa-2x"></i>
                             </a>
                         </li>
                         <li class="nav-item mx-2">
-                            <a class="nav-link" asp-area="" asp-controller="Merchandises" asp-action="Index">
+                            <a class="nav-link" asp-area="" asp-controller="Merchandises" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Merchandises">
                                 <i class="fa-solid fa-cart-shopping fa-2x"></i>
                             </a>
                         </li>
-                        <li class="nav-item ms-5 me-2">
+                        <li class="nav-item ms-2">
                             @if (userId != null)
                             {
-                                if (role == "Admin"){
-                                
-                                    <a class="nav-link" asp-controller="Users" asp-action="Details" asp-route-id="@userId">
+                                if (role == "Admin")
+                                {
+                                    <a class="nav-link ms-5 me-2" asp-controller="Users" asp-action="Details" asp-route-id="@userId" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Manage Account">
                                         <span class="d-flex align-items-center">
                                             <i class="fa-solid fa-user fa-2x"></i>
                                             <span>
@@ -69,9 +69,9 @@
                                         
                                     </a>
                                 }
-                               else{
-                                
-                                    <a class="nav-link" asp-controller="Users" asp-action="Details" asp-route-id="@userId">
+                               else
+                               {
+                                    <a class="nav-link ms-5 me-2" asp-controller="Users" asp-action="Details" asp-route-id="@userId" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Manage Account">
                                         Hello,<br />
                                         <span>@fullName! (@role)</span>
                                     </a>
@@ -79,7 +79,7 @@
                             }
                             else
                             {
-                                <a class="nav-link" asp-controller="Users" asp-action="Login">
+                                <a class="nav-link" asp-controller="Users" asp-action="Login" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Login">
                                     <i class="fa-solid fa-user fa-2x"></i>
                                 </a>
                             }
@@ -90,7 +90,7 @@
                                 if (role == "Admin")
                                 {
                                 <li class="nav-item mx-2">
-                                    <a class="nav-link" asp-controller="Memberships" asp-action="ShowDetails">
+                                    <a class="nav-link" asp-controller="Memberships" asp-action="ShowDetails" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Manage Membership">
                                         <i class="fa-solid fa-user-plus fa-2x"></i>
                                     </a>
                                 </li>
@@ -98,27 +98,28 @@
                                 else
                                 {                            
                                 <li class="nav-item mx-2">
-                                    <a class="nav-link" asp-controller="Memberships" asp-action="Index">
+                                    <a class="nav-link" asp-controller="Memberships" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Manage Membership">
                                         <i class="fa-solid fa-user-plus fa-2x"></i>
                                     </a>
                                 </li>
                                 }
                             <li class="nav-item mx-2">
-                                <a class="nav-link" asp-controller="AnimalFavourite" asp-action="UserFavorites">
+                                <a class="nav-link" asp-controller="AnimalFavourite" asp-action="UserFavorites" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Favorite Animals">
                                     <i class="fa-solid fa-heart fa-2x"></i>
                                 </a>
                             </li>
                             <li class="nav-item mx-2">
-                                <a class="nav-link" asp-controller="EntranceTickets" asp-action="Buy">
+                                <a class="nav-link" asp-controller="EntranceTickets" asp-action="Buy" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Buy Tickets">
                                     <i class="fa-solid fa-ticket fa-2x"></i>
                                 </a>
                             </li>
                             <li class="nav-item mx-2">
-                                <a class="nav-link" asp-controller="EntranceTickets" asp-action="History">
-                                    <i class="fa-solid fa-suitcase fa-2x"></i>                                </a>
+                                <a class="nav-link" asp-controller="EntranceTickets" asp-action="History" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visiting History">
+                                    <i class="fa-solid fa-suitcase fa-2x"></i>
+                                </a>
                             </li>
                             <li class="nav-item mx-2">
-                                <a class="nav-link" asp-controller="Orders" asp-action="Index">
+                                <a class="nav-link" asp-controller="Orders" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Order History">
                                     <i class="fa-solid fa-clock-rotate-left fa-2x"></i>
                                 </a>
                             </li>
@@ -151,6 +152,13 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

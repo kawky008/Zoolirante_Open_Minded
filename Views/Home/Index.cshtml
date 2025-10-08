@@ -3,7 +3,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-
 <style>
     .bottom-no-radius {
         border-bottom-left-radius: 0 !important;
@@ -88,70 +87,80 @@
     }
 </style>
 
-<h2 class="text-center">Today's Events</h2>
-
-@if (Model.EventsToday.Any())
-{
-    <div class="slideshow-container">
-
-        @for (int i = 0; i < Model.EventsToday.Count; i++)
-        {
-            var e = Model.EventsToday[i];
-            <div class="mySlides1 card border-0" style="width: 100%">
-                <div class="numbertext">@(i + 1) / @Model.EventsToday.Count</div>
-                <img src="@e.ImageUrl" class="card-img-top bottom-no-radius" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">@e.Title</h5>
-                    <p class="card-text">Time: @e.StartTime - @e.EndTime</p>
-                    <p class="card-text">Location: @e.Location</p>
-                    <p class="card-text">@e.Description</p>
-                </div>
-            </div>
-        }
-
-        <!-- Next and previous buttons -->
-        <a class="prev" onclick="plusSlides(-1, 0)">&#10094;</a>
-        <a class="next" onclick="plusSlides(1, 0)">&#10095;</a>
-    </div>
-}
-else
-{
-    <p>No events today.</p>
-}
-
-<br />
 <br />
 
-<h2 class="text-center">Upcoming Events Of The Week</h2>
+<div class="row justify-content-center g-4">
+    <div class="col-5 me-5">
+        <h2 class="text-center custom-title">Today's Events</h2>
+        <br />
 
-@if (Model.EventsUpcoming.Any())
-{
-    <div class="slideshow-container">
-
-        @for (int i = 0; i < Model.EventsUpcoming.Count; i++)
+        @if (Model.EventsToday.Any())
         {
-            var e = Model.EventsUpcoming[i];
-            <div class="mySlides2 card border-0" style="width: 100%">
-                <div class="numbertext">@(i + 1) / @Model.EventsUpcoming.Count</div>
-                <img src="@e.ImageUrl" class="card-img-top bottom-no-radius" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">@e.Title</h5>
-                    <p class="card-text">Time: @e.StartTime - @e.EndTime</p>
-                    <p class="card-text">Location: @e.Location</p>
-                    <p class="card-text">@e.Description</p>
-                </div>
+            <div class="slideshow-container">
+
+                @for (int i = 0; i < Model.EventsToday.Count; i++)
+                {
+                    var e = Model.EventsToday[i];
+                    <div class="mySlides1 card border-0" style="width: 100%">
+                        <div class="numbertext">@(i + 1) / @Model.EventsToday.Count</div>
+                        <img src="@e.ImageUrl" class="card-img-top bottom-no-radius" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">@e.Title</h5>
+                            <br />
+                            <p class="card-text">Time: @e.StartTime  -  @e.EndTime</p>
+                            <p class="card-text">Location: @e.Location</p>
+                            <p class="card-text">@e.Description</p>
+                        </div>
+                    </div>
+                }
+
+                <!-- Next and previous buttons -->
+                <a class="prev" onclick="plusSlides(-1, 0)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1, 0)">&#10095;</a>
             </div>
         }
-
-        <!-- Next and previous buttons -->
-        <a class="prev" onclick="plusSlides(-1, 1)">&#10094;</a>
-        <a class="next" onclick="plusSlides(1, 1)">&#10095;</a>
+        else
+        {
+            <p>No events today.</p>
+        }
     </div>
-}
-else
-{
-    <p>No events today.</p>
-}
+        
+    <div class="col-5 ms-5">
+        <h2 class="text-center custom-title">Upcoming Events Of The Week</h2>
+        <br />
+
+        @if (Model.EventsUpcoming.Any())
+        {
+            <div class="slideshow-container">
+
+                @for (int i = 0; i < Model.EventsUpcoming.Count; i++)
+                {
+                    var e = Model.EventsUpcoming[i];
+                    <div class="mySlides2 card border-0" style="width: 100%">
+                        <div class="numbertext">@(i + 1) / @Model.EventsUpcoming.Count</div>
+                        <img src="@e.ImageUrl" class="card-img-top bottom-no-radius" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">@e.Title</h5>
+                            <br />
+                            <p class="card-text">Time: @e.StartTime  -  @e.EndTime</p>
+                            <p class="card-text">Location: @e.Location</p>
+                            <p class="card-text">@e.Description</p>
+                        </div>
+                    </div>
+                }
+
+                <!-- Next and previous buttons -->
+                <a class="prev" onclick="plusSlides(-1, 1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1, 1)">&#10095;</a>
+            </div>
+        }
+        else
+        {
+            <p>No events today.</p>
+        }
+    </div>
+</div>
+
 
 <script>
     let slideIndex = [1,1];
@@ -193,10 +202,49 @@ else
 </div>
 
 <!-- Interactive Map using Leaflet.js -->
-<div class="d-flex justify-content-center mb-4">
-    <div class="text-center map-card">
-        <h2 style="color: #d17a09; margin-top:1rem; margin-bottom: 1rem;">Map of the zoo</h2>
-        <div id="map" class="map mx-auto"></div>
+<div class="text-center mb-4">
+    <div class="d-flex justify-content-center align-items-center mb-2 gap-5">
+        <h2 class="custom-title" style="font-size: 45px">Map Of The Zoo</h2>
+        <a href="images/sample_map.pdf" class="text-decoration-none d-flex align-items-center" download>
+            <i class="fa-solid fa-download fa-2x" style="color: #659707"></i>
+            <span class="custom-subtitle ms-2">Download PDF here</span>
+        </a>
+    </div>
+    
+
+    <br />
+    <div class="card">
+        <div class="row">
+            <div class="col-8">
+                <div id="map" class="map" style="width: 100%"></div>
+            </div>
+            <div class="col-auto text-start my-2">
+                <div class="my-3">
+                    <i class="fa-solid fa-location-dot" style="color: orange"></i>
+                    <span class="custom-subtitle">Animal Sections</span>
+                    <p>African Savannah - lions, giraffes, zebras, elephants</p>
+                    <p>Australian Rainforest - tigers, orangutans, gibbons</p>
+                    <p>South American Jungle - jaguars, macaws, sloths</p>
+                    <p>North American Plains - bison, wolves, bears</p>
+                    <p>Arctic Zone - polar bear, seals, penguins</p>
+                </div>
+                <div class="my-3">
+                    <i class="fa-solid fa-location-dot" style="color: green"></i>
+                    <span class="custom-subtitle">Restaurants</span>
+                    <p>Savanna Cafe (10:00 - 15:00)</p>
+                    <p>Rainforest Grill (11:00 - 14:00, 17:00 - 20:00)</p>
+                    <p>Jungle Feast (11:00 - 14:00, 16:00 - 20:00)</p>
+                    <p>The Oasis Deli (11:00 - 20:00)</p>
+                    <p>The Watering Hole (10:00 - 14:00, 17:00 - 20:00)</p>
+                </div>
+                <div class="my-3">
+                    <i class="fa-solid fa-location-dot" style="color: cornflowerblue"></i>
+                    <span class="custom-subtitle">Gift Shops</span>
+                    <p>Safari Souvenirs, Jungle Treasures, Nature's Nook</p>
+                    <p>Wild Wonders Gift Shop, Riverbank Gifts</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -207,16 +255,26 @@ else
     map.fitBounds(bounds);
 
     // Icon class for Pin
-    var Pin = L.Icon.extend({
-        options: {
-            iconSize:     [50, 45], // size of the icon
-            iconAnchor:   [0, 0], // point of the icon which will correspond to marker's location
-            popupAnchor:  [25, -2] // point from which the popup should open relative to the iconAnchor
-        }
-    })
+       var orangePin = L.icon({
+        iconUrl: 'images/orange_pin.png',
+        iconSize: [40, 40],
+        iconAnchor: [0, 0],
+        popupAnchor: [25, -2]
+    });
 
-    var orangePin = new Pin({iconUrl: 'images/orange_pin.png'}),
-        bluePin = new Pin({iconUrl: 'images/blue_pin.png'});
+    var bluePin = L.icon({
+        iconUrl: 'images/blue_pin.png',
+        iconSize: [35, 40],
+        iconAnchor: [0, 0],
+        popupAnchor: [25, -2]
+    });
+
+    var greenPin = L.icon({
+        iconUrl: 'images/green_pin.png',
+        iconSize: [30, 40],
+        iconAnchor: [0, 0],
+        popupAnchor: [25, -2]
+    });
 
     // display orange pins
     L.marker([600, 300], {icon: orangePin}).addTo(map).bindPopup("Bear exhibit");
@@ -224,10 +282,12 @@ else
     L.marker([250, 150], {icon: orangePin}).addTo(map).bindPopup("Primate exhibit");
     L.marker([200, 850], {icon: orangePin}).addTo(map).bindPopup("Bird exhibit");
 
-    // display blue pins
-    L.marker([550, 450], {icon: bluePin}).addTo(map).bindPopup("Rest area");
-    L.marker([200, 1200], {icon: bluePin}).addTo(map).bindPopup("Zoo entrance");
-    L.marker([500, 1100], {icon: bluePin}).addTo(map).bindPopup("Restaurants");
+    // display green pins
+    L.marker([550, 450], {icon: greenPin}).addTo(map).bindPopup("Jungle Feast");
+    L.marker([500, 1100], {icon: greenPin}).addTo(map).bindPopup("The Watering Hole");
+
+    // dispaly blue pins
+    L.marker([200, 1200], {icon: bluePin}).addTo(map).bindPopup("Gift Shops");
 
 </script>
 
