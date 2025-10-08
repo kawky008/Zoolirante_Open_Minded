@@ -348,4 +348,23 @@ button:active {
     font-weight: 300;
     transition: .5s ease;
 }
+
+
+/* Profile initial avatar */
+.avatar-badge {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: .5px;
+    color: #fff;
+    user-select: none;
+    background: conic-gradient(from 180deg at 50% 50%, #dc9720 0deg, #db5312 120deg, #f3c36a 240deg, #dc9720 360deg);
+    box-shadow: 0 6px 16px rgba(0,0,0,.25);
+}
+
 /******************************************************************************************/

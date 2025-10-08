@@ -35,7 +35,7 @@ namespace Zoolirante_Open_Minded.Controllers
             _emailService = emailService;
         }
 
-        
+
         public IActionResult Buy()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -45,22 +45,10 @@ namespace Zoolirante_Open_Minded.Controllers
             var ticket = new EntranceTicket
             {
                 UserId = userId.Value,
-                Type = "Adult", 
-                Price = 30m     
-          
-            var user = _context.Users.Find(userId.Value);
-            var allowed = _allowedPaymentsByType.TryGetValue(ticket.Type, out var list)
-                ? list
-                : _defaultOnlinePayments;
-
-            ViewBag.AllowedPayments = allowed;
-            ViewBag.UserPaymentMethod = user?.PaymentMethod;
-            ViewBag.PaymentMethodValid =
-                allowed.Contains(user?.PaymentMethod ?? "", StringComparer.OrdinalIgnoreCase);
-
+                Type = "Adult",
+                Price = 30m
+            };
             return View(ticket);
-			return View(ticket);
-      
         }
 
 
