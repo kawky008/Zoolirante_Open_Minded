@@ -1,8 +1,19 @@
 ﻿@model IEnumerable<Zoolirante_Open_Minded.Models.AnimalFavourite>
 
 <h1>Customer's Preferred Animal </h1>
+<form asp-action="Index" method="get">
+    <div class="row">
+        <div class="col-3">
+            <input name="search" placeholder="Search..." class="form-control" />
+        </div>
+        <div class="col-3">
+            <button type="submit" class="btn btn-warning">Search</button>
+        </div>
 
-<table class="table">
+    </div>
+
+</form>
+<table class="table mt-3">
     <thead>
         <tr>
             <th>Customer Name</th>
