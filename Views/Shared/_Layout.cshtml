@@ -87,16 +87,19 @@
                                                 <span class="greeting-hello">Hello,</span><br />
                                                 <span class="greeting-name">@fullName! (Manager)</span>
                                             </span>
-                                            
-                                        </span>
-                                        
+                                        </span>                                    
                                     </a>
                                 }
                                else
                                {
                                     <a class="nav-link ms-5 me-2" asp-controller="Users" asp-action="Details" asp-route-id="@userId" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Manage Account">
-                                        Hello,<br />
-                                        <span>@fullName! (@role)</span>
+                                        <span class="d-flex align-items-center">
+                                            <i class="fa-solid fa-user fa-2x"></i>
+                                            <span>
+                                                <span class="greeting-hello">Hello,</span><br />
+                                                <span class="greeting-name">@fullName!</span>
+                                            </span>
+                                        </span>
                                     </a>
                                }
                             }
