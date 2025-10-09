@@ -72,25 +72,31 @@ namespace Zoolirante_Open_Minded.Controllers
 			var line = cart.Items.FirstOrDefault(i => i.ProductId == id);
 			if (line == null)
 			{
-				cart.Items.Add(new CartItemVM
-				{
-					ProductId = p.ProductId,
-					Name = p.Name,
-					OriginalPrice = p.Price,                                
-					Price = isMember ? p.Price * 0.90m : p.Price,  
-					Qty = Math.Max(1, Math.Min(qty, p.Stock)),
-					ImageUrl = p.ImageUrl
-				});
-			}
-			else
+                var basePrice = (p.SpecialPrice.HasValue && p.SpecialQty > 0) ? p.SpecialPrice.Value : p.Price;
+                var unitPrice = isMember ? basePrice * 0.90m : basePrice;
+
+                cart.Items.Add(new CartItemVM
+                {
+                    ProductId = p.ProductId,
+                    Name = p.Name,
+                    OriginalPrice = p.Price,
+                    Price = Math.Round(unitPrice, 2),
+                    Qty = Math.Max(1, Math.Min(qty, p.Stock)),
+                    ImageUrl = p.ImageUrl
+                });
+
+            }
+            else
 			{
 				var max = Math.Max(1, p.Stock);
-				line.Qty = Math.Min(max, line.Qty + Math.Max(1, qty));
-				line.OriginalPrice = p.Price; 
-				line.Price = isMember ? line.OriginalPrice * 0.90m : line.OriginalPrice;
-			}
+                line.Qty = Math.Min(max, line.Qty + Math.Max(1, qty));
+                line.OriginalPrice = p.Price;
 
-			HttpContext.Session.SetObject(CartKey, cart);
+                var basePrice2 = (p.SpecialPrice.HasValue && p.SpecialQty > 0) ? p.SpecialPrice.Value : p.Price;
+                line.Price = Math.Round(isMember ? basePrice2 * 0.90m : basePrice2, 2);
+            }
+
+            HttpContext.Session.SetObject(CartKey, cart);
 			TempData["CartMessage"] = isMember
 				? $"Added {p.Name} (x{qty}) — 10% member discount applied"
 				: $"Added {p.Name} (x{qty})";
@@ -99,8 +105,31 @@ namespace Zoolirante_Open_Minded.Controllers
 			if (!string.IsNullOrWhiteSpace(referer)) return Redirect(referer);
 			return RedirectToAction(nameof(Index));
 		}
-                                     
-            
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateSpecial(int id, decimal? specialPrice, int specialQty, string? specialReason, decimal? percent)
+        {
+            var m = await _context.Merchandises.FindAsync(id);
+            if (m == null) return NotFound();
+
+            // If a % is provided, compute the price off the original
+            if (percent.HasValue && percent.Value >= 0)
+            {
+                var computed = Math.Round(m.Price * (1m - (percent.Value / 100m)), 2);
+                specialPrice = computed;
+            }
+
+            // Save fields
+            m.SpecialPrice = (specialPrice.HasValue && specialPrice.Value >= 0) ? specialPrice : null;
+            m.SpecialQty = Math.Max(0, specialQty);
+            m.SpecialReason = string.IsNullOrWhiteSpace(specialReason) ? null : specialReason.Trim();
+
+            await _context.SaveChangesAsync();
+            TempData["Msg"] = "Special price updated.";
+            return RedirectToAction(nameof(Index));
+        }
+
 
         // GET: Merchandises/Create
         public IActionResult Create()

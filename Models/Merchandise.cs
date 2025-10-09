@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
+
 namespace Zoolirante_Open_Minded.Models;
 
 public partial class Merchandise
 {
+    public decimal? SpecialPrice { get; set; }
+    
+    public int SpecialQty { get; set; } = 0;
+    
+    public string? SpecialReason { get; set; }   
+
     public int ProductId { get; set; }
 
     public string Name { get; set; } = null!;
