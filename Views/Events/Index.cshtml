@@ -1,5 +1,7 @@
 ﻿@model Zoolirante_Open_Minded.ViewModels.HomeIndexViewModel
 @using Microsoft.AspNetCore.Mvc.Rendering
+@inject IHttpContextAccessor HttpContextAccessor
+
 @{
     ViewData["Title"] = "Events";
 
@@ -36,26 +38,29 @@
 </style>
 
 <section class="zoo-hero py-4">
-  <div class="container">
-    <div class="d-lg-flex align-items-end justify-content-between">
-      <div class="mb-3 mb-lg-0">
-        <h1 class="zoo-title mb-1">Explore Zoo Events</h1>
-        <p class="text-muted mb-0">Parades, keeper talks, animal encounters & more.</p>
-      </div>
-            <form method="get" class="d-flex gap-2">
-                <input class="form-control filter-chip" type="text" name="q" value="@q" placeholder="Search title, location…" />
+    <div class="container">
+        <div class="d-lg-flex align-items-end justify-content-between">
+            <div class="mb-3 mb-lg-0">
+                <h1 class="zoo-title mb-1">Explore Zoo Events</h1>
+                <p class="text-muted mb-0">Parades, keeper talks, animal encounters & more.</p>
+            </div>
 
-                @Html.DropDownList(
-                "sort",
-                                new SelectList(items, "Value", "Text", selected),
-                                new { @class = "form-select filter-chip" }
-                                )
+            <div class="d-flex gap-2 align-items-center">
+                <form method="get" class="d-flex gap-2">
+                    <input class="form-control filter-chip" type="text" name="q" value="@q" placeholder="Search title, location…" />
+                    @Html.DropDownList("sort", new SelectList(items, "Value", "Text", selected),
+                    new { @class = "form-select filter-chip" })
+                    <button class="btn btn-zoo">Apply</button>
+                </form>
 
-                <button class="btn btn-zoo">Apply</button>
-            </form>
+                @if (isManager)
+                {
+                    <a asp-controller="Events" asp-action="Create" class="btn btn-success">Add New Event</a>
+                }
+            </div>
 
+        </div>
     </div>
-  </div>
 </section>
 
 <div class="py-4">
