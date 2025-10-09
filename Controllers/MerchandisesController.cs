@@ -212,25 +212,17 @@ namespace Zoolirante_Open_Minded.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AdjustStock(int id, [Bind("ProductId,Name,Description,Price,ImageUrl,Category")] Merchandise form)
+        public async Task<IActionResult> AdjustStock(int id, int adjustBy = 0, string? reason = null)
         {
-            if (id != form.ProductId) return NotFound();
-            if (!ModelState.IsValid) return View(form); // re-render with validation
-
             var p = await _context.Merchandises.FindAsync(id);
             if (p == null) return NotFound();
 
-            // Only update the fields in the main form.
-            p.Name = form.Name;
-            p.Description = form.Description;
-            p.Price = form.Price;
-            p.ImageUrl = form.ImageUrl;
-            p.Category = form.Category;
+            // adjust SOH; never below zero
+            p.Stock = Math.Max(0, p.Stock + adjustBy);
 
-            // DO NOT touch p.Stock / p.CurrentShelf / p.ShelfCapacity here.
             await _context.SaveChangesAsync();
 
-            TempData["Toast"] = "Saved.";
+            TempData["Toast"] = $"SOH adjusted by {adjustBy}. New SOH: {p.Stock}.";
             return RedirectToAction(nameof(Edit), new { id });
         }
 
