@@ -57,7 +57,14 @@
 
     }
 </style>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-3" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
 
+
+}
 <div class="create-wrap">
     <!-- Collapsible header -->
     <h1 class="hero-title" data-bs-toggle="collapse" data-bs-target="#createCollapse" aria-expanded="true" aria-controls="createCollapse">
@@ -124,7 +131,7 @@
                     <a asp-action="Index" class="btn btn-link">Back to List</a>
                 </div>
             </form>
-
+     
             <div class="small subtle mt-3">
                 Note: First/Middle/Last, Street No. and Phone are collected for a smoother setup.
                 With the current data model only <strong>Full Name, Email and Password</strong> are stored.
@@ -135,6 +142,14 @@
 </div>
 
 <script>
+     let seconds = 5;
+                    const timer = setInterval(() => {
+                        seconds--;
+                        if (seconds <= 0) {
+                            clearInterval(timer);
+                            window.location.href = '@Url.Action("Login", "Users")'; 
+                        }
+                    }, 1000);
     // Build FullName from the 3 fields before submit (no backend changes)
     document.getElementById('createForm').addEventListener('submit', function () {
       const first = (document.getElementById('firstName').value || '').trim();

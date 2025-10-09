@@ -236,7 +236,8 @@ namespace Zoolirante_Open_Minded.Controllers
 
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = " Account created successfully! Redirecting to login in 4 seconds...";
+            return RedirectToAction(nameof(Create));
             }
            // return View(user);
         //}
