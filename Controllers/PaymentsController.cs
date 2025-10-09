@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -142,7 +142,10 @@ namespace Zoolirante_Open_Minded.Controllers
 				await _context.SaveChangesAsync();
 
                 var visitDate = vm.VisitDate ?? now;
-                var user = await _context.Users.FindAsync(uid.Value);
+                var user = await _context.Users
+     .Include(u => u.AnimalFavourites)
+         .ThenInclude(af => af.Animal) 
+     .FirstOrDefaultAsync(u => u.UserId == uid.Value);
                 await _email.SendTicketConfirmationAsync(user, ticket);
                 if (user != null)
                 {
@@ -150,8 +153,12 @@ namespace Zoolirante_Open_Minded.Controllers
 
                     if (daysUntilVisit <= 1)
                     {
+                        var favouriteAnimals = user.AnimalFavourites
+                            .Where(a => a.Animal != null)
+                                   .Select(a => a.Animal.Name)
+                                   .ToList();
 
-                        await _email.BookingReminder(_context, user, ticket);
+                        await _email.BookingReminder(_context, user, ticket, favouriteAnimals);
                     }
                     else
                     {
