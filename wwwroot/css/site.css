@@ -417,3 +417,29 @@ button:active {
 }
 
 /******************************************************************************************/
+
+
+/******************    Staff UI Buttons    *******************/
+.create-button,
+.edit-button,
+.delete-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: initial;
+    color: white;
+    background-color: #659707;
+    width: 150px;
+    height: 40px;
+    border-radius: 10px;
+    margin: 10px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+    .create-button:hover,
+    .edit-button:hover,
+    .delete-button:hover {
+        background-color: #65c707;
+    }
+
+/*************************************************************/

@@ -5,6 +5,13 @@
 @{
     ViewData["Title"] = "Index";
     var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
+    var role = HttpContextAccessor.HttpContext.Session.GetString("Role");
+}
+
+@if (role == "Admin")
+{
+    <a class="create-button" asp-controller="Animals" asp-action="Create">Add Animal</a>
+    <hr />
 }
 
 <form id="filterForm" asp-controller="Animals" asp-action="Index">
@@ -129,6 +136,11 @@ else
                         <p class="card-text mb-1">Species: @Html.DisplayFor(modelItem => item.Species)</p>
                         <p class="card-text mb-1">Conservation Status: @Html.DisplayFor(modelItem => item.ConservationStatus)</p>
                         <p class="card-text mb-1">Region: @Html.DisplayFor(modelItem => item.Region)</p>
+                        @if (role == "Admin")
+                        {
+                            <a class="edit-button" asp-controller="Animals" asp-action="Edit" asp-route-id="@item.AnimalId">Edit Details</a>
+                            <a class="delete-button" asp-controller="Animals" asp-action="Delete" asp-route-id="@item.AnimalId">Delete Animal</a>
+                        }
                     </div>
                 </div>
             </div>
