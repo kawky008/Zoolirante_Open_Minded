@@ -12,6 +12,7 @@ namespace Zoolirante_Open_Minded.Services
         Task SendEmailAsync(string toEmail, string subject, string body);
         Task SendTicketConfirmationAsync(User user, EntranceTicket ticket);
         Task BookingReminder(ZooliranteDatabaseContext context, User user, EntranceTicket ticket, List<string> animalFavourite);
+        Task BenefitsMembership(User user, Membership membership);
     }
     public class Email : IEmailService
     {
@@ -22,6 +23,56 @@ namespace Zoolirante_Open_Minded.Services
         {
             _config = config;
         }
+
+        public async Task BenefitsMembership(User user, Membership membership)
+        {
+            if (user == null || membership == null)
+                throw new ArgumentNullException("User or membership cannot be null.");
+
+            string subject = "🎉 Exclusive Membership Benefits – 20% Off for You!";
+            string body;
+
+            if (membership.IsActive)
+            {
+                body = $@"
+<h2>Hi {user.FullName},</h2>
+<p>Great news! As a valued <strong>Zoolirante Open-Minded Member</strong>, you can now enjoy:</p>
+
+<ul>
+    <li><strong>20% OFF</strong> all merchandise purchases 🛍️</li>
+    <li><strong>20% OFF</strong> your entrance tickets 🎟️</li>
+</ul>
+
+<p>Start date: <b>{membership.StartDate:dd/MM/yyyy}</b></p>
+<p>Valid until: <b>{membership.EndDate:dd/MM/yyyy}</b></p>
+
+<p>Use your membership when purchasing tickets or souvenirs at Zoolirante to automatically receive your discount!</p>
+
+<p>Thank you for being part of our Zoolirante family 🐾</p>
+<p><em>- The Zoolirante Open-Minded Team</em></p>
+";
+            }
+            else
+            {
+                body = $@"
+<h2>Hi {user.FullName},</h2>
+<p>Your Zoolirante membership has expired 😢</p>
+
+<p>Renew now to continue enjoying:</p>
+<ul>
+    <li><strong>20% OFF</strong> tickets and merchandise</li>
+    <li>Exclusive member-only events and previews</li>
+</ul>
+
+<p><a href='https://zoolirante.com/membership'>Renew your membership now</a> to keep your benefits active!</p>
+
+<p>See you again soon at <b>Zoolirante Open-Minded</b>!</p>
+";
+            }
+
+            await SendEmailAsync(user.Email, subject, body);
+        }
+
         public async Task BookingReminder(ZooliranteDatabaseContext context, User user, EntranceTicket ticket, List<string> animalFavourite)
         {
 
