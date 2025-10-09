@@ -34,7 +34,7 @@ namespace Zoolirante_Open_Minded.Controllers
                 var term = q.Trim();
                 baseQuery = baseQuery.Where(e =>
                     e.Title.Contains(term) ||
-                    e.Description!.Contains(term) ||
+                    (e.Description != null && e.Description.Contains(term)) ||
                     e.Location.Contains(term));
             }
 
@@ -79,35 +79,33 @@ namespace Zoolirante_Open_Minded.Controllers
             });
         }
 
-
-
-        // GET: Events/Details/5
+        // /Events/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id is null) return NotFound();
 
+            // Uses skip-navigation Include (needs the join table to exist)
             var ev = await _context.Events
-            .Include(e => e.Animals)                 
-            .FirstOrDefaultAsync(e => e.EventId == id);
-
+                .Include(e => e.Animals)
+                .FirstOrDefaultAsync(e => e.EventId == id);
 
             if (ev is null) return NotFound();
 
             // 3 related upcoming events (not this one)
             var related = await _context.Events
-    .Where(e => e.EventId != ev.EventId && e.StartTime >= DateTime.Today)
-    .OrderBy(e => e.StartTime).Take(3)
-    .Select(e => new EventViewModel
-    {
-        EventId = e.EventId,
-        Title = e.Title,
-        Location = e.Location,
-        StartTime = e.StartTime,
-        EndTime = e.EndTime,
-        Description = e.Description,
-        ImageUrl = e.ImageUrl
-    })
-    .ToListAsync();
+                .Where(e => e.EventId != ev.EventId && e.StartTime >= DateTime.Today)
+                .OrderBy(e => e.StartTime).Take(3)
+                .Select(e => new EventViewModel
+                {
+                    EventId = e.EventId,
+                    Title = e.Title,
+                    Location = e.Location,
+                    StartTime = e.StartTime,
+                    EndTime = e.EndTime,
+                    Description = e.Description,
+                    ImageUrl = e.ImageUrl
+                })
+                .ToListAsync();
 
             var vm = new EventViewModel
             {
@@ -119,6 +117,7 @@ namespace Zoolirante_Open_Minded.Controllers
             return View(vm);
         }
 
+        // /Events/Ics/5
         [HttpGet]
         public async Task<IActionResult> Ics(int id)
         {
@@ -148,14 +147,10 @@ namespace Zoolirante_Open_Minded.Controllers
                 .ToString();
 
             var bytes = Encoding.UTF8.GetBytes(ics);
+            var safe = string.Join("_", (ev.Title ?? "event").Split(Path.GetInvalidFileNameChars()));
+            return File(bytes, "text/calendar", $"{safe}.ics");
+        }
 
-            // (optional) sanitize file name a bit more if needed
-            var safeTitle = string.Join("_", ev.Title.Split(Path.GetInvalidFileNameChars()));
-            var fileName = $"{(string.IsNullOrWhiteSpace(safeTitle) ? "event" : safeTitle)}.ics";
-
-            return File(bytes, "text/calendar", fileName);
-        } // <-- Ics action ends here
-     // <-- controller closes here
 
 
 // GET: Events/Create
@@ -171,6 +166,8 @@ public IActionResult Create()
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("EventId,Title,Description,StartTime,EndTime,Capacity,Price,Location")] Event @event)
         {
+            // validation ...
+            if (!ModelState.IsValid) return View(@event);
             // Business validation (kept minimal and non-invasive)
             if (string.IsNullOrWhiteSpace(@event.Title))
                 ModelState.AddModelError(nameof(@event.Title), "Title is required.");
@@ -189,20 +186,6 @@ public IActionResult Create()
 
             if (!ModelState.IsValid)
                 return View(@event);
-
-            _context.Add(@event);
-            await _context.SaveChangesAsync();
-
-            // Ensure the new event appears on the public Events page immediately:
-            var now = DateTime.Now;
-            if (@event.StartTime > now)
-                return RedirectToAction(nameof(Upcoming));  // will show on Upcoming
-            if (@event.StartTime <= now && @event.EndTime >= now)
-                return RedirectToAction(nameof(Ongoing));   // will show on Ongoing
-
-            // If the event was created already ended (edge case), default to Upcoming list
-            return RedirectToAction(nameof(Upcoming));
-        }
 
 
         // GET: Events/Edit/5
