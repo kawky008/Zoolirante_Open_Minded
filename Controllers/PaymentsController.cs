@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -97,7 +97,17 @@ namespace Zoolirante_Open_Minded.Controllers
 				}
 				await _context.SaveChangesAsync();
 
-				HttpContext.Session.SetString("IsMember", "1");
+				
+                var membership = await _context.Memberships
+                   .Where(u => u.UserId == uid)
+                   .OrderByDescending(m => m.EndDate)
+                   .FirstOrDefaultAsync();
+
+                var user = _context.Users.Where(u => u.UserId == uid).FirstOrDefault();
+
+                await _email.BenefitsMembership(user, membership);
+
+                HttpContext.Session.SetString("IsMember", "1");
 				TempData["Msg"] = "Payment accepted (demo). Membership activated! Redirecting to Home...";
 				vm.CardNumber = vm.Cvv = "";
 				return View(vm);
@@ -142,7 +152,10 @@ namespace Zoolirante_Open_Minded.Controllers
 				await _context.SaveChangesAsync();
 
                 var visitDate = vm.VisitDate ?? now;
-                var user = await _context.Users.FindAsync(uid.Value);
+                var user = await _context.Users
+     .Include(u => u.AnimalFavourites)
+         .ThenInclude(af => af.Animal) 
+     .FirstOrDefaultAsync(u => u.UserId == uid.Value);
                 await _email.SendTicketConfirmationAsync(user, ticket);
                 if (user != null)
                 {
@@ -150,8 +163,12 @@ namespace Zoolirante_Open_Minded.Controllers
 
                     if (daysUntilVisit <= 1)
                     {
+                        var favouriteAnimals = user.AnimalFavourites
+                            .Where(a => a.Animal != null)
+                                   .Select(a => a.Animal.Name)
+                                   .ToList();
 
-                        await _email.BookingReminder(_context, user, ticket);
+                        await _email.BookingReminder(_context, user, ticket, favouriteAnimals);
                     }
                     else
                     {
@@ -252,23 +269,32 @@ namespace Zoolirante_Open_Minded.Controllers
 			{
 				var uid = HttpContext.Session.GetInt32("UserId");
 				if (uid is null) return RedirectToAction("Login", "Users");
-
-				var now = DateTime.UtcNow;
+                var user = _context.Users.Where(u => u.UserId == uid).FirstOrDefault();
+                var now = DateTime.UtcNow;
 				var current = await _context.Memberships
 					.Where(x => x.UserId == uid.Value && x.EndDate > now)
 					.OrderByDescending(x => x.EndDate)
 					.FirstOrDefaultAsync();
 
-				if (current is null)
+                
+                if (current is null)
 					_context.Memberships.Add(new Membership { UserId = uid.Value, StartDate = now, EndDate = now.AddMonths(1) });
 				else
 				{
 					current.EndDate = current.EndDate.AddMonths(1);
 					_context.Update(current);
 				}
-				await _context.SaveChangesAsync();
 
-				HttpContext.Session.SetString("IsMember", "1");
+                await _context.SaveChangesAsync();
+                var membership = await _context.Memberships
+                    .Where(u => u.UserId == uid)
+                    .OrderByDescending(m => m.EndDate)
+                    .FirstOrDefaultAsync();
+
+                
+                await _email.BenefitsMembership(user, membership);
+                
+                HttpContext.Session.SetString("IsMember", "1");
 				TempData["Msg"] = "PayPal (demo): Membership activated/extended!";
 				return RedirectToAction("Index", "Memberships");
 			}

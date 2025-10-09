@@ -28,7 +28,9 @@ namespace Zoolirante_Open_Minded.Controllers
             var ordersQuery = _context.Orders
                 .Include(o => o.PickupLocation)
                 .Include(o => o.User)
+                    .ThenInclude(u => u.UserDetail)   
                 .AsQueryable();
+
 
             if (!string.IsNullOrWhiteSpace(search))
             {

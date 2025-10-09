@@ -228,15 +228,25 @@ namespace Zoolirante_Open_Minded.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(User user)
         {
+            bool emailExists = await _context.Users
+        .AnyAsync(u => u.Email == user.Email);
+
+            if (emailExists)
+            {
+                
+                ModelState.AddModelError("Email", "This email is already registered.");
+                return View(user);
+            }
             //if (ModelState.IsValid)
             //{
-                // Hash password before saving
-                if (!string.IsNullOrEmpty(user.PasswordHash))
+            // Hash password before saving
+            if (!string.IsNullOrEmpty(user.PasswordHash))
                     user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
 
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "Account created successfully!";
+            return RedirectToAction("Login");
             }
            // return View(user);
         //}

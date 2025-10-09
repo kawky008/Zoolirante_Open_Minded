@@ -15,6 +15,7 @@ public partial class ZooliranteDatabaseContext : DbContext
         : base(options)
     {
     }
+    public DbSet<EventAnimal> EventAnimal {  get; set; }
     public DbSet<PendingEmail> PendingEmails { get; set; }
     public virtual DbSet<EntranceTicket> EntranceTicket { get; set; }
     
@@ -48,7 +49,14 @@ public partial class ZooliranteDatabaseContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
+        modelBuilder.Entity<EventAnimal>()
+        .HasKey(ea => ea.Id);
 
+        modelBuilder.Entity<EventAnimal>()
+            .HasOne(ea => ea.Event)
+            .WithOne(e => e.EventAnimal)
+            .HasForeignKey<EventAnimal>(ea => ea.EventId)
+            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<UserDetail>(entity =>
         {
             entity.ToTable("UserDetail");
