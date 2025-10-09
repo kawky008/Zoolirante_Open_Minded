@@ -124,7 +124,7 @@ body {
 /* From Uiverse.io by OnlyCodeChannel */
 .searchBox {
     display: flex;
-    max-width: 300px;
+    max-width: 800px;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
@@ -166,8 +166,8 @@ button:active {
     border: none;
     background: none;
     outline: none;
-    color: #e1e1e1;
-    font-size: 15px;
+    color: black;
+    font-size: 18px;
     padding: 24px 46px 24px 26px;
 }
 
