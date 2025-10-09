@@ -13,14 +13,43 @@
 }
 <h1>Merchandise</h1>
 
-<form method="get" class="row g-2 mb-3">
-    <div class="col-4">
-        <input name="searchText" value="@ViewBag.SearchText" class="form-control" placeholder="Search Items..." />
-    </div>
-    <div class="col-md-2">
-        <button class="btn btn-warning w-100 mb-2" type="submit">Find your Item</button>
+<form method="get" class="filters-wrap">
+    <div class="filter-slab">
+        <div class="row g-3 align-items-center">
+          
+            <div class="col-12 col-md-4">
+                <select name="category"
+                        class="form-select"
+                        asp-items="@(ViewBag.CategoryList as IEnumerable<SelectListItem>)"
+                        onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+
+        
+            <div class="col-12 col-md-6">
+                <input name="searchText"
+                       value="@ViewBag.SearchText"
+                       class="form-control"
+                       placeholder="Search merchandise..." />
+            </div>
+
+
+            <div class="col-12 col-md-2">
+                <button type="submit" class="btn btn-warning w-100 filter-btn">
+                    Search
+   
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="11" cy="11" r="7" stroke-width="2"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
     </div>
 </form>
+
 @if (userId != null && role == "Admin")
 {
     <p><a class="btn btn-warning" asp-action="Create">Create New</a></p>
@@ -127,4 +156,4 @@ else
         }
     </div>
 }
-}
+

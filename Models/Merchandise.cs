@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 
 namespace Zoolirante_Open_Minded.Models;
@@ -20,4 +21,10 @@ public partial class Merchandise
     public string? Category { get; set; }
 
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+}
+public class MerchandiseIndexVM
+{
+    public string? SelectedCategory { get; set; }
+    public List<SelectListItem> Categories { get; set; } = new();
+    public List<Merchandise> Items { get; set; } = new();
 }

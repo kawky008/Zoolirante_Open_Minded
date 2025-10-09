@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,23 +20,48 @@ namespace Zoolirante_Open_Minded.Controllers
         {
             _context = context;
         }
-        
-        // GET: Merchandises
-        
-        public async Task<IActionResult> Index(string searchText)
-        {
-			ViewData["BannerText"] = "View our merchandises";
-			var q = _context.Merchandises.AsQueryable();
 
-			if (!string.IsNullOrWhiteSpace(searchText))
-				q = q.Where(i => i.Name.StartsWith(searchText));
-			return View(await q.ToListAsync());
+        // GET: Merchandises
+
+        public async Task<IActionResult> Index(string? searchText, string? category)
+        {
+            ViewData["BannerText"] = "View our merchandises";
+            var q = _context.Merchandises.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchText))
+                q = q.Where(i => i.Name.StartsWith(searchText));
+            var categories = await _context.Merchandises
+        .AsNoTracking()
+        .Where(m => !string.IsNullOrEmpty(m.Category))
+        .Select(m => m.Category!)
+        .Distinct()
+        .OrderBy(c => c)
+        .ToListAsync();
+
+            var categoryItems = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "", Text = "All categories" }
+    };
+            categoryItems.AddRange(categories.Select(c => new SelectListItem
+            {
+                Value = c,
+                Text = c,
+                Selected = string.Equals(c, category)
+            }));
+            ViewBag.CategoryList = categoryItems;
+
+            if (!string.IsNullOrWhiteSpace(category))
+                q = q.Where(i => i.Category == category);
+
+            return View(await q.OrderBy(i => i.Name).ToListAsync());
+
+
         }
 
         // GET: Merchandises/Details/5
         public async Task<IActionResult> Details(int? id)
-		{
-			if (id == null)
+        {
+            if (id == null)
             {
                 return NotFound();
             }
@@ -58,49 +82,49 @@ namespace Zoolirante_Open_Minded.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(int id, int qty = 1)
         {
-			var p = await _context.Merchandises.FirstOrDefaultAsync(x => x.ProductId == id);
-			if (p == null) return NotFound();
+            var p = await _context.Merchandises.FirstOrDefaultAsync(x => x.ProductId == id);
+            if (p == null) return NotFound();
 
-			var now = DateTime.UtcNow;
-			var uid = HttpContext.Session.GetInt32("UserId");
-			var isMember = uid.HasValue && await _context.Memberships
-				.AnyAsync(m => m.UserId == uid.Value && m.EndDate > now);
+            var now = DateTime.UtcNow;
+            var uid = HttpContext.Session.GetInt32("UserId");
+            var isMember = uid.HasValue && await _context.Memberships
+                .AnyAsync(m => m.UserId == uid.Value && m.EndDate > now);
 
-			const string CartKey = "CART_V1";
-			var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
+            const string CartKey = "CART_V1";
+            var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
 
-			var line = cart.Items.FirstOrDefault(i => i.ProductId == id);
-			if (line == null)
-			{
-				cart.Items.Add(new CartItemVM
-				{
-					ProductId = p.ProductId,
-					Name = p.Name,
-					OriginalPrice = p.Price,                                
-					Price = isMember ? p.Price * 0.90m : p.Price,  
-					Qty = Math.Max(1, Math.Min(qty, p.Stock)),
-					ImageUrl = p.ImageUrl
-				});
-			}
-			else
-			{
-				var max = Math.Max(1, p.Stock);
-				line.Qty = Math.Min(max, line.Qty + Math.Max(1, qty));
-				line.OriginalPrice = p.Price; 
-				line.Price = isMember ? line.OriginalPrice * 0.90m : line.OriginalPrice;
-			}
+            var line = cart.Items.FirstOrDefault(i => i.ProductId == id);
+            if (line == null)
+            {
+                cart.Items.Add(new CartItemVM
+                {
+                    ProductId = p.ProductId,
+                    Name = p.Name,
+                    OriginalPrice = p.Price,
+                    Price = isMember ? p.Price * 0.90m : p.Price,
+                    Qty = Math.Max(1, Math.Min(qty, p.Stock)),
+                    ImageUrl = p.ImageUrl
+                });
+            }
+            else
+            {
+                var max = Math.Max(1, p.Stock);
+                line.Qty = Math.Min(max, line.Qty + Math.Max(1, qty));
+                line.OriginalPrice = p.Price;
+                line.Price = isMember ? line.OriginalPrice * 0.90m : line.OriginalPrice;
+            }
 
-			HttpContext.Session.SetObject(CartKey, cart);
-			TempData["CartMessage"] = isMember
-				? $"Added {p.Name} (x{qty}) — 10% member discount applied"
-				: $"Added {p.Name} (x{qty})";
+            HttpContext.Session.SetObject(CartKey, cart);
+            TempData["CartMessage"] = isMember
+                ? $"Added {p.Name} (x{qty}) — 10% member discount applied"
+                : $"Added {p.Name} (x{qty})";
 
-			var referer = Request.Headers["Referer"].ToString();
-			if (!string.IsNullOrWhiteSpace(referer)) return Redirect(referer);
-			return RedirectToAction(nameof(Index));
-		}
-                                     
-            
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrWhiteSpace(referer)) return Redirect(referer);
+            return RedirectToAction(nameof(Index));
+        }
+
+
 
         // GET: Merchandises/Create
         public IActionResult Create()

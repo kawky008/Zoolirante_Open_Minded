@@ -417,3 +417,52 @@ button:active {
 }
 
 /******************************************************************************************/
+
+
+
+:root {
+    --amber: #f0ad4e; 
+    --amber-300: #f6c26b; 
+    --panel-bg: #fff;
+}
+
+.filter-slab {
+    background: var(--panel-bg);
+    border: 2px solid var(--amber-300);
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+
+    .filter-slab .form-select,
+    .filter-slab .form-control {
+        height: 56px;
+        border: 1px solid var(--amber-300);
+        border-radius: 12px;
+        box-shadow: none;
+    }
+
+        .filter-slab .form-select:focus,
+        .filter-slab .form-control:focus {
+            border-color: var(--amber);
+            outline: none;
+            box-shadow: 0 0 0 .25rem rgba(240,173,78,.25);
+        }
+
+.filter-btn {
+    height: 56px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+    .filter-btn .icon {
+        width: 18px;
+        height: 18px;
+        margin-left: 6px;
+        vertical-align: -2px;
+    }
+
+.filters-wrap {
+    margin-top: 18px;
+    margin-bottom: 28px;
+}
