@@ -71,7 +71,12 @@
 
     }
 </style>
-
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
 <div class="login-wrap">
     <h1 class="page-title mb-1">Account Logon</h1>
     <div class="lead-muted mb-4">Returning Customer</div>

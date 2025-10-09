@@ -57,11 +57,6 @@
 
     }
 </style>
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success mt-3" role="alert">
-        @TempData["SuccessMessage"]
-    </div>
 
 
 }
@@ -142,14 +137,7 @@
 </div>
 
 <script>
-     let seconds = 5;
-                    const timer = setInterval(() => {
-                        seconds--;
-                        if (seconds <= 0) {
-                            clearInterval(timer);
-                            window.location.href = '@Url.Action("Login", "Users")'; 
-                        }
-                    }, 1000);
+    
     // Build FullName from the 3 fields before submit (no backend changes)
     document.getElementById('createForm').addEventListener('submit', function () {
       const first = (document.getElementById('firstName').value || '').trim();
