@@ -30,14 +30,21 @@ namespace Zoolirante_Open_Minded.Controllers
         private readonly IEmailService _emailService;
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string? search)
         {
             var animalF = _context.EntranceTicket
-                      .Include(a => a.User)
+                      .Include(a => a.User).AsQueryable();
                       
-                      .ToList();
+            if (!string.IsNullOrEmpty(search))
+            {
+                int userIdSearch;
+                bool isNumber = int.TryParse(search, out userIdSearch);
+                animalF = animalF.Where(a =>
+                    (isNumber && a.UserId == userIdSearch) ||
+                    a.User.FullName.Contains(search) || a.Type.Contains(search));
+            }
 
-            return View(animalF);
+            return View(animalF.ToList());
         }
         public EntranceTicketsController(ZooliranteDatabaseContext context, IEmailService emailService)
         {
