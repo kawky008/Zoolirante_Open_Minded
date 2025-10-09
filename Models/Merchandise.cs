@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Zoolirante_Open_Minded.Models;
 
@@ -19,6 +20,12 @@ public partial class Merchandise
     public string? ImageUrl { get; set; }
 
     public string? Category { get; set; }
+
+    [Range(0, int.MaxValue)]
+    public int ShelfCapacity { get; set; } = 0;  
+
+    [Range(0, int.MaxValue)]
+    public int CurrentShelf { get; set; } = 0;
 
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }
