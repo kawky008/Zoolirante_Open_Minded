@@ -187,6 +187,15 @@ public IActionResult Create()
             if (!ModelState.IsValid)
                 return View(@event);
 
+            _context.Events.Add(@event);
+            await _context.SaveChangesAsync();
+
+            // redirect after successful create
+            return RedirectToAction(nameof(Index));
+
+        }
+
+
 
         // GET: Events/Edit/5
         public async Task<IActionResult> Edit(int? id)
