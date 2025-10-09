@@ -152,7 +152,6 @@ namespace Zoolirante_Open_Minded.Controllers
         }
 
 
-
 // GET: Events/Create
 public IActionResult Create()
         {
@@ -163,12 +162,14 @@ public IActionResult Create()
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("EventId,Title,Description,StartTime,EndTime,Capacity,Price,Location")] Event @event)
         {
-            // validation ...
+            // Basic model validation
             if (!ModelState.IsValid) return View(@event);
-            // Business validation (kept minimal and non-invasive)
+
+            // Business validation
             if (string.IsNullOrWhiteSpace(@event.Title))
                 ModelState.AddModelError(nameof(@event.Title), "Title is required.");
 
@@ -184,18 +185,13 @@ public IActionResult Create()
             if (@event.Price < 0)
                 ModelState.AddModelError(nameof(@event.Price), "Price cannot be negative.");
 
-            if (!ModelState.IsValid)
-                return View(@event);
+            if (!ModelState.IsValid) return View(@event);
 
-            _context.Events.Add(@event);
+            // Success path (this was missing)
+            _context.Add(@event);
             await _context.SaveChangesAsync();
-
-            // redirect after successful create
             return RedirectToAction(nameof(Index));
-
         }
-
-
 
         // GET: Events/Edit/5
         public async Task<IActionResult> Edit(int? id)
