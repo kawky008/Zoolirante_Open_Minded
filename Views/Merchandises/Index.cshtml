@@ -145,7 +145,7 @@ else
 
                     <div class="card-footer bg-transparent border-0">
                         <div class="d-grid gap-2">
-                            <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.ProductId">Details</a>
+                            <a class="btn btn-warning" asp-action="Details" asp-route-id="@item.ProductId">Details</a>
 
                             @if (userId != null && isManager)
                             {
@@ -157,15 +157,8 @@ else
                                     <i class="fa-solid fa-screwdriver-wrench me-1"></i> Stock Adjustment
                                 </a>
 
-                                <a class="btn btn-sm btn-outline-danger"
-                                   asp-action="Delete"
-                                   asp-route-id="@item.ProductId">
-                                    Delete
-                                </a>
-                                <a class="btn btn-warning btn-sm"
-                                   asp-controller="Lto" asp-action="Index">
-                                    📦 LTO Action
-                                </a>
+                                <a class="btn btn-sm btn-warning" asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+
                                 <div class="btn-group">
                                     <button type="button"
                                             class="btn btn-sm btn-warning"
