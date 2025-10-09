@@ -16,7 +16,6 @@
 }
 
 <h1 class="custom-large-title">Merchandise</h1>
-<hr />
 
 <form method="get" class="row g-2 mb-3">
     <div class="col-4">
@@ -42,19 +41,7 @@
         <a class="btn btn-outline-secondary" asp-controller="Cart" asp-action="Index">View Cart</a>
     </div>
 
-<style>
-    .cart-icon {
-        color: #db7322;
-        transition: color 0.3s ease;
-    }
-
-    .cart-icon:hover {
-        color: #e09344;
-    }
-</style>
-
-<br />
-<hr />
+}
 
 
 <style>
@@ -80,7 +67,7 @@ else
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
         @foreach (var item in Model)
         {
-            <div class="col mb-4">
+            <div class="col">
                 <div class="card h-100 shadow-sm">
                     <img class="card-img-top" src="@item.ImageUrl" alt="@item.Name" />
 
@@ -254,5 +241,3 @@ else
             .forEach(el => new bootstrap.Tooltip(el));
     </script>
 }
-
-
