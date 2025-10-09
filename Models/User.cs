@@ -34,5 +34,6 @@ namespace Zoolirante_Open_Minded.Models
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
         public ICollection<Membership> Memberships { get; set; } = new List<Membership>();
         public virtual UserDetail? UserDetail { get; set; }
+        public ICollection<AnimalFavourite> AnimalFavourites { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace Zoolirante_Open_Minded.Controllers
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             var userRole = HttpContext.Session.GetString("Role");
@@ -28,14 +28,21 @@ namespace Zoolirante_Open_Minded.Controllers
             var ordersQuery = _context.Orders
                 .Include(o => o.PickupLocation)
                 .Include(o => o.User)
+                    .ThenInclude(u => u.UserDetail)   
                 .AsQueryable();
 
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                ordersQuery = ordersQuery.Where(o =>o.User.FullName.Contains(search) || o.Items.Contains(search) || o.Status.Contains(search) || o.User.Email.Contains(search));
+            }
             if (userRole == "Customer")
             {
                 var orders = ordersQuery.Where(o => o.UserId == userId);
                 return View(await orders.ToListAsync());
             }
 
+            
             return View(await ordersQuery.ToListAsync());
 
 

@@ -168,13 +168,25 @@ public IActionResult Create()
         {
             // validation ...
             if (!ModelState.IsValid) return View(@event);
+            // Business validation (kept minimal and non-invasive)
+            if (string.IsNullOrWhiteSpace(@event.Title))
+                ModelState.AddModelError(nameof(@event.Title), "Title is required.");
 
-            _context.Add(@event);
-            await _context.SaveChangesAsync();
+            if (string.IsNullOrWhiteSpace(@event.Location))
+                ModelState.AddModelError(nameof(@event.Location), "Location is required.");
 
-            // After save, just show the Events page; the new item will appear under Today/Upcoming automatically
-            return RedirectToAction(nameof(Index));
-        }
+            if (@event.StartTime >= @event.EndTime)
+                ModelState.AddModelError(nameof(@event.EndTime), "End time must be after start time.");
+
+            if (@event.Capacity.HasValue && @event.Capacity.Value < 0)
+                ModelState.AddModelError(nameof(@event.Capacity), "Capacity cannot be negative.");
+
+            if (@event.Price < 0)
+                ModelState.AddModelError(nameof(@event.Price), "Price cannot be negative.");
+
+            if (!ModelState.IsValid)
+                return View(@event);
+
 
         // GET: Events/Edit/5
         public async Task<IActionResult> Edit(int? id)

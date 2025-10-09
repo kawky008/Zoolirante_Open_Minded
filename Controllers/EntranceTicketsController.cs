@@ -29,6 +29,23 @@ namespace Zoolirante_Open_Minded.Controllers
         private readonly ZooliranteDatabaseContext _context;
         private readonly IEmailService _emailService;
 
+        [HttpGet]
+        public IActionResult Index(string? search)
+        {
+            var animalF = _context.EntranceTicket
+                      .Include(a => a.User).AsQueryable();
+                      
+            if (!string.IsNullOrEmpty(search))
+            {
+                int userIdSearch;
+                bool isNumber = int.TryParse(search, out userIdSearch);
+                animalF = animalF.Where(a =>
+                    (isNumber && a.UserId == userIdSearch) ||
+                    a.User.FullName.Contains(search) || a.Type.Contains(search));
+            }
+
+            return View(animalF.ToList());
+        }
         public EntranceTicketsController(ZooliranteDatabaseContext context, IEmailService emailService)
         {
             _context = context;
@@ -98,7 +115,7 @@ namespace Zoolirante_Open_Minded.Controllers
 
 			ticket.CreatedAt = DateTime.Now;
 
-                ticket.ExpiredAt = DateTime.Now.AddMonths(1);
+                //ticket.ExpiredAt = DateTime.Now.AddMonths(1);
                 ticket.Details = "Ticket purchased online";
 
 			var isMember = await _context.Memberships

@@ -20,6 +20,21 @@ namespace Zoolirante_Open_Minded.Controllers
             _context = context;
         }
 
+		
+		public IActionResult Index(string? search)
+		{
+			var animalF = _context.AnimalFavourite
+					  .Include(a => a.Animal)
+					  .Include(a => a.User)
+					  .AsQueryable();
+			if (!string.IsNullOrWhiteSpace(search))
+			{
+				animalF = animalF.Where(animal => animal.Animal.Name.Contains(search) || animal.User.FullName.Contains(search));
+			}
+
+            return View(animalF.ToList());
+		}
+
 		[HttpPost("Toggle")]
 		public IActionResult Toggle([FromBody] ToggleFavoriteDto fav)
 		{
