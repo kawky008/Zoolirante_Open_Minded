@@ -20,15 +20,19 @@ namespace Zoolirante_Open_Minded.Controllers
             _context = context;
         }
 
-		[HttpGet]
-		public IActionResult Index()
+		
+		public IActionResult Index(string? search)
 		{
-            var animalF = _context.AnimalFavourite
-                      .Include(a => a.Animal)
-                      .Include(a => a.User)
-                      .ToList();
+			var animalF = _context.AnimalFavourite
+					  .Include(a => a.Animal)
+					  .Include(a => a.User)
+					  .AsQueryable();
+			if (!string.IsNullOrWhiteSpace(search))
+			{
+				animalF = animalF.Where(animal => animal.Animal.Name.Contains(search) || animal.User.FullName.Contains(search));
+			}
 
-            return View(animalF);
+            return View(animalF.ToList());
 		}
 
 		[HttpPost("Toggle")]
