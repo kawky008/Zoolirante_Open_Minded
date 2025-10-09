@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<Zoolirante_Open_Minded.Models.Event>
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 
 @{
     var mode = (ViewBag.Mode as string) ?? "ongoing";
@@ -7,6 +9,27 @@
     <a asp-action="Ongoing" class="btn btn-outline-primary @(mode == "ongoing" ? "active" : "")">View Ongoing</a>
     <a asp-action="Upcoming" class="btn btn-outline-primary @(mode == "upcoming" ? "active" : "")">View Upcoming</a>
 </div>
+
+@{
+    var http = HttpContextAccessor.HttpContext!;
+    bool isManager = http.User?.IsInRole("Manager") == true || http.User?.IsInRole("Admin") == true;
+
+    var sessionRole = http.Session.GetString("Role") ?? http.Session.GetString("UserRole");
+    if (!isManager && !string.IsNullOrEmpty(sessionRole))
+    {
+        isManager =
+            sessionRole.Equals("Manager", StringComparison.OrdinalIgnoreCase) ||
+            sessionRole.Equals("Admin", StringComparison.OrdinalIgnoreCase);
+    }
+}
+
+@if (isManager)
+{
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-success">Add New Event</a>
+    </div>
+}
+
 
 @if (!Model.Any())
 {
