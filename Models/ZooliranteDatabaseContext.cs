@@ -137,6 +137,8 @@ public partial class ZooliranteDatabaseContext : DbContext
             entity.Property(e => e.ImageUrl).HasMaxLength(255);
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.SpecialPrice).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.SpecialReason).HasMaxLength(200);
         });
 
         modelBuilder.Entity<Order>(entity =>

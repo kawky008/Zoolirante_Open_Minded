@@ -136,24 +136,44 @@
                                         @{
                                             var u = item.User;
 
-                                            string Try(string name)
-                                            => u?.GetType().GetProperty(name) != null
-                                            ? Convert.ToString(u.GetType().GetProperty(name)!.GetValue(u)) ?? ""
-                                            : "";
+                                            // Reflection helpers that can read from either User or nested UserDetail
+                                            string TryOn(object? obj, string prop)
+                                            {
+                                                if (obj == null) return "";
+                                                var p = obj.GetType().GetProperty(prop);
+                                                if (p == null) return "";
+                                                var v = p.GetValue(obj);
+                                                return v?.ToString() ?? "";
+                                            }
+
+                                            string TryAny(object? obj, params string[] props)
+                                            {
+                                                if (obj == null) return "";
+                                                foreach (var p in props)
+                                                {
+                                                    var val = TryOn(obj, p);
+                                                    if (!string.IsNullOrWhiteSpace(val)) return val;
+                                                }
+                                                return "";
+                                            }
 
                                             // Required basics
                                             var email = u?.Email ?? "";
 
-                                            // Single phone (show if your model has one; otherwise "—")
-                                            var phone = Try("Phone");
-                                            if (string.IsNullOrWhiteSpace(phone)) phone = Try("PhoneNumber");
-                                            if (string.IsNullOrWhiteSpace(phone)) phone = Try("Mobile");
-                                            if (string.IsNullOrWhiteSpace(phone)) phone = Try("ContactNumber");
-                                            if (string.IsNullOrWhiteSpace(phone)) phone = Try("Telephone");
-                                            if (string.IsNullOrWhiteSpace(phone)) phone = Try("PhoneNo");
+                                            // Prefer phone stored in the profile (UserDetail), then fall back to legacy fields on User
+                                            var phone = TryAny(u?.UserDetail,
+                                            "BestContactPhone", "BestContactPhoneNumber", "BestContactNumber",
+                                            "ContactPhone", "Phone", "PhoneNumber", "Mobile", "Telephone", "PhoneNo");
+
+                                            if (string.IsNullOrWhiteSpace(phone))
+                                            {
+                                                phone = TryAny(u,
+                                                "Phone", "PhoneNumber", "Mobile", "ContactNumber", "Telephone", "PhoneNo");
+                                            }
 
                                             string ShowOrDash(string s) => string.IsNullOrWhiteSpace(s) ? "—" : s;
                                         }
+
 
                                         <dl class="row mb-0">
                                             <dt class="col-sm-4">Full name</dt>

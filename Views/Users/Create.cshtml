@@ -72,7 +72,7 @@
     <div id="createCollapse" class="collapse show">
         <div class="card card-glass p-4">
 
-            <form asp-action="Create" method="post" id="createForm">
+            <form asp-controller="Users" asp-action="Register" method="post" id="createForm">
                 @Html.AntiForgeryToken()
 
                 <!-- Names (UI only) -->
@@ -120,10 +120,12 @@
 
                 <!-- Hidden FullName that we’ll populate from first/middle/last -->
                 <input type="hidden" asp-for="FullName" id="fullNameBound" />
+                <input type="hidden" name="returnUrl" value="~/Home/Index" />
+
 
                 <div class="d-flex gap-2 mt-2">
                     <button type="submit" class="btn btn-green px-4">Create Account</button>
-                    <a asp-action="Index" class="btn btn-link">Back to List</a>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-link">Back to Home</a>
                 </div>
             </form>
      
