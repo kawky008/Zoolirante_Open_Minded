@@ -103,7 +103,7 @@
                     var e = Model.EventsToday[i];
                     <div class="mySlides1 card border-0" style="width: 100%">
                         <div class="numbertext">@(i + 1) / @Model.EventsToday.Count</div>
-                        <img src="@e.ImageUrl" class="card-img-top bottom-no-radius" alt="...">
+                        <img src="@e.ImageUrl" width="250" height="450" class="card-img-top bottom-no-radius" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">@e.Title</h5>
                             <br />
@@ -138,7 +138,7 @@
                     var e = Model.EventsUpcoming[i];
                     <div class="mySlides2 card border-0" style="width: 100%">
                         <div class="numbertext">@(i + 1) / @Model.EventsUpcoming.Count</div>
-                        <img src="@e.ImageUrl" class="card-img-top bottom-no-radius" alt="...">
+                        <img src="@e.ImageUrl" width="250" height="450" class="card-img-top bottom-no-radius" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">@e.Title</h5>
                             <br />
