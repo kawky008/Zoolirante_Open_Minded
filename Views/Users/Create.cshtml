@@ -58,6 +58,8 @@
     }
 </style>
 
+
+}
 <div class="create-wrap">
     <!-- Collapsible header -->
     <h1 class="hero-title" data-bs-toggle="collapse" data-bs-target="#createCollapse" aria-expanded="true" aria-controls="createCollapse">
@@ -126,7 +128,7 @@
                     <a asp-controller="Home" asp-action="Index" class="btn btn-link">Back to Home</a>
                 </div>
             </form>
-
+     
             <div class="small subtle mt-3">
                 Note: First/Middle/Last, Street No. and Phone are collected for a smoother setup.
                 With the current data model only <strong>Full Name, Email and Password</strong> are stored.
@@ -137,6 +139,7 @@
 </div>
 
 <script>
+    
     // Build FullName from the 3 fields before submit (no backend changes)
     document.getElementById('createForm').addEventListener('submit', function () {
       const first = (document.getElementById('firstName').value || '').trim();
