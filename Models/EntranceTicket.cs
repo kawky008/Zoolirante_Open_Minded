@@ -18,7 +18,8 @@ namespace Zoolirante_Open_Minded.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public DateTime ExpiredAt { get; set; } = DateTime.Now.AddMonths(1);
+        public DateTime VisitDate { get; set; } 
+        public DateTime ExpiredAt  => VisitDate.AddHours(12);
 
         public string Details { get; set; }
         public User User { get; set; }

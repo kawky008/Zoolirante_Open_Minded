@@ -15,6 +15,7 @@ public partial class ZooliranteDatabaseContext : DbContext
         : base(options)
     {
     }
+    public DbSet<PendingEmail> PendingEmails { get; set; }
     public virtual DbSet<EntranceTicket> EntranceTicket { get; set; }
     
     public virtual  DbSet<AnimalFavourite> AnimalFavourite { get; set; }

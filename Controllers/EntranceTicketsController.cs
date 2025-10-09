@@ -98,7 +98,7 @@ namespace Zoolirante_Open_Minded.Controllers
 
 			ticket.CreatedAt = DateTime.Now;
 
-                ticket.ExpiredAt = DateTime.Now.AddMonths(1);
+                //ticket.ExpiredAt = DateTime.Now.AddMonths(1);
                 ticket.Details = "Ticket purchased online";
 
 			var isMember = await _context.Memberships
