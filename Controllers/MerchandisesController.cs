@@ -199,6 +199,30 @@ namespace Zoolirante_Open_Minded.Controllers
             return View(merchandise);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AdjustStock(int id, [Bind("ProductId,Name,Description,Price,ImageUrl,Category")] Merchandise form)
+        {
+            if (id != form.ProductId) return NotFound();
+            if (!ModelState.IsValid) return View(form); // re-render with validation
+
+            var p = await _context.Merchandises.FindAsync(id);
+            if (p == null) return NotFound();
+
+            // Only update the fields in the main form.
+            p.Name = form.Name;
+            p.Description = form.Description;
+            p.Price = form.Price;
+            p.ImageUrl = form.ImageUrl;
+            p.Category = form.Category;
+
+            // DO NOT touch p.Stock / p.CurrentShelf / p.ShelfCapacity here.
+            await _context.SaveChangesAsync();
+
+            TempData["Toast"] = "Saved.";
+            return RedirectToAction(nameof(Edit), new { id });
+        }
+
         // GET: Merchandises/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

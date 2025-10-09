@@ -10,6 +10,7 @@
     var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
     var fullName = HttpContextAccessor.HttpContext.Session.GetString("FullName");
     var role = HttpContextAccessor.HttpContext.Session.GetString("Role");
+    var role1 = HttpContextAccessor.HttpContext?.Session.GetString("Role") ?? "Customer";
 }
 <h1 class="custom-large-title">Merchandise</h1>
 <hr />
@@ -137,12 +138,21 @@ else
                     <div class="card-footer bg-transparent border-0">
                         <div class="d-grid gap-2">
                             <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.ProductId">Details</a>
-                            @if (userId != null && role == "Admin")
+                            @if (userId != null && (role == "Admin" || role == "Manager"))
                             {
-                                <div class="btn-group">
-                                    <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.ProductId">Edit</a>
-                                    <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-                                </div>
+                                <!-- Stacked buttons match your card layout (.d-grid gap-2 above) -->
+                                <a class="btn btn-warning btn-sm"
+                                   asp-action="Edit"
+                                   asp-route-id="@item.ProductId"
+                                   asp-route-focus="stock">
+                                    <i class="fa-solid fa-screwdriver-wrench me-1"></i> Stock Adjustment
+                                </a>
+
+                                <a class="btn btn-sm btn-outline-danger"
+                                   asp-action="Delete"
+                                   asp-route-id="@item.ProductId">
+                                    Delete
+                                </a>
                             }
                             @if (item.Stock <= 0)
                             {
