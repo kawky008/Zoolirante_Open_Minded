@@ -5,8 +5,12 @@ html {
 }
 
 body {
-    background-color: #f7ecd4;
     margin-bottom: 60px;
+    min-height: 100vh;
+    background: radial-gradient(circle at 50% 20%, #f1d8b4, transparent 60%), radial-gradient(circle at 50% 70%, #f1d8b4, transparent 60%), radial-gradient(circle at 50% 50%, #f1d8b4, transparent 60%);
+    background-color: #f7ecd4;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 @media (min-width: 768px) {
@@ -83,7 +87,22 @@ body {
 
 }
 
-
+/* Profile initial avatar */
+.avatar-badge {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: .5px;
+    color: #fff;
+    user-select: none;
+    background: conic-gradient(from 180deg at 50% 50%, #dc9720 0deg, #db5312 120deg, #f3c36a 240deg, #dc9720 360deg);
+    box-shadow: 0 6px 16px rgba(0,0,0,.25);
+}
 /**************************************************************************/
 
 
@@ -205,6 +224,118 @@ button:active {
     box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 /*************************************************************************************/
+
+
+
+
+/*********************   Fancy Button   **********************/
+/* From Uiverse.io by eleventhday */
+.fancy {
+    background-color: #659707;
+    border: 2px solid #fff;
+    border-radius: 0;
+    box-sizing: border-box;
+    color: #000;
+    cursor: pointer;
+    display: inline-block;
+    float: right;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin: 0;
+    outline: none;
+    overflow: visible;
+    padding: 1.25em 2em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    transition: all 0.3s ease-in-out;
+    user-select: none;
+    font-size: 25px;
+}
+
+.fancy::before {
+    content: " ";
+    width: 1.5625rem;
+    height: 2px;
+    background: white;
+    top: 50%;
+    left: 1.5em;
+    position: absolute;
+    transform: translateY(-50%);
+    transform-origin: center;
+    transition: background 0.3s linear, width 0.3s linear;
+}
+
+.fancy .text {
+    font-weight: bold;
+    font-size: 1.125em;
+    line-height: 1.33333em;
+    padding-left: 2em;
+    display: block;
+    text-align: left;
+    transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: white;
+}
+
+.fancy .top-key {
+    height: 2px;
+    width: 1.5625rem;
+    top: -2px;
+    left: 0.625rem;
+    position: absolute;
+    background: #659707;
+    transition: width 0.5s ease-out, left 0.3s ease-out;
+}
+
+.fancy .bottom-key-1 {
+    height: 2px;
+    width: 1.5625rem;
+    right: 1.875rem;
+    bottom: -2px;
+    position: absolute;
+    background: #659707;
+    transition: width 0.5s ease-out, right 0.3s ease-out;
+}
+
+.fancy .bottom-key-2 {
+    height: 2px;
+    width: 0.625rem;
+    right: 0.625rem;
+    bottom: -2px;
+    position: absolute;
+    background: #659707;
+    transition: width 0.5s ease-out, right 0.3s ease-out;
+}
+
+.fancy:hover {
+    color: #659707;
+    background: white;
+}
+
+.fancy:hover::before {
+    width: 0.9375rem;
+    background-color: #659707;
+}
+
+.fancy:hover .text {
+    color: #659707;
+    padding-left: 1.5em;
+}
+
+.fancy:hover .top-key {
+    left: -2px;
+    width: 0px;
+}
+
+.fancy:hover .bottom-key-1,
+.fancy:hover .bottom-key-2 {
+    right: 0;
+    width: 0;
+}
+/****************************************/
 
 
 
@@ -414,6 +545,7 @@ button:active {
     text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
     font-size: 2.5rem;
     font-weight: bold;
+    font-family: Century , sans-serif;
     padding: 0 20px; /* prevent text from touching edges on small screens */
 }
 /**************************************************************************************/
@@ -497,23 +629,133 @@ button:active {
     font-weight: 300;
     transition: .5s ease;
 }
+/******************************************************************************************/
 
 
-/* Profile initial avatar */
-.avatar-badge {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
+
+
+
+
+/***********************      Membership       **************************/
+/* From Uiverse.io by Yaya12085 */
+.plan {
+    border-radius: 16px;
+    box-shadow: 0 30px 30px -25px rgba(0, 38, 255, 0.205);
+    padding: 10px;
+    background-color: #dc9720;
+    color: #918069;
+    max-width: 900px;
+    font-size: 1.5rem;
+}
+
+.plan strong {
+    font-weight: 800;
+    color: #7b3f00;
+}
+
+.plan .inner {
+    align-items: center;
+    padding: 40px;
+    padding-top: 40px;
+    background-color: #f5dcc4;
+    border-radius: 12px;
+    position: relative;
+}
+
+.plan .pricing {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--gradient-2, linear-gradient(90deg, #f28e09 0%, #db5312 100%));
+    border-radius: 99em 0 0 99em;
+    display: flex;
+    align-items: center;
+    padding: 0.625em 0.75em;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #7b3f00;
+}
+
+.plan .pricing small {
+    color: #917e70;
+    font-size: 1em;
+    margin-left: 0.25em;
+}
+
+.plan .title {
+    font-weight: 600;
+    font-size: 2.5rem;
+    color: #7b3f00;
+}
+
+.plan .title + * {
+    margin-top: 0.75rem;
+}
+
+.plan .info + * {
+    margin-top: 1rem;
+}
+
+.plan .features {
+    display: flex;
+    flex-direction: column;
+}
+
+.plan .features li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.plan .features li + * {
+    margin-top: 1rem;
+}
+
+.plan .features .icon {
+    background-color: #ca661f;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-weight: 800;
-    font-size: 26px;
-    letter-spacing: .5px;
     color: #fff;
-    user-select: none;
-    background: conic-gradient(from 180deg at 50% 50%, #dc9720 0deg, #db5312 120deg, #f3c36a 240deg, #dc9720 360deg);
-    box-shadow: 0 6px 16px rgba(0,0,0,.25);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+}
+
+.plan .features .icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.plan .features + * {
+    margin-top: 1.5rem;
+}
+
+.plan .action {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.plan .button {
+    background: var(--gradient-2, linear-gradient(90deg, #dc9720 0%, #db5312 100%));
+    border-radius: 6px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.5rem;
+    text-align: center;
+    border: 0;
+    outline: 0;
+    width: 40%;
+    padding: 0.625em 0.75em;
+    text-decoration: none;
+    transition: background 0.4s ease;
+    box-shadow: 4px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.plan .button:hover, .plan .button:focus {
+    background: var(--gradient-2, linear-gradient(90deg, #dcc320 0%, #db7412 100%));
 }
 
 /******************************************************************************************/

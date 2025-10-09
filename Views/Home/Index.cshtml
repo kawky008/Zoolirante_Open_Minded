@@ -1,6 +1,10 @@
 ﻿@model Zoolirante_Open_Minded.ViewModels.HomeIndexViewModel
+@inject IHttpContextAccessor HttpContextAccessor
+
 @{
     ViewData["Title"] = "Home Page";
+    var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
+    var role = HttpContextAccessor.HttpContext.Session.GetString("Role");
 }
 
 <style>
@@ -89,7 +93,7 @@
 
 <br />
 
-<div class="row justify-content-center g-4">
+<div class="row justify-content-center g-4 mb-5">
     <div class="col-5 me-5">
         <h2 class="text-center custom-title">Today's Events</h2>
         <br />
@@ -103,7 +107,9 @@
                     var e = Model.EventsToday[i];
                     <div class="mySlides1 card border-0" style="width: 100%">
                         <div class="numbertext">@(i + 1) / @Model.EventsToday.Count</div>
+              
                         <img src="@e.ImageUrl" width="250" height="450" class="card-img-top bottom-no-radius" alt="...">
+
                         <div class="card-body">
                             <h5 class="card-title">@e.Title</h5>
                             <br />
@@ -138,7 +144,10 @@
                     var e = Model.EventsUpcoming[i];
                     <div class="mySlides2 card border-0" style="width: 100%">
                         <div class="numbertext">@(i + 1) / @Model.EventsUpcoming.Count</div>
+
+
                         <img src="@e.ImageUrl" width="250" height="450" class="card-img-top bottom-no-radius" alt="...">
+
                         <div class="card-body">
                             <h5 class="card-title">@e.Title</h5>
                             <br />
@@ -160,7 +169,6 @@
         }
     </div>
 </div>
-
 
 <script>
     let slideIndex = [1,1];
@@ -187,23 +195,131 @@
     setInterval(() => {plusSlides(1, 1)}, 4000);
 </script>
 
+<br />
+
+<
+<div style="display:flex; justify-content:start; width:100%;">
+    <div class="card mt-5 mb-5" style="width:80%; position: relative; border:none">
+        <img src="images/tiger.png" style="width:100%; height:100%; border-radius:13px;" />
+
+        @if(userId == null)
+        {
+            <div style="position: absolute; top: 30px; right: -60px;">
+                <a class="fancy" asp-controller="Users" asp-action="Login">
+                    <span class="top-key"></span>
+                    <span class="text">Buy Tickets</span>
+                    <span class="bottom-key-1"></span>
+                    <span class="bottom-key-2"></span>
+                </a>
+            </div>
+
+        }
+        else if(userId != null && role != "Admin")
+        {
+            <div style="position: absolute; top: 30px; right: -60px;">
+                <a class="fancy" asp-controller="EntranceTickets" asp-action="Buy">
+                    <span class="top-key"></span>
+                    <span class="text">Buy Tickets</span>
+                    <span class="bottom-key-1"></span>
+                    <span class="bottom-key-2"></span>
+                </a>
+            </div>
+        }
+        else
+        {
+            <div style="position: absolute; top: 30px; right: -60px;">
+                <a class="fancy" href="#">
+                    <span class="top-key"></span>
+                    <span class="text">Buy Tickets</span>
+                    <span class="bottom-key-1"></span>
+                    <span class="bottom-key-2"></span>
+                </a>
+            </div>
+        
+        }
+
+        <div style="position: absolute; bottom: 90px; right: 30px;">
+            <h2 class="custom-large-title" style="color:white; font-size:6vw">Buy</h2>
+            <h2 class="custom-large-title" style="color:white; font-size:6vw">Tickets</h2>
+        </div>
+    </div>
+</div>
 
 
+<br />
 
-<div class="row h-100 g-4 mb-4">
 
-    <div class="col-4">
-        <div class="card" style="width: 25rem; height: 10rem;">
-            <div class="card-body">
-                <p class="card-text">Display account & membership link</p>
+<div style="display:flex; justify-content:end; width:100%; margin-bottom:50px;">
+    <!-- Membership Col -->
+    <!-- From Uiverse.io by Yaya12085 -->
+    <div class="plan">
+        <div class="inner">
+            <span class="pricing">
+                <span>
+                    $49 <small>/ m</small>
+                </span>
+            </span>
+            <p class="title">Monthly Membership</p>
+            <p class="info">Unlock one month of wildlife and adventure at Zoolirante. Every membership helps save species from extinction and protect wild habitats.</p>
+            <ul class="features">
+                <li>
+                    <span class="icon">
+                        <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 0h24v24H0z" fill="none"></path>
+                            <path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"></path>
+                        </svg>
+                    </span>
+                    <span><strong>Unlimited</strong> visits to Zoolirante</span>
+                </li>
+                <li>
+                    <span class="icon">
+                        <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 0h24v24H0z" fill="none"></path>
+                            <path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"></path>
+                        </svg>
+                    </span>
+                    <span><strong>Discounts</strong> on cafes and gift shops</span>
+                </li>
+                <li>
+                    <span class="icon">
+                        <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 0h24v24H0z" fill="none"></path>
+                            <path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"></path>
+                        </svg>
+                    </span>
+                    <span>Contribute to our <strong>conservation</strong> work</span>
+                </li>
+            </ul>
+            <div class="action">
+                @if (userId == null)
+                {
+                    <a asp-controller="Users" asp-action="login" class="button">
+                        Become a member
+                    </a>
+                }
+                else if (role != "Admin")
+                {
+                    <a asp-controller="Memberships" asp-action="Join" class="button">
+                        Become a member
+                    </a>
+                }
+                else
+                {
+                    <a class="button" href="#">
+                        Become a member
+                    </a>
+                }
             </div>
         </div>
     </div>
 </div>
 
+<br />
+
+
 <!-- Interactive Map using Leaflet.js -->
-<div class="text-center mb-4">
-    <div class="d-flex justify-content-center align-items-center mb-2 gap-5">
+<div class="text-center mt-3 mb-5">
+    <div class="d-flex justify-content-center align-items-center mb-1 gap-5">
         <h2 class="custom-large-title">Map Of The Zoo</h2>
         <a href="images/sample_map.pdf" class="text-decoration-none d-flex align-items-center" download>
             <i class="fa-solid fa-download fa-2x" style="color: #659707"></i>
@@ -211,9 +327,7 @@
         </a>
     </div>
     
-
-    <br />
-    <div class="card">
+    <div class="card" style="border:none">
         <div class="row">
             <div class="col-8">
                 <div id="map" class="map" style="width: 100%"></div>
@@ -290,4 +404,22 @@
     L.marker([200, 1200], {icon: bluePin}).addTo(map).bindPopup("Gift Shops");
 
 </script>
+
+<br />
+
+<div style="background-color:#659707; width:100vw; margin-left:calc(-50vw + 50%); padding:60px 0;">
+    <div class="container text-light">
+        <h2 class="custom-large-title" style="color:#f0f0f0; text-align:center;">About Zoolirante</h2>
+        <br />
+        <div style="font-family:Century; font-size:25px; color:#e3ddda; ">
+            <p>Nestled in the heart of Italy, Zoolirante is more than just a zoo — it’s a living celebration of nature, curiosity, and connection. Founded with a passion for wildlife and a vision for a sustainable future, Zoolirante brings together animals, people, and the environment in a space designed to inspire wonder and respect for the natural world.</p>
+
+            <p>Our mission is to foster a deep appreciation for biodiversity through immersive experiences, innovative habitats, and educational programs that engage visitors of all ages. Every exhibit at Zoolirante is thoughtfully crafted to reflect the animals’ natural environments, ensuring their comfort, health, and happiness while allowing guests to observe the beauty of wildlife up close.</p>
+
+            <p>Beyond conservation, Zoolirante is a place of joy and discovery — a destination where families laugh together, students learn through adventure, and every visitor leaves with a renewed sense of connection to the planet we share. From our lush botanical paths to our commitment to research and rescue efforts, Zoolirante represents Italy’s spirit of care, creativity, and community.</p>
+
+            <p>At Zoolirante, every visit is not just a day at the zoo — it’s a journey into the wild heart of life itself.</p>
+        </div>
+    </div>
+</div>
 
