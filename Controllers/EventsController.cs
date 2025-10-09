@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Zoolirante_Open_Minded.Models;
+using Zoolirante_Open_Minded.ViewModels;
 
 namespace Zoolirante_Open_Minded.Controllers
 {
@@ -19,51 +21,139 @@ namespace Zoolirante_Open_Minded.Controllers
         }
 
         // GET: Events
-        public IActionResult Index()=> RedirectToAction(nameof(Ongoing));
-        public async Task<IActionResult> Ongoing()
+        public IActionResult Index(string? q, string? sort = "soonest")
         {
-			ViewData["BannerText"] = "View our events";
-			var now = DateTime.Now;
-            var list = await _context.Events
-                .Where(e => e.StartTime <= now && e.EndTime >= now)
-                .OrderBy(e => e.EndTime)
-                .ToListAsync();
-            ViewBag.Mode = "ongoing";
-            return View("Index", list);
+            var today = DateTime.Today;
+            var tomorrow = today.AddDays(1);
+            var weekLater = today.AddDays(7);
+
+            IQueryable<Event> baseQuery = _context.Events;
+
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                var term = q.Trim();
+                baseQuery = baseQuery.Where(e =>
+                    e.Title.Contains(term) ||
+                    (e.Description != null && e.Description.Contains(term)) ||
+                    e.Location.Contains(term));
+            }
+
+            baseQuery = sort switch
+            {
+                "latest" => baseQuery.OrderByDescending(e => e.StartTime),
+                _ => baseQuery.OrderBy(e => e.StartTime)
+            };
+
+            var eventsToday = baseQuery
+                .Where(e => e.StartTime >= today && e.StartTime < tomorrow)
+                .Select(e => new EventViewModel
+                {
+                    EventId = e.EventId,
+                    Title = e.Title,
+                    Location = e.Location,
+                    StartTime = e.StartTime,
+                    EndTime = e.EndTime,
+                    Description = e.Description,
+                    ImageUrl = e.ImageUrl
+                })
+                .ToList();
+
+            var eventsUpcoming = baseQuery
+                .Where(e => e.StartTime >= tomorrow && e.StartTime < weekLater)
+                .Select(e => new EventViewModel
+                {
+                    EventId = e.EventId,
+                    Title = e.Title,
+                    Location = e.Location,
+                    StartTime = e.StartTime,
+                    EndTime = e.EndTime,
+                    Description = e.Description,
+                    ImageUrl = e.ImageUrl
+                })
+                .ToList();
+
+            return View(new HomeIndexViewModel
+            {
+                EventsToday = eventsToday,
+                EventsUpcoming = eventsUpcoming
+            });
         }
 
-        public async Task<IActionResult> Upcoming()
-        {
-			ViewData["BannerText"] = "Welcome to Zoolirante";
-			var now = DateTime.Now;
-            var list = await _context.Events
-                .Where(e => e.StartTime > now)
-                .OrderBy(e => e.StartTime)
-                .ToListAsync();
-            ViewBag.Mode = "upcoming";
-            return View("Index", list);
-        }
-
-        // GET: Events/Details/5
+        // /Events/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id is null) return NotFound();
 
-            var @event = await _context.Events
-                .FirstOrDefaultAsync(m => m.EventId == id);
-            if (@event == null)
-            {
-                return NotFound();
-            }
+            // Uses skip-navigation Include (needs the join table to exist)
+            var ev = await _context.Events
+                .Include(e => e.Animals)
+                .FirstOrDefaultAsync(e => e.EventId == id);
 
-            return View(@event);
+            if (ev is null) return NotFound();
+
+            // 3 related upcoming events (not this one)
+            var related = await _context.Events
+                .Where(e => e.EventId != ev.EventId && e.StartTime >= DateTime.Today)
+                .OrderBy(e => e.StartTime).Take(3)
+                .Select(e => new EventViewModel
+                {
+                    EventId = e.EventId,
+                    Title = e.Title,
+                    Location = e.Location,
+                    StartTime = e.StartTime,
+                    EndTime = e.EndTime,
+                    Description = e.Description,
+                    ImageUrl = e.ImageUrl
+                })
+                .ToListAsync();
+
+            var vm = new EventViewModel
+            {
+                Event = ev,
+                FeaturingAnimals = ev.Animals.ToList(),
+                Related = related
+            };
+
+            return View(vm);
         }
 
-        // GET: Events/Create
-        public IActionResult Create()
+        // /Events/Ics/5
+        [HttpGet]
+        public async Task<IActionResult> Ics(int id)
+        {
+            var ev = await _context.Events.FirstOrDefaultAsync(e => e.EventId == id);
+            if (ev is null) return NotFound();
+
+            string Esc(string s) => s?.Replace(",", "\\,").Replace(";", "\\;").Replace("\n", "\\n") ?? "";
+            string dtStart = ev.StartTime.ToUniversalTime().ToString("yyyyMMdd'T'HHmmss'Z'");
+            string dtEnd = ev.EndTime.ToUniversalTime().ToString("yyyyMMdd'T'HHmmss'Z'");
+
+            var ics = new StringBuilder()
+                .AppendLine("BEGIN:VCALENDAR")
+                .AppendLine("VERSION:2.0")
+                .AppendLine("PRODID:-//Zoolirante//Events//EN")
+                .AppendLine("CALSCALE:GREGORIAN")
+                .AppendLine("METHOD:PUBLISH")
+                .AppendLine("BEGIN:VEVENT")
+                .AppendLine($"UID:event-{ev.EventId}@zoolirante")
+                .AppendLine($"DTSTAMP:{DateTime.UtcNow:yyyyMMdd'T'HHmmss'Z'}")
+                .AppendLine($"DTSTART:{dtStart}")
+                .AppendLine($"DTEND:{dtEnd}")
+                .AppendLine($"SUMMARY:{Esc(ev.Title)}")
+                .AppendLine($"LOCATION:{Esc(ev.Location)}")
+                .AppendLine($"DESCRIPTION:{Esc(ev.Description ?? "")}")
+                .AppendLine("END:VEVENT")
+                .AppendLine("END:VCALENDAR")
+                .ToString();
+
+            var bytes = Encoding.UTF8.GetBytes(ics);
+            var safe = string.Join("_", (ev.Title ?? "event").Split(Path.GetInvalidFileNameChars()));
+            return File(bytes, "text/calendar", $"{safe}.ics");
+        }
+
+
+// GET: Events/Create
+public IActionResult Create()
         {
             return View();
         }
@@ -72,10 +162,14 @@ namespace Zoolirante_Open_Minded.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("EventId,Title,Description,StartTime,EndTime,Capacity,Price,Location")] Event @event)
         {
-            // Business validation (kept minimal and non-invasive)
+            // Basic model validation
+            if (!ModelState.IsValid) return View(@event);
+
+            // Business validation
             if (string.IsNullOrWhiteSpace(@event.Title))
                 ModelState.AddModelError(nameof(@event.Title), "Title is required.");
 
@@ -91,23 +185,13 @@ namespace Zoolirante_Open_Minded.Controllers
             if (@event.Price < 0)
                 ModelState.AddModelError(nameof(@event.Price), "Price cannot be negative.");
 
-            if (!ModelState.IsValid)
-                return View(@event);
+            if (!ModelState.IsValid) return View(@event);
 
+            // Success path (this was missing)
             _context.Add(@event);
             await _context.SaveChangesAsync();
-
-            // Ensure the new event appears on the public Events page immediately:
-            var now = DateTime.Now;
-            if (@event.StartTime > now)
-                return RedirectToAction(nameof(Upcoming));  // will show on Upcoming
-            if (@event.StartTime <= now && @event.EndTime >= now)
-                return RedirectToAction(nameof(Ongoing));   // will show on Ongoing
-
-            // If the event was created already ended (edge case), default to Upcoming list
-            return RedirectToAction(nameof(Upcoming));
+            return RedirectToAction(nameof(Index));
         }
-
 
         // GET: Events/Edit/5
         public async Task<IActionResult> Edit(int? id)

@@ -149,25 +149,18 @@ namespace Zoolirante_Open_Minded.Controllers
         {
             var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
             var line = cart.Items.FirstOrDefault(i => i.ProductId == productId);
-            if (line != null)
-            {
-                if (qty <= 0)
-                {
-                    cart.Items.Remove(line);
-                }
-                else
-                {
+            if (line == null) return RedirectToAction(nameof(Index));
 
-                    var stock = _db.Merchandises
-                                   .Where(p => p.ProductId == productId)
-                                   .Select(p => p.Stock)
-                                   .FirstOrDefault();
-                    if (stock > 0)
-                        line.Qty = Math.Min(qty, stock);
-                    else
-                        line.Qty = Math.Max(1, qty);
-                }
+            qty = Math.Max(0, qty);
+            if (qty == 0)
+            {
+                cart.Items.Remove(line);
             }
+            else
+            {
+                line.Qty = qty;   // no DB mutation here
+            }
+
             HttpContext.Session.SetObject(CartKey, cart);
             return RedirectToAction(nameof(Index));
         }
@@ -192,13 +185,11 @@ namespace Zoolirante_Open_Minded.Controllers
         public async Task<IActionResult> Create([Bind("UserId,PickupLocationId,PickupDate")] Order order)
         {
             var cart = HttpContext.Session.GetObject<CartVM>(CartKey) ?? new CartVM();
-
             if (!cart.Items.Any())
             {
                 TempData["CartMessage"] = "Your cart is empty.";
                 return RedirectToAction(nameof(Checkout));
             }
-
             
             var uid2 = HttpContext.Session.GetInt32("UserId");
             var isMember2 = false;
@@ -231,7 +222,45 @@ namespace Zoolirante_Open_Minded.Controllers
             }
             HttpContext.Session.SetObject(CartKey, cart);
 
+            // Optional: basic validation that a pickup location exists in the cart, etc.
+            // if (cart.PickupLocationId == null) { ... }
 
+            // Start transaction to keep stock/capacity + order write atomic
+            await using var tx = await _db.Database.BeginTransactionAsync();
+
+            // 1) Re-check availability and deduct
+            foreach (var line in cart.Items)
+            {
+                var p = await _db.Merchandises
+                    .FirstOrDefaultAsync(x => x.ProductId == line.ProductId);
+
+                if (p == null)
+                {
+                    ModelState.AddModelError("", $"Item not found: {line.ProductId}");
+                    await tx.RollbackAsync();
+                    return View("Checkout", cart);
+                }
+
+                if (p.Stock < line.Qty)
+                {
+                    ModelState.AddModelError("", $"Only {p.Stock} left for {p.Name}.");
+                    await tx.RollbackAsync();
+                    return View("Checkout", cart);
+                }
+
+                p.Stock -= line.Qty;
+
+              
+                if (p.CurrentShelf > 0)
+                {
+                    var shelfTake = Math.Min(line.Qty, p.CurrentShelf);
+                    p.CurrentShelf -= shelfTake;  // clamp by Math.Min
+                }
+            }
+
+            // 2) Persist deductions
+            await _db.SaveChangesAsync();
+            
             order.Items = string.Join(", ", cart.Items.Select(i => $"({i.Qty}) {i.Name}"));
             order.TotalAmount = cart.Subtotal;
             order.OrderDate = DateTime.Now;
@@ -240,13 +269,13 @@ namespace Zoolirante_Open_Minded.Controllers
             _db.Orders.Add(order);
             await _db.SaveChangesAsync();
 
-
+            // 4) Commit transaction and clear the cart
+            await tx.CommitAsync();
             HttpContext.Session.SetObject(CartKey, new CartVM());
 
             TempData["CartMessage"] = $"Order placed successfully! Total: {order.TotalAmount:C}";
             return RedirectToAction("Index", "Orders");
         }
-
 
 
     }

@@ -155,6 +155,7 @@ else
     </div>
 }
 
+
 @if (userId != null && isManager)
 {
     @* Render all modals outside the cards to avoid layout/flicker issues *@
@@ -241,3 +242,5 @@ else
             .forEach(el => new bootstrap.Tooltip(el));
     </script>
 }
+
+
