@@ -1,23 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Zoolirante_Open_Minded.Helpers;
 using Zoolirante_Open_Minded.Models;
+using Zoolirante_Open_Minded.Services;
 using Zoolirante_Open_Minded.ViewModels;
-
 namespace Zoolirante_Open_Minded.Controllers
 {
     public class MembershipsController : Controller
     {
         private readonly ZooliranteDatabaseContext _context;
-
-		public MembershipsController(ZooliranteDatabaseContext context)
+        private readonly IEmailService _email;
+        public MembershipsController(ZooliranteDatabaseContext context, IEmailService email)
         {
             _context = context;
+            _email = email;
         }
 
 		[HttpGet]
@@ -121,9 +123,11 @@ namespace Zoolirante_Open_Minded.Controllers
 					StartDate = DateTime.Now,
 					EndDate = DateTime.Now.AddMonths(1)
 				};
-
+                
 				_context.Add(m);
-				await _context.SaveChangesAsync();
+                await _email.B
+
+                await _context.SaveChangesAsync();
 				TempData["Message"] = "Membership created!";
 				return RedirectToAction(nameof(Index));
 			}
