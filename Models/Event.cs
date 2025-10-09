@@ -36,6 +36,7 @@ public partial class Event
 
 
     public virtual ICollection<Animal> Animals { get; set; } = new List<Animal>();
+    public virtual EventAnimal EventAnimal { get; set; }
 }
 
 

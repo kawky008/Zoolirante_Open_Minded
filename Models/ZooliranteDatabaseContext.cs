@@ -15,6 +15,7 @@ public partial class ZooliranteDatabaseContext : DbContext
         : base(options)
     {
     }
+    public DbSet<EventAnimal> EventAnimal {  get; set; }
     public DbSet<PendingEmail> PendingEmails { get; set; }
     public virtual DbSet<EntranceTicket> EntranceTicket { get; set; }
     
@@ -48,7 +49,14 @@ public partial class ZooliranteDatabaseContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
+        modelBuilder.Entity<EventAnimal>()
+        .HasKey(ea => ea.Id);
 
+        modelBuilder.Entity<EventAnimal>()
+            .HasOne(ea => ea.Event)
+            .WithOne(e => e.EventAnimal)
+            .HasForeignKey<EventAnimal>(ea => ea.EventId)
+            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<UserDetail>(entity =>
         {
             entity.ToTable("UserDetail");
@@ -129,6 +137,8 @@ public partial class ZooliranteDatabaseContext : DbContext
             entity.Property(e => e.ImageUrl).HasMaxLength(255);
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.SpecialPrice).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.SpecialReason).HasMaxLength(200);
         });
 
         modelBuilder.Entity<Order>(entity =>

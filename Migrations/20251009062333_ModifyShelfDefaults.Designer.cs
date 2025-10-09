@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Zoolirante_Open_Minded.Models;
 
@@ -11,9 +12,11 @@ using Zoolirante_Open_Minded.Models;
 namespace Zoolirante_Open_Minded.Migrations
 {
     [DbContext(typeof(ZooliranteDatabaseContext))]
-    partial class ZooliranteDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20251009062333_ModifyShelfDefaults")]
+    partial class ModifyShelfDefaults
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

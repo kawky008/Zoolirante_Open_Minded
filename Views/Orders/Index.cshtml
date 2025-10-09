@@ -1,4 +1,11 @@
 ﻿@model IEnumerable<Zoolirante_Open_Minded.Models.Order>
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var role = HttpContextAccessor.HttpContext?.Session.GetString("Role") ?? "";
+    bool isManager = !string.Equals(role, "Customer", StringComparison.OrdinalIgnoreCase);
+}
+
 
 @{
     ViewData["Title"] = "Index";
@@ -47,7 +54,7 @@
 <p>
     <a class="mt-3" asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table table-hover align-middle">
     <thead>
         <tr>
             <th>
@@ -74,7 +81,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.User)
             </th>
+            <th>Customer Info</th>
             <th></th>
+
         </tr>
     </thead>
     <tbody>
@@ -104,6 +113,104 @@
             <td>
                 @Html.DisplayFor(modelItem => item.User.Email)
             </td>
+                <td>
+
+                    @if (isManager)
+                    {
+                        <button type="button"
+                                class="btn btn-sm btn-outline-secondary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#cust-@item.OrderId">
+                            Customer info
+                        </button>
+
+                        <!-- Modal lives inside the table cell to avoid invalid HTML inside <tbody> -->
+                        <div class="modal fade" id="cust-@item.OrderId" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Customer details</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        @{
+                                            var u = item.User;
+
+                                            // Reflection helpers that can read from either User or nested UserDetail
+                                            string TryOn(object? obj, string prop)
+                                            {
+                                                if (obj == null) return "";
+                                                var p = obj.GetType().GetProperty(prop);
+                                                if (p == null) return "";
+                                                var v = p.GetValue(obj);
+                                                return v?.ToString() ?? "";
+                                            }
+
+                                            string TryAny(object? obj, params string[] props)
+                                            {
+                                                if (obj == null) return "";
+                                                foreach (var p in props)
+                                                {
+                                                    var val = TryOn(obj, p);
+                                                    if (!string.IsNullOrWhiteSpace(val)) return val;
+                                                }
+                                                return "";
+                                            }
+
+                                            // Required basics
+                                            var email = u?.Email ?? "";
+
+                                            // Prefer phone stored in the profile (UserDetail), then fall back to legacy fields on User
+                                            var phone = TryAny(u?.UserDetail,
+                                            "BestContactPhone", "BestContactPhoneNumber", "BestContactNumber",
+                                            "ContactPhone", "Phone", "PhoneNumber", "Mobile", "Telephone", "PhoneNo");
+
+                                            if (string.IsNullOrWhiteSpace(phone))
+                                            {
+                                                phone = TryAny(u,
+                                                "Phone", "PhoneNumber", "Mobile", "ContactNumber", "Telephone", "PhoneNo");
+                                            }
+
+                                            string ShowOrDash(string s) => string.IsNullOrWhiteSpace(s) ? "—" : s;
+                                        }
+
+
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-4">Full name</dt>
+                                            <dd class="col-sm-8">@ShowOrDash(item.User?.FullName ?? "")</dd>
+
+                                            <dt class="col-sm-4">Email</dt>
+                                            <dd class="col-sm-8">
+                                                @if (!string.IsNullOrWhiteSpace(email))
+                                                {
+                                                    <a href="mailto:@email">@email</a>
+                                                }
+                                                else
+                                                {
+                                                    @:—
+                                                }
+                                            </dd>
+
+                                            <dt class="col-sm-4">Phone</dt>
+                                            <dd class="col-sm-8">@ShowOrDash(phone)</dd>
+                                        </dl>
+
+                                        <div class="alert alert-warning small mt-3 mb-0">
+                                            Managers can view contact info only. Sensitive fields are never shown.
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </td>
+
             <td>
                 <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |

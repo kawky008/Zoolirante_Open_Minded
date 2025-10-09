@@ -58,6 +58,8 @@
     }
 </style>
 
+
+}
 <div class="create-wrap">
     <!-- Collapsible header -->
     <h1 class="hero-title" data-bs-toggle="collapse" data-bs-target="#createCollapse" aria-expanded="true" aria-controls="createCollapse">
@@ -70,7 +72,7 @@
     <div id="createCollapse" class="collapse show">
         <div class="card card-glass p-4">
 
-            <form asp-action="Create" method="post" id="createForm">
+            <form asp-controller="Users" asp-action="Register" method="post" id="createForm">
                 @Html.AntiForgeryToken()
 
                 <!-- Names (UI only) -->
@@ -118,13 +120,15 @@
 
                 <!-- Hidden FullName that we’ll populate from first/middle/last -->
                 <input type="hidden" asp-for="FullName" id="fullNameBound" />
+                <input type="hidden" name="returnUrl" value="~/Home/Index" />
+
 
                 <div class="d-flex gap-2 mt-2">
                     <button type="submit" class="btn btn-green px-4">Create Account</button>
-                    <a asp-action="Index" class="btn btn-link">Back to List</a>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-link">Back to Home</a>
                 </div>
             </form>
-
+     
             <div class="small subtle mt-3">
                 Note: First/Middle/Last, Street No. and Phone are collected for a smoother setup.
                 With the current data model only <strong>Full Name, Email and Password</strong> are stored.
@@ -135,6 +139,7 @@
 </div>
 
 <script>
+    
     // Build FullName from the 3 fields before submit (no backend changes)
     document.getElementById('createForm').addEventListener('submit', function () {
       const first = (document.getElementById('firstName').value || '').trim();
