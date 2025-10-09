@@ -64,10 +64,35 @@ namespace Zoolirante_Open_Minded.Controllers
 
             foreach (var it in cart.Items)
             {
-                if (it.OriginalPrice <= 0) it.OriginalPrice = it.Price;
-                it.Price = isMember ? it.OriginalPrice * 0.90m : it.OriginalPrice;
+                var p = await _db.Merchandises
+                    .Where(m => m.ProductId == it.ProductId)
+                    .Select(m => new { m.Price, m.SpecialPrice, m.SpecialQty })
+                    .FirstOrDefaultAsync();
+
+                // regular price from DB (fallback to the line’s current price)
+                var regular = p?.Price ?? it.Price;
+
+                // how many units on this line can use special price?
+                var specialCap = (p?.SpecialPrice.HasValue == true && p.SpecialQty > 0)
+                    ? Math.Min(it.Qty, p.SpecialQty)
+                    : 0;
+
+                var memFactor = isMember ? 0.90m : 1.00m;
+                var unitReg = Math.Round(regular * memFactor, 2);
+                var unitSpec = Math.Round(((p?.SpecialPrice) ?? regular) * memFactor, 2);
+
+                // total for the line with a mix of special + regular units
+                var lineTotal = (specialCap * unitSpec) + ((it.Qty - specialCap) * unitReg);
+
+                // keep OriginalPrice as the REGULAR price for reference
+                it.OriginalPrice = regular;
+
+                // store an EFFECTIVE unit price so (Price * Qty) == correct total
+                it.Price = it.Qty > 0 ? Math.Round(lineTotal / it.Qty, 2) : unitReg;
             }
             HttpContext.Session.SetObject(CartKey, cart);
+
+
 
             return View(cart);
         }
@@ -165,6 +190,37 @@ namespace Zoolirante_Open_Minded.Controllers
                 TempData["CartMessage"] = "Your cart is empty.";
                 return RedirectToAction(nameof(Checkout));
             }
+            
+            var uid2 = HttpContext.Session.GetInt32("UserId");
+            var isMember2 = false;
+            if (uid2.HasValue)
+            {
+                var now2 = DateTime.UtcNow;
+                isMember2 = await _db.Memberships.AnyAsync(m => m.UserId == uid2.Value && m.EndDate > now2);
+            }
+
+            foreach (var it in cart.Items)
+            {
+                var p2 = await _db.Merchandises
+                    .Where(m => m.ProductId == it.ProductId)
+                    .Select(m => new { m.Price, m.SpecialPrice, m.SpecialQty })
+                    .FirstOrDefaultAsync();
+
+                var regular2 = p2?.Price ?? it.Price;
+                var specialCap = (p2?.SpecialPrice.HasValue == true && p2.SpecialQty > 0)
+                    ? Math.Min(it.Qty, p2.SpecialQty)
+                    : 0;
+
+                var memFactor2 = isMember2 ? 0.90m : 1.00m;
+                var unitReg2 = Math.Round(regular2 * memFactor2, 2);
+                var unitSpec2 = Math.Round(((p2?.SpecialPrice) ?? regular2) * memFactor2, 2);
+
+                var lineTotal2 = (specialCap * unitSpec2) + ((it.Qty - specialCap) * unitReg2);
+
+                it.OriginalPrice = regular2;
+                it.Price = it.Qty > 0 ? Math.Round(lineTotal2 / it.Qty, 2) : unitReg2;
+            }
+            HttpContext.Session.SetObject(CartKey, cart);
 
             // Optional: basic validation that a pickup location exists in the cart, etc.
             // if (cart.PickupLocationId == null) { ... }
@@ -204,8 +260,7 @@ namespace Zoolirante_Open_Minded.Controllers
 
             // 2) Persist deductions
             await _db.SaveChangesAsync();
-
-         
+            
             order.Items = string.Join(", ", cart.Items.Select(i => $"({i.Qty}) {i.Name}"));
             order.TotalAmount = cart.Subtotal;
             order.OrderDate = DateTime.Now;
