@@ -43,7 +43,7 @@ namespace Zoolirante_Open_Minded.Services
     <li><strong>20% OFF</strong> your entrance tickets 🎟️</li>
 </ul>
 
-<p>Start date:<b>{membership.StartDate:dd/MM/yyyy}</b></p>
+<p>Start date: <b>{membership.StartDate:dd/MM/yyyy}</b></p>
 <p>Valid until: <b>{membership.EndDate:dd/MM/yyyy}</b></p>
 
 <p>Use your membership when purchasing tickets or souvenirs at Zoolirante to automatically receive your discount!</p>
