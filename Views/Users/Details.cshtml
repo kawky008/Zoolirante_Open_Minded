@@ -63,7 +63,7 @@
     <!-- Header -->
     <div class="d-flex align-items-center gap-3 mb-3">
         <div class="avatar-badge" title="@name" aria-hidden="true">@initial</div>
-        <h2 class="m-0">Welcome to Zoolirante, @name!</h2>
+        <h2 class="m-0 custom-large-title" style="color: #db7322">Welcome to Zoolirante, @name!</h2>
     </div>
 
 
@@ -71,7 +71,7 @@
         <!-- Profile -->
         <div class="col-12 col-lg-6">
             <div class="card card-glass h-100">
-                <div class="card-header">Profile</div>
+                <div class="card-header custom-subtitle" style="color: #db7322">Profile</div>
                 <div class="card-body">
                     <div class="d-flex flex-column gap-3">
                         <div>
@@ -82,14 +82,14 @@
                             <div class="label">Email</div>
                             <div class="d-flex align-items-center flex-wrap gap-2">
                                 <a href="mailto:@Model.Email" class="value">@Model.Email</a>
-                                <span class="badge bg-success badge-chip">Verified</span>
+                                <span class="badge bg-success badge-chip" style="font-weight:400; font-size: 1rem">Verified</span>
                                 <button type="button" class="copy-btn" onclick="copyEmail('@Model.Email')">Copy</button>
                                 <small id="copyEmailMsg" class="text-success d-none">Copied!</small>
                             </div>
                         </div>
                         <div>
                             <div class="label">Role</div>
-                            <span class="badge bg-secondary badge-chip value" style="font-weight:700;">@Model.Role</span>
+                            <span class="badge bg-secondary badge-chip value" style="font-weight:400; font-size: 1rem">@Model.Role</span>
                         </div>
                     </div>
                 </div>
@@ -102,11 +102,11 @@
         <!-- Membership only view -->
         <div class="col-12 col-lg-6">
             <div class="card card-glass h-100">
-                <div class="card-header">Membership</div>
+                <div class="card-header custom-subtitle" style="color: #db7322">Membership</div>
                 <div class="card-body">
                     <div class="mb-2">
                         <div class="label">Status</div>
-                        <span class="badge bg-light text-dark badge-chip">Open to view your status</span>
+                        <span class="badge bg-light text-dark badge-chip" style="font-weight:400; font-size: 1rem">Open to view your status</span>
                     </div>
                     <div class="small account-subtle">
                         See your tier, renewal date and benefits on the membership page.
@@ -121,7 +121,7 @@
         <!-- Payment methods -->
         <div class="col-12 col-lg-6">
             <div class="card card-glass h-100">
-                <div class="card-header">Payment methods</div>
+                <div class="card-header custom-subtitle" style="color: #db7322">Payment methods</div>
                 <div class="card-body">
                     <div class="mb-2">
                         <div class="label">Default</div>
@@ -138,7 +138,7 @@
         <!-- Security -->
         <div class="col-12 col-lg-6">
             <div class="card card-glass h-100">
-                <div class="card-header">Security</div>
+                <div class="card-header custom-subtitle" style="color: #db7322">Security</div>
                 <div class="card-body">
                     <div class="small account-subtle mb-2">Reset your password or sign out across devices.</div>
                     <div class="d-flex gap-2 flex-wrap">
