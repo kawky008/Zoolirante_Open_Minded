@@ -22,22 +22,25 @@ body {
 
 
 
-/*****************************     Tooltip       *******************************/
-.tooltip {
-    border-radius: 5px !important;
+
+
+
+
+
+
+
+
+
+
+/**************************    Customer UI Elements    ************************/
+/* for search input and search button, go down. There is a section for it */
+.custom-large-title {
+    font-weight: 900;
+    font-size: 45px;
+    color: #659707;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
 
-.tooltip-inner {
-    background-color: black;
-    color: #65c707;
-}
-/****************************************************************************/
-
-
-
-
-
-/*****************         Custom Green Bold Texts          *********************/
 .custom-title {
     font-weight: 900;
     font-size: xx-large;
@@ -51,27 +54,66 @@ body {
     color: #659707;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 }
-/*******************************************************************************/
 
-
-
-
-
-/*****************************       Map      *******************************/
-.map-card {
-    width: 70%;
-    background-color: #383737;
+.normal-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: initial;
+    color: white;
+    background-color: #659707;
+    width: 150px;
+    height: 40px;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+    margin: 10px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
-.map {
-    width: 95%;
-    height: 600px;
-    background-color: #e0d8c8 !important;
-    border-radius: 14px;
+.normal-button:hover {
+    background-color: #65c707;
 }
-/*****************************************************************************************/
+
+.reset-button,
+.cance-button {
+
+}
+
+.reset-button:hover,
+.cancel-button:hover {
+
+}
+
+
+/**************************************************************************/
+
+
+
+
+
+
+/******************    Staff UI Buttons    *******************/
+.create-button,
+.edit-button,
+.delete-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: initial;
+    color: white;
+    background-color: #659707;
+    width: 150px;
+    height: 40px;
+    border-radius: 10px;
+    margin: 10px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.create-button:hover,
+.edit-button:hover,
+.delete-button:hover {
+    background-color: #65c707;
+}
+/*************************************************************/
 
 
 
@@ -130,7 +172,7 @@ button:active {
 }
 
 .dropdowns {
-    height: 70px; /* same as searchButton */
+    height: 75px; /* same as searchButton */
     width: 250px;
     color: black;
     background: floralwhite;
@@ -141,6 +183,87 @@ button:active {
     font-size: 15px; /* same as searchButton */
 }
 /****************************************************************************************/
+
+
+
+
+/*******************************        Card        ***********************************/
+.card {
+    background-color: floralwhite;
+    border: 3px solid #dc9720;
+    border-radius: 1rem; /* rounded corners */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* soft shadow */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-body {
+    color: rgba(0,0,0,0.8);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+/*************************************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*****************************     Tooltip       *******************************/
+.tooltip {
+    border-radius: 5px !important;
+}
+
+.tooltip-inner {
+    background-color: black;
+    color: #65c707;
+}
+/****************************************************************************/
+
+
+
+
+
+
+
+/*****************************       Map      *******************************/
+.map-card {
+    width: 70%;
+    background-color: #383737;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+}
+
+.map {
+    width: 95%;
+    height: 600px;
+    background-color: #e0d8c8 !important;
+    border-radius: 14px;
+}
+/****************************************************************************/
 
 
 
@@ -294,29 +417,6 @@ button:active {
     padding: 0 20px; /* prevent text from touching edges on small screens */
 }
 /**************************************************************************************/
-
-
-
-
-
-/*******************************        Card        ***********************************/
-.card {
-    background-color: floralwhite;
-    border: 3px solid #dc9720;
-    border-radius: 1rem; /* rounded corners */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* soft shadow */
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card-body {
-    color: rgba(0,0,0,0.8);
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-/*************************************************************************************/
 
 
 
