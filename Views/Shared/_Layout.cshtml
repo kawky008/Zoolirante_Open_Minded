@@ -1,4 +1,27 @@
-﻿@inject IHttpContextAccessor HttpContextAccessor
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var http = HttpContextAccessor.HttpContext!;
+    bool isManager = http.User?.IsInRole("Manager") == true || http.User?.IsInRole("Admin") == true;
+    var sessionRole = http.Session.GetString("Role") ?? http.Session.GetString("UserRole");
+    if (!isManager && !string.IsNullOrEmpty(sessionRole))
+    {
+        isManager =
+            sessionRole.Equals("Manager", StringComparison.OrdinalIgnoreCase) ||
+            sessionRole.Equals("Admin", StringComparison.OrdinalIgnoreCase);
+    }
+}
+
+@if (isManager)
+{
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Events" asp-action="Create">New Event</a>
+    </li>
+}
+
+
+
+@inject IHttpContextAccessor HttpContextAccessor
 
 
 

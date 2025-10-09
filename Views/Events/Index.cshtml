@@ -1,4 +1,27 @@
-﻿@model IEnumerable<Zoolirante_Open_Minded.Models.Event>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var http = HttpContextAccessor.HttpContext!;
+    bool isManager = http.User?.IsInRole("Manager") == true || http.User?.IsInRole("Admin") == true;
+
+    // Fallback to session role (works with your current setup)
+    var sessionRole = http.Session.GetString("Role") ?? http.Session.GetString("UserRole");
+    if (!isManager && !string.IsNullOrEmpty(sessionRole))
+    {
+        isManager =
+            sessionRole.Equals("Manager", StringComparison.OrdinalIgnoreCase) ||
+            sessionRole.Equals("Admin", StringComparison.OrdinalIgnoreCase);
+    }
+}
+@if (isManager)
+{
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-success">Add New Event</a>
+    </div>
+}
+
+
+@model IEnumerable<Zoolirante_Open_Minded.Models.Event>
 
 @{
     var mode = (ViewBag.Mode as string) ?? "ongoing";
