@@ -75,14 +75,39 @@ namespace Zoolirante_Open_Minded.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("EventId,Title,Description,StartTime,EndTime,Capacity,Price,Location")] Event @event)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(@event);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(@event);
+            // Business validation (kept minimal and non-invasive)
+            if (string.IsNullOrWhiteSpace(@event.Title))
+                ModelState.AddModelError(nameof(@event.Title), "Title is required.");
+
+            if (string.IsNullOrWhiteSpace(@event.Location))
+                ModelState.AddModelError(nameof(@event.Location), "Location is required.");
+
+            if (@event.StartTime >= @event.EndTime)
+                ModelState.AddModelError(nameof(@event.EndTime), "End time must be after start time.");
+
+            if (@event.Capacity.HasValue && @event.Capacity.Value < 0)
+                ModelState.AddModelError(nameof(@event.Capacity), "Capacity cannot be negative.");
+
+            if (@event.Price < 0)
+                ModelState.AddModelError(nameof(@event.Price), "Price cannot be negative.");
+
+            if (!ModelState.IsValid)
+                return View(@event);
+
+            _context.Add(@event);
+            await _context.SaveChangesAsync();
+
+            // Ensure the new event appears on the public Events page immediately:
+            var now = DateTime.Now;
+            if (@event.StartTime > now)
+                return RedirectToAction(nameof(Upcoming));  // will show on Upcoming
+            if (@event.StartTime <= now && @event.EndTime >= now)
+                return RedirectToAction(nameof(Ongoing));   // will show on Ongoing
+
+            // If the event was created already ended (edge case), default to Upcoming list
+            return RedirectToAction(nameof(Upcoming));
         }
+
 
         // GET: Events/Edit/5
         public async Task<IActionResult> Edit(int? id)
