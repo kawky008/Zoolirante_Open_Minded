@@ -12,6 +12,7 @@ namespace Zoolirante_Open_Minded.Services
         Task SendEmailAsync(string toEmail, string subject, string body);
         Task SendTicketConfirmationAsync(User user, EntranceTicket ticket);
         Task BookingReminder(ZooliranteDatabaseContext context, User user, EntranceTicket ticket, List<string> animalFavourite);
+        Task BenefitsMembership(User user, Membership membership);
     }
     public class Email : IEmailService
     {

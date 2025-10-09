@@ -115,6 +115,9 @@ namespace Zoolirante_Open_Minded.Controllers
             if (ModelState.IsValid)
             {
 				var uid = HttpContext.Session.GetInt32("UserId");
+
+
+                var user = _context.Users.Where(u=>u.UserId == uid).FirstOrDefault();
 				if (uid is null) return RedirectToAction("Login", "Users");
 
 				var m = new Membership
@@ -125,7 +128,7 @@ namespace Zoolirante_Open_Minded.Controllers
 				};
                 
 				_context.Add(m);
-                await _email.B
+                await _email.BenefitsMembership(user, m);
 
                 await _context.SaveChangesAsync();
 				TempData["Message"] = "Membership created!";
