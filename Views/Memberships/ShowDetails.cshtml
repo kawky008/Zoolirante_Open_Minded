@@ -1,10 +1,21 @@
 ﻿@model IEnumerable<Zoolirante_Open_Minded.Models.Membership>
-
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
+    var fullName = HttpContextAccessor.HttpContext.Session.GetString("FullName");
+    var role = HttpContextAccessor.HttpContext.Session.GetString("Role");
+}
 @{
     ViewData["Title"] = "Index";
 }
+@if (role == "Admin"){
 
-<h1>Index</h1>
+    <h1>Customer Membership </h1>
+}
+else
+{
+    <h1>Your Membership </h1>
+}
 
 <p>
     <a asp-action="Create">Create New</a>
