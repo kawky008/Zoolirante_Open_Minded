@@ -29,6 +29,16 @@ namespace Zoolirante_Open_Minded.Controllers
         private readonly ZooliranteDatabaseContext _context;
         private readonly IEmailService _emailService;
 
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var animalF = _context.EntranceTicket
+                      .Include(a => a.User)
+                      
+                      .ToList();
+
+            return View(animalF);
+        }
         public EntranceTicketsController(ZooliranteDatabaseContext context, IEmailService emailService)
         {
             _context = context;

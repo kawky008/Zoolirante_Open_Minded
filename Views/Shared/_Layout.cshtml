@@ -106,7 +106,7 @@
                             if (role == "Admin")
                             {
                                 <li class="nav-item mx-2">
-                                    <a class="nav-link" asp-controller="AnimalFavourite" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Favorite Animals">
+                                    <a class="nav-link" asp-controller="AnimalFavourite" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Manage Favorite Animals">
                                         <i class="fa-solid fa-heart fa-2x"></i>
                                     </a>
                                 </li>
@@ -114,22 +114,44 @@
                             else
                             {
                                 <li class="nav-item mx-2">
-                                    <a class="nav-link" asp-controller="AnimalFavourite" asp-action="UserFavorites" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Favorite Animals">
+                                    <a class="nav-link" asp-controller="AnimalFavourite" asp-action="UserFavorites" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Your Favorite Animals">
                                         <i class="fa-solid fa-heart fa-2x"></i>
                                     </a>
                                 </li>
                             }
-
+                            if (role == "Admin")
+                            {
                             <li class="nav-item mx-2">
-                                <a class="nav-link" asp-controller="EntranceTickets" asp-action="Buy" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Buy Tickets">
+                                <a class="nav-link" asp-controller="EntranceTickets" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Manage Tickets">
                                     <i class="fa-solid fa-ticket fa-2x"></i>
                                 </a>
-                            </li>
-                            <li class="nav-item mx-2">
-                                <a class="nav-link" asp-controller="EntranceTickets" asp-action="History" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visiting History">
-                                    <i class="fa-solid fa-suitcase fa-2x"></i>
-                                </a>
-                            </li>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item mx-2">
+                                    <a class="nav-link" asp-controller="EntranceTickets" asp-action="Buy" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Buy Tickets">
+                                        <i class="fa-solid fa-ticket fa-2x"></i>
+                                    </a>
+                                </li>
+                            }
+                            if (role == "Admin")
+                            {
+                                <li class="nav-item mx-2">
+                                    <a hidden class="nav-link" asp-controller="EntranceTickets" asp-action="History" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visiting History">
+                                        <i hidden class="fa-solid fa-suitcase fa-2x"></i>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item mx-2">
+                                    <a class="nav-link" asp-controller="EntranceTickets" asp-action="History" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visiting History">
+                                        <i class="fa-solid fa-suitcase fa-2x"></i>
+                                    </a>
+                                </li>
+                            }
+
                             <li class="nav-item mx-2">
                                 <a class="nav-link" asp-controller="Orders" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Order History">
                                     <i class="fa-solid fa-clock-rotate-left fa-2x"></i>
