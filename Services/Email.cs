@@ -22,11 +22,10 @@ namespace Zoolirante_Open_Minded.Services
         }
         public async Task BookingReminder(ZooliranteDatabaseContext context, User user, EntranceTicket ticket)
         {
-            var startOfDay = ticket.VisitDate;
-            var endOfDay = startOfDay.AddDays(1);
+            
 
             var events = await context.Events
-                //.Where(e => e.StartTime >= startOfDay && e.StartTime < endOfDay)
+                .Where(e => e.StartTime.Date == ticket.VisitDate.Date)
                 .OrderBy(e => e.StartTime)
                 .ToListAsync();
 
