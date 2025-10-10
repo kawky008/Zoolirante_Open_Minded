@@ -12,12 +12,7 @@
     }
 }
 
-
-
-
 @inject IHttpContextAccessor HttpContextAccessor
-
-
 
 @{
     var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
@@ -100,7 +95,10 @@
                             else
                             {
                                 <a class="nav-link" asp-controller="Users" asp-action="Login" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Login">
-                                    <i class="fa-solid fa-user fa-2x"></i>
+                                    <span class="d-flex align-items-center">
+                                        <i class="fa-solid fa-user fa-2x"></i>
+                                        <span style="font-size:20px; font-weight:bold">Login here</span>
+                                    </span>
                                 </a>
                             }
                         </li>
