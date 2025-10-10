@@ -23,6 +23,8 @@
             sessionRole.Equals("Manager", StringComparison.OrdinalIgnoreCase) ||
             sessionRole.Equals("Admin", StringComparison.OrdinalIgnoreCase);
     }
+    var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
+    var role = HttpContextAccessor.HttpContext.Session.GetString("Role");
 }
 
 
@@ -90,9 +92,9 @@
                 <div class="carousel-item @(i==0?"active":"")">
                   <div class="zoo-card">
                     <div class="zoo-img-wrap">
-                                            <img class="zoo-img"
-                                                 src="@(string.IsNullOrWhiteSpace(ev.ImageUrl) ? "/images/placeholder-event.jpg" : ev.ImageUrl)"
-                                                 alt="@ev.Title" />
+                        <img class="zoo-img"
+                            src="@(string.IsNullOrWhiteSpace(ev.ImageUrl) ? "/images/placeholder-event.jpg" : ev.ImageUrl)"
+                            alt="@ev.Title" />
 
                       <div class="img-gradient"></div>
                       <span class="img-badge">@(@i+1) / @Model.EventsToday.Count</span>
@@ -105,9 +107,16 @@
                         <div class="zoo-desc">@ev.Description</div>
                       }
                       <div class="mt-3 d-flex gap-2">
-                        <a asp-action="Details" asp-route-id="@ev.EventId" class="btn btn-zoo">View details</a>
-                        <a asp-action="Ics" asp-route-id="@ev.EventId" class="btn btn-outline-dark" style="border-radius:12px;">Add to calendar</a>
-                      </div>
+                        <a asp-action="Details" asp-route-id="@ev.EventId" class="normal-button">View details</a>
+                        <a asp-action="Ics" asp-route-id="@ev.EventId" class="normal-button" style="border-radius:12px;">Add to calendar</a>
+                       </div>
+                       @if (role == "Admin")
+                       {
+                           <div>
+                            <a asp-controller="Events" asp-action="Edit" asp-route-id="@ev.EventId" class="edit-button">Edit</a>
+                            <a asp-controller="Events" asp-action="Delete" asp-route-id="@ev.EventId" class="delete-button">Delete</a>
+                          </div>
+                       }                       
                     </div>
                   </div>
                 </div>
@@ -152,9 +161,17 @@
                         <div class="zoo-desc">@ev.Description</div>
                       }
                       <div class="mt-3 d-flex gap-2">
-                        <a asp-action="Details" asp-route-id="@ev.EventId" class="btn btn-zoo">View details</a>
-                        <a asp-action="Ics" asp-route-id="@ev.EventId" class="btn btn-outline-dark" style="border-radius:12px;">Add to calendar</a>
+                        <a asp-action="Details" asp-route-id="@ev.EventId" class="normal-button">View details</a>
+                        <a asp-action="Ics" asp-route-id="@ev.EventId" class="normal-button" style="border-radius:12px;">Add to calendar</a>
                       </div>
+                      @if (role == "Admin")
+                      {
+                          <div>
+                            <a asp-controller="Events" asp-action="Edit" asp-route-id="@ev.EventId" class="edit-button">Edit</a>
+                            <a asp-controller="Events" asp-action="Delete" asp-route-id="@ev.EventId" class="delete-button">Delete</a>
+                          </div>
+                      }
+                      
                     </div>
                   </div>
                 </div>
