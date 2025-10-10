@@ -39,7 +39,7 @@ namespace Zoolirante_Open_Minded.Services
 <p>Great news! As a valued <strong>Zoolirante Open-Minded Member</strong>, you can now enjoy:</p>
 
 <ul>
-    <li><strong>20% OFF</strong> all merchandise purchases 🛍️</li>
+    <li><strong>10% OFF</strong> all merchandise purchases 🛍️</li>
     <li><strong>20% OFF</strong> your entrance tickets 🎟️</li>
 </ul>
 
@@ -60,7 +60,7 @@ namespace Zoolirante_Open_Minded.Services
 
 <p>Renew now to continue enjoying:</p>
 <ul>
-    <li><strong>20% OFF</strong> tickets and merchandise</li>
+    <li><strong>20% OFF</strong> tickets and 10% merchandise</li>
     <li>Exclusive member-only events and previews</li>
 </ul>
 
@@ -112,7 +112,7 @@ namespace Zoolirante_Open_Minded.Services
 
                     if (commonAnimals.Count() > 0)
                     {
-                        eventsHtml += $" (This event has your favourite animals</strong>: {string.Join(", ", commonAnimals)})";
+                        eventsHtml += $"<strong style='color: orange;'>(This event has your favourite animals: {string.Join(", ", commonAnimals)})</strong>";
                     }
                            
                 }
