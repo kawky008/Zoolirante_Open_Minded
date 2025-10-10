@@ -187,6 +187,30 @@
     setInterval(() => {plusSlides(1, 1)}, 4000);
 </script>
 
+
+<hr />
+
+
+
+<div style="display:flex; justify-content:end; width:100%;">
+    <div class="card mt-5 mb-5" style="width:80%; position: relative; border:none">
+        <img src="images/monkey.jpeg" style="width:100%; height:100%; border-radius:13px;" />
+        <div style="position: absolute; top: 30px; left: -100px;">
+            <a class="fancy" asp-controller="Animals" asp-action="Index">
+                <span class="top-key"></span>
+                <span class="text">Explore</span>
+                <span class="bottom-key-1"></span>
+                <span class="bottom-key-2"></span>
+            </a>
+        </div>
+        <div style="position: absolute; bottom: 50px; left: 30px;">
+            <h2 class="custom-large-title" style="color:white; font-size:6vw">Explore</h2>
+            <h2 class="custom-large-title" style="color:white; font-size:6vw">Our Animals</h2>
+        </div>
+    </div>
+</div>
+
+
 <hr />
 
 <
@@ -196,7 +220,7 @@
 
         @if(userId == null)
         {
-            <div style="position: absolute; top: 30px; right: -60px;">
+            <div style="position: absolute; top: 30px; right: -100px;">
                 <a class="fancy" asp-controller="Users" asp-action="Login">
                     <span class="top-key"></span>
                     <span class="text">Buy Tickets</span>
@@ -208,7 +232,7 @@
         }
         else if(userId != null && role != "Admin")
         {
-            <div style="position: absolute; top: 30px; right: -60px;">
+            <div style="position: absolute; top: 30px; right: -100px;">
                 <a class="fancy" asp-controller="EntranceTickets" asp-action="Buy">
                     <span class="top-key"></span>
                     <span class="text">Buy Tickets</span>
@@ -219,7 +243,7 @@
         }
         else
         {
-            <div style="position: absolute; top: 30px; right: -60px;">
+            <div style="position: absolute; top: 30px; right: -100px;">
                 <a class="fancy" href="#">
                     <span class="top-key"></span>
                     <span class="text">Buy Tickets</span>
@@ -241,7 +265,7 @@
 <br />
 
 
-<div style="display:flex; justify-content:end; width:100%; margin-bottom:20px;">
+<div style="display:flex; justify-content:center; width:100%; margin-bottom:20px;">
     <!-- Membership Col -->
     <!-- From Uiverse.io by Yaya12085 -->
     <div class="plan">
