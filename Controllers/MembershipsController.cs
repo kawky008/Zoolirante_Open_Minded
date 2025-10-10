@@ -68,6 +68,7 @@ namespace Zoolirante_Open_Minded.Controllers
 
 		public async Task<IActionResult> Index()
         {
+            ViewData["BannerText"] = "Join membership";
 			var uid = HttpContext.Session.GetInt32("UserId");
 			if (uid is null) return RedirectToAction("Login", "Users");
 
@@ -82,7 +83,9 @@ namespace Zoolirante_Open_Minded.Controllers
         // GET: Memberships/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            ViewData["BannerText"] = "Manage your membership";
+
+			if (id == null)
             {
                 return NotFound();
             }
@@ -100,6 +103,7 @@ namespace Zoolirante_Open_Minded.Controllers
         // GET: Memberships/Create
         public IActionResult Create()
         {
+            ViewData["BannerText"] = "Manage your membership";
 			var uid = HttpContext.Session.GetInt32("UserId");
 			if (uid is null) return RedirectToAction("Login", "Users");
 			return View();

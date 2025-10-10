@@ -55,7 +55,9 @@ namespace Zoolirante_Open_Minded.Controllers
 
         public IActionResult Buy()
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
+            ViewData["BannerText"] = "Buy tickets";
+
+			var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
                 return RedirectToAction("Login", "Users");
 
@@ -73,8 +75,10 @@ namespace Zoolirante_Open_Minded.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Buy(EntranceTicket ticket)
         {
-           
-            var userId = HttpContext.Session.GetInt32("UserId");
+            ViewData["BannerText"] = "Buy tickets";
+
+
+			var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
                 return RedirectToAction("Login", "Users");
 
@@ -155,6 +159,7 @@ namespace Zoolirante_Open_Minded.Controllers
 		[HttpGet]
 		public async Task<IActionResult> History()
 		{
+            ViewData["BannerText"] = "Your visiting history";
 			var userId = HttpContext.Session.GetInt32("UserId");
 			if (userId is null) return RedirectToAction("Login", "Users");
 

@@ -115,7 +115,9 @@ namespace Zoolirante_Open_Minded.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(User model)
         {
-            if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.PasswordHash))
+            ViewData["BannerText"] = "Manage your account";
+
+			if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.PasswordHash))
             {
                 if (string.IsNullOrWhiteSpace(model.Email))
                     ModelState.AddModelError(nameof(model.Email), "Email is required.");
@@ -212,7 +214,9 @@ namespace Zoolirante_Open_Minded.Controllers
         // GET: User details
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            ViewData["BannerText"] = "Manage your account";
+
+			if (id == null) return NotFound();
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
             if (user == null) return NotFound();

@@ -22,7 +22,9 @@ namespace Zoolirante_Open_Minded.Controllers
         // GET: Orders
         public async Task<IActionResult> Index(string? search)
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
+            ViewData["BannerText"] = "Manage your orders";
+
+			var userId = HttpContext.Session.GetInt32("UserId");
             var userRole = HttpContext.Session.GetString("Role");
 
             var ordersQuery = _context.Orders
