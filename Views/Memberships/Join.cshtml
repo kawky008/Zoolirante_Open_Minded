@@ -4,14 +4,14 @@
 }
 <h2>Join Membership (1 Month)</h2>
 
-<a class="btn btn-primary" asp-controller="Payments" asp-action="Card"asp-route-orderId="0" asp-route-purpose="membership">
+<a class="normal-button" asp-controller="Payments" asp-action="Card"asp-route-orderId="0" asp-route-purpose="membership">
     Pay with Card
 </a>
 
 <form id="paypalMembershipForm" asp-controller="Payments" asp-action="PaypalDemo" method="post">
     <input type="hidden" name="purpose" value="membership" />
     @Html.AntiForgeryToken()
-    <button type="submit" class="btn btn-outline-dark">
+    <button type="submit" class="normal-button">
         Pay with PayPal
     </button>
 </form>

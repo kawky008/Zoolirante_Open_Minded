@@ -88,18 +88,18 @@
 </div>
 
 
-<button disabled type="button" id="btnPayCard" class="btn btn-primary">Pay with Card</button>
+<button disabled type="button" id="btnPayCard" class="normal-button">Pay with Card</button>
 
 
 <iframe name="bgSubmit" style="display:none;"></iframe>
-<form id="paypalForm" asp-controller="Payments" asp-action="PaypalDemo" method="post" target="bgSubmit" class="d-inline">
+<form id="paypalForm" asp-controller="Payments" asp-action="PaypalDemo" method="post" target="bgSubmit" class="">
     <input type="hidden" name="purpose" value="ticket" />
     <input type="hidden" name="ticketType" id="ppTicketType" />
     <input type="hidden" name="qty" value="1" />
     <input type="hidden" name="visitDate" id="ppVisitDate" />
     <input type="hidden" name="visitRange" id="ppVisitRange" />
     @Html.AntiForgeryToken()
-    <button id="btnPayPal" disabled type="submit" class="btn btn-outline-dark"
+    <button id="btnPayPal" disabled type="submit" class="normal-button"
             onclick="window.open('https://www.sandbox.paypal.com/', '_blank')">
         Pay with PayPal
     </button>
