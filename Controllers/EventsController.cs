@@ -23,7 +23,8 @@ namespace Zoolirante_Open_Minded.Controllers
         // GET: Events
         public IActionResult Index(string? q, string? sort = "soonest")
         {
-            var today = DateTime.Today;
+			ViewData["BannerText"] = "Explore our events";
+			var today = DateTime.Today;
             var tomorrow = today.AddDays(1);
             var weekLater = today.AddDays(7);
 
