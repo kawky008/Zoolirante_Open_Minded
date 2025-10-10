@@ -95,7 +95,7 @@
 
 <div class="row justify-content-center g-4 mb-5">
     <div class="col-5 me-5">
-        <h2 class="text-center custom-title">Today's Events</h2>
+        <h2 class="text-center custom-large-title">Today's Events</h2>
         <br />
 
         @if (Model.EventsToday.Any())
@@ -105,18 +105,13 @@
                 @for (int i = 0; i < Model.EventsToday.Count; i++)
                 {
                     var e = Model.EventsToday[i];
-                    <div class="mySlides1 card border-0" style="width: 100%">
-                        <div class="numbertext">@(i + 1) / @Model.EventsToday.Count</div>
-              
-                        <img src="@e.ImageUrl" width="250" height="450" class="card-img-top bottom-no-radius" alt="...">
+                    <div class="mySlides1 card border-0 position-relative" style="width:100%">
+                        <img src="@e.ImageUrl" class="card-img-top" style="width:100%; height:450px;" />
 
-                        <div class="card-body">
-                            <h5 class="card-title">@e.Title</h5>
-                            <br />
-                            <p class="card-text">Time: @e.StartTime  -  @e.EndTime</p>
-                            <p class="card-text">Location: @e.Location</p>
-                            <p class="card-text">@e.Description</p>
-                        </div>
+                        <h2 class="custom-title" style="position:absolute; bottom:20px; left:20px; color:white; background:rgba(0,0,0,0.4); padding:5px 10px; border-radius:10px">
+                            @e.Title
+                        </h2>
+                        <a class="stretched-link" asp-controller="Events" asp-action="Details" asp-route-id="@e.EventId"></a>
                     </div>
                 }
 
@@ -132,7 +127,7 @@
     </div>
         
     <div class="col-5 ms-5">
-        <h2 class="text-center custom-title">Upcoming Events Of The Week</h2>
+        <h2 class="text-center custom-large-title">Upcoming Events</h2>
         <br />
 
         @if (Model.EventsUpcoming.Any())
@@ -142,19 +137,13 @@
                 @for (int i = 0; i < Model.EventsUpcoming.Count; i++)
                 {
                     var e = Model.EventsUpcoming[i];
-                    <div class="mySlides2 card border-0" style="width: 100%">
-                        <div class="numbertext">@(i + 1) / @Model.EventsUpcoming.Count</div>
+                    <div class="mySlides2 card border-0 position-relative" style="width:100%">
+                        <img src="@e.ImageUrl" class="card-img-top" style="width:100%; height:450px;" />
 
-
-                        <img src="@e.ImageUrl" width="250" height="450" class="card-img-top bottom-no-radius" alt="...">
-
-                        <div class="card-body">
-                            <h5 class="card-title">@e.Title</h5>
-                            <br />
-                            <p class="card-text">Time: @e.StartTime  -  @e.EndTime</p>
-                            <p class="card-text">Location: @e.Location</p>
-                            <p class="card-text">@e.Description</p>
-                        </div>
+                        <h2 class="custom-title" style="position:absolute; bottom:20px; left:20px; color:white; background:rgba(0,0,0,0.4); padding:5px 10px; border-radius:10px">
+                            @e.Title
+                        </h2>
+                        <a class="stretched-link" asp-controller="Events" asp-action="Details" asp-route-id="@e.EventId"></a>
                     </div>
                 }
 
@@ -195,7 +184,7 @@
     setInterval(() => {plusSlides(1, 1)}, 4000);
 </script>
 
-<br />
+<hr />
 
 <
 <div style="display:flex; justify-content:start; width:100%;">
@@ -249,7 +238,7 @@
 <br />
 
 
-<div style="display:flex; justify-content:end; width:100%; margin-bottom:50px;">
+<div style="display:flex; justify-content:end; width:100%; margin-bottom:20px;">
     <!-- Membership Col -->
     <!-- From Uiverse.io by Yaya12085 -->
     <div class="plan">
@@ -314,11 +303,12 @@
     </div>
 </div>
 
+<hr />
 <br />
 
 
 <!-- Interactive Map using Leaflet.js -->
-<div class="text-center mt-3 mb-5">
+<div class="text-center mt-5 mb-5">
     <div class="d-flex justify-content-center align-items-center mb-1 gap-5">
         <h2 class="custom-large-title">Map Of The Zoo</h2>
         <a href="images/sample_map.pdf" class="text-decoration-none d-flex align-items-center" download>

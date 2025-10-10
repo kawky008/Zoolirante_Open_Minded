@@ -282,9 +282,9 @@ button:active {
 
 .fancy .top-key {
     height: 2px;
-    width: 1.5625rem;
+    width: 12rem;
     top: -2px;
-    left: 0.625rem;
+    left: 2rem;
     position: absolute;
     background: #659707;
     transition: width 0.5s ease-out, left 0.3s ease-out;
@@ -292,18 +292,8 @@ button:active {
 
 .fancy .bottom-key-1 {
     height: 2px;
-    width: 1.5625rem;
-    right: 1.875rem;
-    bottom: -2px;
-    position: absolute;
-    background: #659707;
-    transition: width 0.5s ease-out, right 0.3s ease-out;
-}
-
-.fancy .bottom-key-2 {
-    height: 2px;
-    width: 0.625rem;
-    right: 0.625rem;
+    width: 12rem;
+    right: 2rem;
     bottom: -2px;
     position: absolute;
     background: #659707;

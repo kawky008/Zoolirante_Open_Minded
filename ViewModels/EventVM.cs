@@ -10,7 +10,7 @@ namespace Zoolirante_Open_Minded.ViewModels
 
 	public class EventViewModel
 	{
-        public int EventId { get; set; }
+		public int EventId { get; set; } = 1;
         public string Title { get; set; }
 		public string Location { get; set; }
 		public DateTime StartTime { get; set; }

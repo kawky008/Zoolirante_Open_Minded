@@ -28,6 +28,7 @@ namespace Zoolirante_Open_Minded.Controllers
 				.Where(e => e.StartTime >= today && e.StartTime < tomorrow)
 				.Select(e => new EventViewModel
 				{
+					EventId = e.EventId,
 					Title = e.Title,
 					Location = e.Location,
 					StartTime = e.StartTime,
@@ -41,6 +42,7 @@ namespace Zoolirante_Open_Minded.Controllers
 				.Where(e => e.StartTime >= tomorrow && e.StartTime < weekLater)
 				.Select(e => new EventViewModel
 				{
+					EventId = e.EventId,
 					Title = e.Title,
 					Location = e.Location,
 					StartTime = e.StartTime,
