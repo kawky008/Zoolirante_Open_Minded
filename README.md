@@ -65,13 +65,3 @@ Visitors can buy entrance tickets by selecting a visit date and ticket type, the
 The event section supports today's events, upcoming events, search, sorting, event details, calendar export, ticket actions, and related-event recommendations. This helps visitors quickly discover activities and connect events with animal interests.
 
 ![Event list and recommendation workflow](docs/readme/event-list-recommendations.png)
-
-## My Contribution
-
-I contributed to the merchandise and event workflows, including merchandise search and filtering, cart integration, item management, stock and refill-related features, event list views, event detail pages, related-event recommendations, and calendar export functionality.
-
-I also worked as part of the Agile project team, contributing to feature design, implementation, testing, and final presentation materials.
-
-## Notes
-
-This project was completed as academic project work. The README focuses on the system scope, feature coverage, screenshots, and my practical contribution so recruiters can quickly understand the project.
